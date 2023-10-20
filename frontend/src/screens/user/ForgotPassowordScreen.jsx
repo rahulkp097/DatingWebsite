@@ -1,24 +1,16 @@
 import React from 'react'
 import Header from '../../components/user/Header'
-
 import Footer from '../../components/user/Footer'
+import ForgotPassoword from '../../components/user/ForgotPassoword'
 
-import ProfileCard from '../../components/user/ProfileCard';
-
-
-function UserProfileScreen() {
-  
+function ForgotPassowordScreen() {
   return (
     <>
     <Header/>
-
-   <ProfileCard/>
-  
-    
+    <ForgotPassoword/>
     <Footer/>
     </>
-    
   )
 }
 
-export default UserProfileScreen
+export default ForgotPassowordScreen

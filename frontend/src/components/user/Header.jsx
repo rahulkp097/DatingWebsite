@@ -1,86 +1,72 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../../slices/userApiSlice';
 import { logout } from '../../slices/authSlice';
+import { toast } from 'react-toastify';
+
 const Header = () => {
-
-  const dispatch=useDispatch()
-  const navigate=useNavigate()
-
-  const [logoutApiCall]=useLogoutMutation();
- 
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logoutApiCall, { isLoading }] = useLogoutMutation();
 
   const userInfoStr = localStorage.getItem('userInfo');
   const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null;
-  console.log(typeof userInfo)
-console.log("userInfo",userInfo)
 
-
-
-  const logoutHandler= async()=>{
-
+  const logoutHandler = async () => {
     try {
-     
-      await logoutApiCall().unwrap()
-      dispatch(logout())
-      navigate('/')
+      dispatch(logout());
+      const res = await logoutApiCall().unwrap();
+      navigate('/login');
+      if (res) {
+        toast.success("Logout Successfully");
+      } else {
+        toast.error("Logout Failed");
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
+  };
 
   return (
-    <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-teal-300">
-      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-        <div className="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start">
-          <Link to="/" className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase text-white">
-            You&Me
-          </Link>
-          <button className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none" type="button">
-            <span className="block relative w-6 h-px rounded-sm bg-white"></span>
-            <span className="block relative w-6 h-px rounded-sm bg-white mt-1"></span>
-            <span className="block relative w-6 h-px rounded-sm bg-white mt-1"></span>
-          </button>
-        </div>
-        <div className="lg:flex flex-grow items-center">
-          <ul className="flex flex-col lg:flex-row list-none ml-auto">
-          {userInfo ? (
-<div>
+    <div className="navbar bg-neutral">
+      <div className="flex-1">
+        <Link to="/" className="btn btn-ghost normal-case text-xl">
+          <img
+            src="/logoi.jpg" // Replace with your image path
+            alt="You&Me Logo"
+            className="w-10 h-10 rounded-full mr-2" // Adjust the size as needed
+          />
+          You&Me
+        </Link>
+      </div>
 
-<li className="nav-item">
-<span className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white">
-  Welcome, {userInfo?.name} 
-
-</span>
-</li>
-
-  <button onClick={logoutHandler}>Logout</button>
-  <Link to='/profile'>Profile</Link>
-</div>
-          ) : (
-
-            <>
-            <li className="nav-item">
-              
-            <Link to="/login" className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
-              Login
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/register" className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
-              Register
-            </Link>
-          </li>
-            </>
-          )}
-           
+      {userInfo && (
+        <div className="dropdown dropdown-end">
+          <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+            <div className="w-10 rounded-full">
+              <img
+                src={userInfo?.image || 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'}
+                alt="User Avatar"
+              />
+            </div>
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <Link to="/profile" className="justify-between">
+                Profile
+              </Link>
+            </li>
+            <li>
+              <button onClick={logoutHandler}>Logout</button>
+            </li>
           </ul>
         </div>
-      </div>
-    </nav>
+      )}
+    </div>
   );
 };
 

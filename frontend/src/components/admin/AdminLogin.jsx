@@ -1,11 +1,9 @@
 import React, { useState,useEffect } from 'react';
-import { Link,useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import { useAdminloginMutation } from '../../slices/adminApiSlice';
 import { setCredentialsAdmin } from '../../slices/adminAuthSlice';
 import { toast } from 'react-toastify'
-import Loader from '../user/Loader';
-
 
 
 function AdminLogin() {
@@ -16,14 +14,13 @@ function AdminLogin() {
   const navigate =useNavigate();
   const dispatch=useDispatch()
 
- const [login,{isLoading}]=useAdminloginMutation()
+ const [login]=useAdminloginMutation()
 
 const { adminInfo } = useSelector((state) => state.adminAuth);
-console.log("admin auth",adminInfo)
 
 useEffect(()=>{
     if(adminInfo){
-        navigate('/adminhome')
+        navigate("/admin/dashboard")
     }
  },[navigate,adminInfo])
 
@@ -40,17 +37,18 @@ useEffect(()=>{
       }
     try {
       const res = await login({ email, password }).unwrap();
-      console.log(res);
+      console.log('insde the function',res)
   
-      if (res) {
+      if (res.success) {
         dispatch(setCredentialsAdmin({ ...res }));
-        console.log('insde the function')
-        navigate('/adminhome');
+       
+        navigate("/admin/dashboard");
+
       } else {
         toast.error("Login failed");
       }
     } catch (err) {
-      console.error(err); // Log the error to the console
+      console.error("eror",err); // Log the error to the console
   
       if (err.response && err.response.status === 401) {
         toast.error("Invalid email or password");
@@ -64,7 +62,7 @@ useEffect(()=>{
   
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center ">
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
         <div className="mb-4">

@@ -12,11 +12,14 @@ function Register() {
     const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
     const [confirmPassword,setConfirmPassword]=useState("")
- 
+    const [gender, setGender] = useState("");
+
+    const genderOptions = ["Male", "Female", "Other"];
+
     const navigate =useNavigate();
     const dispatch=useDispatch()
   
-   const [register,{isLoading}]=useRegisterMutation()
+   const [EmailVerification,{isLoading}]=useRegisterMutation()
   
    const {userInfo}=useSelector((state)=>state.auth)
   
@@ -25,40 +28,77 @@ function Register() {
           navigate("/")
       }
    },[navigate,userInfo])
-  
-
+ 
 
    const submitHandler = async (e) => {
     e.preventDefault();
-
+    console.log("password length", password.length);
+    
+    const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    
+    
     if (password !== confirmPassword) {
-        toast.error('Passwords do not match');
-    } else {
-        try {
-            const res = await register({ name, email, password });
-            console.log("response from server",res)
-            dispatch(setCredentials({...res}))
-            navigate('/');
-        } catch (err) {
-            console.error(err); 
-            toast.error('An error occurred while registering. Please try again.'); // Display a more informative error message to the user
-        }
+      toast.error('Passwords do not match');
     }
-}
+    else if(name===""){
+        toast.error("please enter your name")
+    } else if(gender===""){
+        toast.error("please select your gender")
+    }  else if (password.length < 6) {
+      toast.error("Password should be at least six letters");
+    } else if (!specialCharacters.test(password)) {
+      toast.error("Password should contain at least one special character");
+    } else {
+      try {
+        const res = await EmailVerification({ email, name });
+        console.log("response from server", res);
+        
+        if (res.data.success) {
+          toast.success(`OTP has been sent to ${email}`);
+          navigate(`/otp?name=${name}&email=${email}&password=${password}&gender=${gender}`);
+        } else {
+          return toast.error("The user already exists");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error('An error occurred while registering. Please try again.');
+      }
+    }
+  }
+  
 
   return (
     
-    <div>
-    <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-gray-50">
-        <div>
-            <Link href="/">
-                <h3 className="text-4xl font-bold text-purple-600">
-                    Logo
-                </h3>
-            </Link>
-        </div>
-        <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-lg sm:rounded-lg">
-            <form onSubmit={submitHandler}> 
+    <div className=" flex justify-center items-center h-screen">
+    {/* Left: Image */}
+    <div className="w-1/2 h-screen hidden lg:block">
+      <img
+        src="https://images.pexels.com/photos/1024984/pexels-photo-1024984.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        alt="Placeholder Image"
+        className="object-cover w-full h-full"
+      />
+    </div>
+    {/* Right: Login Form */}
+    <div className="lg:p-36 md:p-52 sm:p-20 p-8 w-full lg:w-1/2">
+
+        <Link to='/'>
+    <div className=" flex flex-col items-center">
+      
+      <img
+        src="https://i.etsystatic.com/11917044/r/il/19576f/1308034468/il_794xN.1308034468_6mr7.jpg"
+        className='rounded-full  w-36 h-36'
+        alt=""
+        srcSet=""
+        />
+      
+      
+ 
+    </div>
+        </Link>
+    <h1 className="text-2xl font-semibold ">Sign up</h1>
+      
+
+    <form onSubmit={submitHandler}> 
                 <div>
                     <label
                     
@@ -73,10 +113,31 @@ function Register() {
                         onChange={(e)=>setName(e.target.value)}
                             type="text"
                             name="name"
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        />
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"  />
                     </div>
                 </div>
+
+                <div className="mt-4">
+  <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+    Gender
+  </label>
+  <div className="flex flex-col  items-start">
+    <select
+      value={gender}
+      onChange={(e) => setGender(e.target.value)}
+      name="gender"
+      className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500">
+      <option value="">Select Gender</option>
+      {genderOptions.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+
+
                 <div className="mt-4">
                     <label
                         htmlFor="email"
@@ -86,12 +147,12 @@ function Register() {
                     </label>
                     <div className="flex flex-col items-start">
                         <input
+                        required
                             value={email}
                             onChange={(e)=>setEmail(e.target.value)}
                             type="email"
                             name="email"
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        />
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"/>
                     </div>
                 </div>
                 <div className="mt-4">
@@ -107,8 +168,7 @@ function Register() {
                             onChange={(e)=>setPassword(e.target.value)}
                             type="password"
                             name="password"
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        />
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"  />
                     </div>
                 </div>
                 <div className="mt-4">
@@ -124,16 +184,10 @@ function Register() {
                             onChange={(e)=>setConfirmPassword(e.target.value)}
                             type="password"
                             name="password_confirmation"
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        />
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"  />
                     </div>
                 </div>
-                <a
-                    href="#"
-                    className="text-xs text-purple-600 hover:underline"
-                >
-                    Forget Password?
-                </a>
+             
                 <div className="flex items-center mt-4">
                 {isLoading && <Loader/>}
                     <button type='submit' className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
@@ -141,40 +195,21 @@ function Register() {
                     </button>
                 </div>
             </form>
-            <div className="mt-4 text-grey-600">
-                Already have an account?{" "}
-                <span>
-                    <Link to="/login" className="text-purple-600 hover:underline" href="#">
-                        Log in
-                    </Link>
-                </span>
-            </div>
-            <div className="flex items-center w-full my-4">
-                <hr className="w-full" />
-                <p className="px-3 ">OR</p>
-                <hr className="w-full" />
-            </div>
-            <div className="my-6 space-y-2">
-                <button
-                    aria-label="Login with Google"
-                    type="button"
-                    className="flex items-center justify-center w-full p-2 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 dark:border-gray-400 focus:ring-violet-400"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 32 32"
-                        className="w-5 h-5 fill-current"
-                    >
-                        <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z"></path>
-                    </svg>
-                    <p>Login with Google</p>
-                </button>
-               
-            </div>
-        </div>
+
+
+      {/* Sign up Link */}
+      
+      <div className="mt-6 text-blue-500 text-center">
+
+      Already have an account?  {"   "}
+      
+        <Link  to="/login" className="hover:underline">
+            
+            Login
+        </Link>
+      </div>
     </div>
-</div>
-        
+  </div>
   )
 }
 

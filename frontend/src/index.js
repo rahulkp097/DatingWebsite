@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
-import { createRoot } from 'react-dom/client';
-import HomeScreen from './components/user/Home.jsx';
+import ReactDOM from 'react-dom/client';
+import App from './App.js';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import store from './store.js';
 import { Provider } from 'react-redux';
-import App from './App.js';
 import './index.css';
 
 
@@ -18,35 +16,85 @@ import AdminHomeScreen from './screens/admin/AdminHomeScreen.jsx';
 import AdminUserScreen from './screens/admin/AdminUserScreen.jsx';
 import AdminSubscripctionsScreen from './screens/admin/AdminSubscripctionsScreen.jsx';
 import AdminTokenScreen from './screens/admin/AdminTokenScreen.jsx';
+import EmailVerification from './components/user/EmailVerification.jsx';
+import ForgotPassowordScreen from './screens/user/ForgotPassowordScreen.jsx';
+import NewPasswordSettingScreeen from './screens/user/NewPasswordSettingScreeen.jsx';
+import ErrorPage from './components/user/ErrorPage.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement:<ErrorPage/>,
+    children: [
+      {
+        path: "/",
+        element: <UserHomeScreen />,
+       
+      },
+      {
+        path:"/register",
+        element:<UserRegisterScreen/>
+      },
+      {
+        path:"login",
+        element:<UserLoginScreen/>
+      },
+      {
+        path:"otp",
+        element:<EmailVerification/>
+      },
+      {
+        path:"forgotpassword",
+        element:<ForgotPassowordScreen/>
+      },
+      {
+        path:"profile",
+        element:<UserProfileScreen/>
+      },
+      {
+        path:"enterpassword",
+        element:<NewPasswordSettingScreeen/>
+      },
+      
+    ],
+  },
+  {
+    path:"/admin", 
+    element: <App />,
+   
+    children:[
+      {
+    path:"",
+    element:<AdminLoginScreen/>
+  },
+  {
+    path:"dashboard",
+    element:<AdminHomeScreen/>
+  },
+  {
+    path:"users",
+    element:<AdminUserScreen/>
+  },
+  {
+    path:"subscriptions",
+    element:<AdminSubscripctionsScreen/>
+  },
+  {
+    path:"token",
+    element:<AdminTokenScreen/>
+  },
+
+]}
+]);
 
 
-const routes = (
-  <Routes>
-  <Route path="/" element={<App />}>
-    <Route index={true} path='/' element={<UserHomeScreen />} />
-    <Route path='/login' element={<UserLoginScreen />} />
-    <Route path='/register' element={<UserRegisterScreen />} />
-    <Route path='/profile' element={<UserProfileScreen />} />
-  
 
-
-
-    {/* admin route */}
-    <Route path='/admin/' element={<AdminLoginScreen />}/>
-  <Route path='/adminhome' element={<AdminHomeScreen />} />
-  <Route path='/admin/users' element={<AdminUserScreen />} />
-  <Route path='admin/subscriptions' element={<AdminSubscripctionsScreen />} />
-  <Route path='/admin/token' element={<AdminTokenScreen />} />
-</Route>
-</Routes>
-);
-const root = createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+      <React.StrictMode>
   <Provider store={store}>
-  <React.StrictMode>
-    <BrowserRouter>
-      {routes}
-    </BrowserRouter>
-  </React.StrictMode>
+  <RouterProvider router={router} />
   </Provider>
+  </React.StrictMode>
 );

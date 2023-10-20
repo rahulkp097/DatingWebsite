@@ -5,11 +5,9 @@ import Footer from '../../components/user/Footer'
 
 function UserRegisterScreen() {
   return (
-    <>
-    <Header/>
+    
     <Register/>
-    <Footer/>
-    </>
+  
   )
 }
 

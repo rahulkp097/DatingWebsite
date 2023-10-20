@@ -1,10 +1,10 @@
 import express from 'express'
 const router=express.Router()
-import { protect } from '../middlewares/authMiddleware.js'
-import { adminLogin, getUserData } from '../controllers/adminController.js'
-
+import { adminLogin, adminLogout, getUserData, userAction } from '../controllers/adminController.js'
+import { adminAuthProtect } from '../middlewares/adminAuth.js'
 router.post("/",adminLogin)
-router.get("/users",getUserData)
-router.post('/logout',)
+router.get("/users", adminAuthProtect, getUserData);
+router.put("/users",adminAuthProtect,userAction)
+router.post('/logout',adminLogout)
 
 export default router

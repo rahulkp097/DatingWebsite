@@ -2,12 +2,16 @@ import React from 'react'
 import Header from '../../components/user/Header'
 import Footer from '../../components/user/Footer'
 import HomeScreen from '../../components/user/Home'
+import UserHomeProfileCards from '../../components/user/UserHomeProfileCards';
 
 function UserHomeScreen() {
+  
+  const userInfoStr = localStorage.getItem('userInfo');
+
   return (
     <>
-    <Header/>
-    <HomeScreen/>
+     {userInfoStr && <Header />}
+     {userInfoStr ? <UserHomeProfileCards/>  : <HomeScreen/>}
     <Footer/>
     </>
   )
