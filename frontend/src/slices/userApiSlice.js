@@ -1,6 +1,7 @@
 import { apiSlice } from "./apiSlice";
+import { userApi } from "../config/API.js"
 
-const USERS_URL =' http://localhost:5000/api/users'
+const USERS_URL =userApi
 
 
 export const usersApiSlice=apiSlice.injectEndpoints({
@@ -125,6 +126,53 @@ export const usersApiSlice=apiSlice.injectEndpoints({
 
             })
         }),
+
+
+
+        sendInterestRequest:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/sendinterest`,
+                method:'post',
+                body:data,
+                credentials: 'include',
+
+            })
+        }),
+
+   cancelInterestRequest:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/cancelinterest`,
+                method:'post',
+                body:data,
+                credentials: 'include',
+
+            })
+        }),
+        getInterestLIst: builder.mutation({
+            query: (userId) => ({
+              url: `${USERS_URL}/interestslist/${userId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+          
+          acceptInterestRequest: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/acceptinterest`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+          getMatchList: builder.mutation({
+            query: (userId) => ({
+              url: `${USERS_URL}/match/${userId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+
     })
 })
 
@@ -141,4 +189,9 @@ export const {
     useUpdateUserProfilePhotoMutation,
     useUploadPhotoToCloudinaryMutation,
     useGetHomeMutation,
+    useSendInterestRequestMutation,
+    useCancelInterestRequestMutation,
+    useGetInterestLIstMutation,
+    useAcceptInterestRequestMutation,
+    useGetMatchListMutation
 }=usersApiSlice

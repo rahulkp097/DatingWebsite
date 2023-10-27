@@ -47,76 +47,116 @@ function AdminUserlist() {
 
   return (
     <>
-      <div className="relative m-5 max-w-lg mx-auto ">
-        <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-          <svg
-            className="h-5 w-5 text-gray-500"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+     <div className="container mx-auto px-4 sm:px-8">
+      <div className="py-8">
+        <div>
+          <h2 className="text-2xl font-semibold leading-tight">Users</h2>
+        </div>
+        <div className="my-2 flex sm:flex-row flex-col">
+          <div className="flex flex-row mb-1 sm:mb-0">
+            <div className="relative">
+              <select className="...">
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+              </select>
+              <div className="..."></div>
+            </div>
+            <div className="relative">
+              <select className="...">
+                <option>All</option>
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+              <div className="..."></div>
+            </div>
+          </div>
+          <div className="block relative">
+            <span className="..."></span>
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </svg>
-        </span>
-        <input
-          className="w-full border rounded-md pl-10 pr-4 py-2 focus:border-blue-500 focus:outline-none focus:shadow-outline"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
-      <div className="flex flex-col justify-center items-center ">
-        {filteredUserData.length === 0 ? (
-          <p>No results found</p>
-        ) : (
-          <table className="table bg-primary-content">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUserData.map((user, index) => (
+          </div>
+        </div>
+        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+          <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+            <table className="min-w-full leading-normal">
+              <thead>
+                <tr>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    SL NO.
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Created at
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                {filteredUserData.map((user, index) => (
                 <tr key={user._id}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <div className="flex items-center space-x-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-20 h-20">
-                          <img src={user.image} alt="Avatar Tailwind CSS Component" />
-                        </div>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-black">{index + 1}</td>
+               
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-10 h-10">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src={user.image}
+                          alt="Avatar Tailwind CSS Component"
+                        />
                       </div>
-                      <div>
-                        <div className="font-bold">{user.name}</div>
-                        <div className="text-sm opacity-50">{user.location}</div>
+                      <div className="ml-3">
+                        <p className="text-gray-900 whitespace-no-wrap">{user.name}</p>
                       </div>
                     </div>
                   </td>
-                  <td>{user.email}</td>
-                  <td>
-                    <button
-                      onClick={() => userToggle(user._id)}
-                      className={`btn btn-ghost btn-xs ${user.isActive ? 'bg-red-500 text-white' : 'bg-green-500 text-white'} p-2 m-1`}
-                    >
-                      {user.isActive ? 'Block' : 'Unblock'}
-                    </button>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">{user.location}</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">{user.createdAt}</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                      <span aria-hidden className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                      <span onClick={() => userToggle(user._id)}  className="relative">{user.isActive ? 'Active' : 'Inctive'}</span>
+                    </span>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+                ))}
+                {/* Additional rows go here */}
+              </tbody>
+            </table>
+            <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+              <span className="text-xs xs:text-sm text-gray-900">
+                Showing 1 to 4 of 50 Entries
+              </span>
+              <div className="inline-flex mt-2 xs:mt-0">
+                <button className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
+                  Prev
+                </button>
+                <button className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
     </>
   );
 }

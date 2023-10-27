@@ -2,16 +2,19 @@ import React from "react";
 import Header from "../../components/user/Header";
 
 import Footer from "../../components/user/Footer";
-import EnterPasswrod from "../../components/user/EnterPasswrod";
 
-function NewPasswordSettingScreeen() {
+import ProfileCard from "../../components/user/ProfileCard";
+
+function ProfileScreen() {
   return (
     <>
       <Header />
-      <EnterPasswrod />
+
+      <ProfileCard />
+
       <Footer />
     </>
   );
 }
 
-export default NewPasswordSettingScreeen;
+export default ProfileScreen;

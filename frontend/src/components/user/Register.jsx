@@ -1,9 +1,9 @@
 import React, { useState,useEffect} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 
-import {useDispatch,useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import { useRegisterMutation } from '../../slices/userApiSlice'
-import { setCredentials } from '../../slices/authSlice'
+
 import { toast } from 'react-toastify'
 import Loader from './Loader'
 
@@ -17,7 +17,7 @@ function Register() {
     const genderOptions = ["Male", "Female", "Other"];
 
     const navigate =useNavigate();
-    const dispatch=useDispatch()
+
   
    const [EmailVerification,{isLoading}]=useRegisterMutation()
   

@@ -1,14 +1,9 @@
-import React from 'react'
-import Header from '../../components/user/Header'
-import Register from '../../components/user/Register'
-import Footer from '../../components/user/Footer'
+import React from "react";
+
+import Register from "../../components/user/Register";
 
 function UserRegisterScreen() {
-  return (
-    
-    <Register/>
-  
-  )
+  return <Register />;
 }
 
-export default UserRegisterScreen
+export default UserRegisterScreen;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useResestPasswordMutation } from '../../slices/userApiSlice'
 import { toast } from 'react-toastify'
 
@@ -7,7 +7,7 @@ function EnterPasswrod() {
 
     const [password,setPassword]=useState("")
     const [confirmPassword,setConfirmPassword]=useState("")
-    const [resetPasswordAPi,{isLoading}]=useResestPasswordMutation()
+    const [resetPasswordAPi]=useResestPasswordMutation()
     const navigate=useNavigate()
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);

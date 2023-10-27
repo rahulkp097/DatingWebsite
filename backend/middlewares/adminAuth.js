@@ -9,7 +9,7 @@ const adminAuthProtect = async (req, res, next) => {
         const token = req.cookies.adminjwt
      
       if (token) {
-        
+    
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.admin = decoded.userId;
         next();

@@ -6,7 +6,7 @@ const generateToken = (res, userId) => {
         expiresIn: '30d'
     });
 
-    console.log("user token",token)
+   
 
     res.cookie("userJwt", token, {
         httpOnly: true,

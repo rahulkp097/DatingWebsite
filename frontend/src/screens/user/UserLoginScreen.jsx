@@ -1,13 +1,9 @@
-import React from 'react'
+import React from "react";
 
-import Login from '../../components/user/Login'
+import Login from "../../components/user/Login";
 
 function UserLoginScreen() {
-  return (
-    
-        <Login/>
-     
-  )
+  return <Login />;
 }
 
-export default UserLoginScreen
+export default UserLoginScreen;

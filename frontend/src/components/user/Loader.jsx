@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function Loader() {
+
+
+
+
   return (
     
 <div role="status">

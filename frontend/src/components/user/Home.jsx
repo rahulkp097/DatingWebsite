@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 
@@ -54,7 +54,7 @@ Meet someone new today.
           </div>
           <div className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px" style={{transform: "translateZ(0px)"}}>
             <svg className="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
-              <polygon className="text-blueGray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
+              
             </svg>
           </div>
         </div>
@@ -67,10 +67,9 @@ Meet someone new today.
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
                       <i className="fas fa-award"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Create A Profile</h6>
+                    <h6 className="text-xl font-semibold text-black">Create A Profile</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Divide details about your product or agency work into parts.
-                      A paragraph describing a feature will be enough.
+                    Craft your unique dating persona with a captivating profile that reflects the real you.
                     </p>
                   </div>
                 </div>
@@ -81,10 +80,9 @@ Meet someone new today.
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
                       <i className="fas fa-retweet"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Find Match</h6>
+                    <h6 className="text-xl font-semibold text-black">Find Match</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Keep your user engaged by providing meaningful information.
-                      Remember that by this time, the user is curious.
+                    Dive into our vast pool of potential partners and discover that special someone who shares your interests and values.
                     </p>
                   </div>
                 </div>
@@ -95,10 +93,9 @@ Meet someone new today.
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
                       <i className="fas fa-fingerprint"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Make Connection</h6>
+                    <h6 className="text-xl font-semibold text-black">Make Connection</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
-                      Write a few lines about each one. A paragraph describing a
-                      feature will be enough. Keep your user engaged!
+                    Forge meaningful bonds and kindle the flames of romance with our platform's seamless communication features.
                     </p>
                   </div>
                 </div>

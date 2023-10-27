@@ -20,7 +20,8 @@ const userSchema=mongoose.Schema({
    location:String,
    gender:String,
    matches:[],
-   interest:[],
+   interestSend:[],
+   interestReceived:[],
    tikets:[],
    isActive:{
       type:Boolean,

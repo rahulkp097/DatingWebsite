@@ -1,16 +1,16 @@
 import React from 'react'
 import Header from '../../components/user/Header'
-import UserProfilePage from '../../components/user/UserProfilePage'
 import Footer from '../../components/user/Footer'
+import UserMatch from '../../components/user/UserMatch'
 
-const UserProfileScreen = () => {
+function UserMatchListScreen() {
   return (
     <>
     <Header/>
-    <UserProfilePage/>
+    <UserMatch/>
     <Footer/>
     </>
   )
 }
 
-export default UserProfileScreen
+export default UserMatchListScreen

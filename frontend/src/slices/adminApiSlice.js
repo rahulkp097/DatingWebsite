@@ -1,5 +1,6 @@
 import { apiSlice } from "./apiSlice";
-const AdminURL =' http://localhost:5000/api/users/admin'
+import { adminApi } from "../config/API";
+const AdminURL =adminApi
 export const adminApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     adminlogin: builder.mutation({

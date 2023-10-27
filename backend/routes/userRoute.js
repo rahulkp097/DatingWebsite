@@ -1,6 +1,6 @@
 import express from 'express'
 const router=express.Router()
-import { verifyOTP, updateProfile, login, registerUser, userLogout, resestPassword, confirmPassword, getUserProfile, uploadPhoto, getHome } from '../controllers/userController.js'
+import  { verifyOTP, updateProfile, login,cancelInterest, registerUser, userLogout, resestPassword, confirmPassword, getUserProfile, uploadPhoto, getHome, sendinterest, getInterestsList, acceptInterest, matchList } from '../controllers/userController.js'
 import { protect } from '../middlewares/userAuth.js'
 
 router.post("/login",login)
@@ -13,5 +13,11 @@ router.post("/otp",verifyOTP)
 router.post("/resestpassword",resestPassword)
 router.post("/confirmpassword",confirmPassword)
 router.post('/logout',userLogout)
+router.post("/sendinterest",sendinterest)    
+router.post("/cancelinterest",cancelInterest)    
+router.get("/interestslist/:id", getInterestsList);
+router.post("/acceptinterest", acceptInterest);
+router.get("/match/:Id", matchList);
+  
 
 export default router

@@ -6,5 +6,5 @@ router.post("/",adminLogin)
 router.get("/users", adminAuthProtect, getUserData);
 router.put("/users",adminAuthProtect,userAction)
 router.post('/logout',adminLogout)
-
+ 
 export default router

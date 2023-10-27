@@ -7,6 +7,7 @@ import { setCredentials } from '../../slices/authSlice';
 import { useUpdateProfileMutation } from '../../slices/userApiSlice';
 import Loader from './Loader';
 
+
 function ProfileCard() {
   const [image, setImage] = useState(null);
   const [uploadedImageURL, setUploadedImageURL] = useState(null);
@@ -25,6 +26,8 @@ function ProfileCard() {
     console.log("Selected image:", selectedImage);
   };
 
+
+  
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
@@ -56,7 +59,7 @@ function ProfileCard() {
         console.log('Profile updated successfully');
         dispatch(setCredentials(res.user));
         toast.success("Profile updated successfully");
-        closeModal(); // Close the modal
+        closeModal();
       }
     } catch (error) {
       console.error('Error updating profile:', error);

@@ -12,7 +12,6 @@ const adminLogin = async (req, res) => {
         
          generateAdminToken(res, email);
 
-
       res.status(200).json({ success:true, message: "login sucesss" });
     } else {
       res.json({ message: "Invalid email or password" });

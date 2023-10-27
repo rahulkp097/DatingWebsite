@@ -9,7 +9,7 @@ import './index.css';
 
 import UserHomeScreen from './screens/user/UserHomeScreen.jsx';
 import UserLoginScreen from './screens/user/UserLoginScreen.jsx';
-import UserProfileScreen from './screens/user/UserProfileScreen.jsx';
+import ProfileScreen from './screens/user/ProfileScreen.jsx';
 import UserRegisterScreen from './screens/user/UserRegisterScreen.jsx';
 import AdminLoginScreen from './screens/admin/AdminLoginScreen.jsx';
 import AdminHomeScreen from './screens/admin/AdminHomeScreen.jsx';
@@ -20,7 +20,11 @@ import EmailVerification from './components/user/EmailVerification.jsx';
 import ForgotPassowordScreen from './screens/user/ForgotPassowordScreen.jsx';
 import NewPasswordSettingScreeen from './screens/user/NewPasswordSettingScreeen.jsx';
 import ErrorPage from './components/user/ErrorPage.jsx';
-
+import UserInterestScreen from './screens/user/UserInterestScreen.jsx';
+import UserMatchListScreen from './screens/user/UserMatchListScreen.jsx';
+import UserPrivateRoutes from './components/user/UserPrivateRoutes.jsx';
+import AdminPrivateRoute from './components/admin/AdminPrivateRoute.jsx';
+import UserProfileScreen from './screens/user/UserProfileScreen.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,12 +53,50 @@ const router = createBrowserRouter([
         element:<ForgotPassowordScreen/>
       },
       {
-        path:"profile",
-        element:<UserProfileScreen/>
+        path: 'profile',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <ProfileScreen />,
+          },
+        ],
       },
       {
         path:"enterpassword",
         element:<NewPasswordSettingScreeen/>
+      },
+    
+      {
+        path: 'interests',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <UserInterestScreen />,
+          },
+        ],
+      },
+      {
+        path: 'matches',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <UserMatchListScreen />,
+          },
+        ],
+      },
+
+      {
+        path: 'userprofile',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <UserProfileScreen />,
+          },
+        ],
       },
       
     ],
@@ -69,20 +111,44 @@ const router = createBrowserRouter([
     element:<AdminLoginScreen/>
   },
   {
-    path:"dashboard",
-    element:<AdminHomeScreen/>
+    path: 'dashboard',
+    element: <AdminPrivateRoute />,
+    children: [
+      {
+        index: true,
+        element: <AdminHomeScreen />,
+      },
+    ],
   },
   {
-    path:"users",
-    element:<AdminUserScreen/>
+    path: 'users',
+    element: <AdminPrivateRoute />,
+    children: [
+      {
+        index: true,
+        element: <AdminUserScreen />,
+      },
+    ],
   },
   {
-    path:"subscriptions",
-    element:<AdminSubscripctionsScreen/>
+    path: 'subscriptions',
+    element: <AdminPrivateRoute />,
+    children: [
+      {
+        index: true,
+        element: <AdminSubscripctionsScreen />,
+      },
+    ],
   },
   {
-    path:"token",
-    element:<AdminTokenScreen/>
+    path: 'token',
+    element: <AdminPrivateRoute />,
+    children: [
+      {
+        index: true,
+        element: <AdminTokenScreen />,
+      },
+    ],
   },
 
 ]}

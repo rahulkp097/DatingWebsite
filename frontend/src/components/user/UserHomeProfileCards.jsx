@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useGetHomeMutation } from '../../slices/userApiSlice';
-import { useSelector } from 'react-redux';
+import { useCancelInterestRequestMutation, useGetHomeMutation, useSendInterestRequestMutation } from '../../slices/userApiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { setCredentials } from '../../slices/authSlice';
 
 const UserHomeProfileCards = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const dispatch=useDispatch()
   const { userInfo } = useSelector((state) => state.auth);
   const [getUserListApi, { isLoading }] = useGetHomeMutation();
+  const [sendInterestApi]=useSendInterestRequestMutation()
+  const [cancelInterestApi]=useCancelInterestRequestMutation()
 
   useEffect(() => {
     getUsertList();
@@ -25,6 +29,40 @@ const UserHomeProfileCards = () => {
       console.log(error);
     }
   };
+
+  const isRequestSent = (targetId) => userInfo?.interestSend?.includes(targetId);
+
+  
+  const sendOrCancelRequest = async (targetId) => {
+    const userId = userInfo._id;
+
+    try {
+      if (isRequestSent(targetId)) {
+        
+        const res=await cancelInterestApi({targetId,userId}).unwrap()
+          console.log(res)
+        if (res.success) {
+          toast.success(res.message);
+          dispatch(setCredentials({ ...res.user }));
+          
+        }
+
+      } else {
+        
+        const res = await sendInterestApi({ targetId, userId }).unwrap();
+
+        if (res.success) {
+          toast.success(res.message);
+          dispatch(setCredentials({ ...res.user }));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -77,8 +115,9 @@ const UserHomeProfileCards = () => {
               <button
                 className="block w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
+                onClick={()=>sendOrCancelRequest(profile._id)}
               >
-                Send Request
+                {isRequestSent(profile._id) ? 'Cancel Request' : 'Send Request'}
               </button>
             </div>
           </div>
