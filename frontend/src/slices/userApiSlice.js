@@ -173,6 +173,15 @@ export const usersApiSlice=apiSlice.injectEndpoints({
             }),
           }),
 
+          deleteMatch: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/deletematch`,
+                method: 'post',
+                body:data,
+                credentials: 'include',
+              }),
+          }),
+
     })
 })
 
@@ -193,5 +202,6 @@ export const {
     useCancelInterestRequestMutation,
     useGetInterestLIstMutation,
     useAcceptInterestRequestMutation,
-    useGetMatchListMutation
+    useGetMatchListMutation,
+    useDeleteMatchMutation
 }=usersApiSlice

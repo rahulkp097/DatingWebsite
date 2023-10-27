@@ -22,7 +22,7 @@ const generateAdminToken = (res, id) => {
       expiresIn: "30d",
     });
         
-    console.log('Generated Admin Token:', token); // Log the generated token
+  
     res.cookie("adminjwt", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",

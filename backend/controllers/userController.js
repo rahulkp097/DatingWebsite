@@ -138,7 +138,7 @@ const uploadPhoto = async (req, res) => {
   const { userId, imageUrl } = req.body;
 
   try {
-    const user = await userModel.findById(userId);
+    const user = await userModel.findById(userId).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -164,7 +164,7 @@ const updateProfile = async (req, res) => {
   const { name, age, bio, userInfo, location } = req.body;
 
   try {
-    const user = await userModel.findById(userInfo._id);
+    const user = await userModel.findById(userInfo._id).select('-password');;
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -205,7 +205,7 @@ const getUserProfile = (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const user = userModel.findById(userId);
+    const user = userModel.findById(userId).select('-password');;
 
     if (user.isActive) {
       res.status(200).json({ success: true, user });
@@ -333,7 +333,7 @@ const targetId=req.body.targetId
 
 try {
   
-  const sendUser=await userModel.findById(userId)
+  const sendUser=await userModel.findById(userId).select('-password');
 
   sendUser.interestSend.push(targetId)
   await sendUser.save()
@@ -344,6 +344,7 @@ try {
   targetUser.interestReceived.push(userId)
   
   await targetUser.save()
+  
 
       return res.status(200).json({user:sendUser, success:true, message: 'Interest sent successfully' });
     } catch (error) {
@@ -359,7 +360,7 @@ try {
   
     try {
      
-      const sendingUser = await userModel.findById(userId);
+      const sendingUser = await userModel.findById(userId).select('-password');;
   
       if (!sendingUser) {
         return res.status(404).json({ message: 'Sending user not found' });
@@ -393,11 +394,9 @@ try {
     const userId = req.params.id;
   
     try {
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(userId).select('-password');;
   
-      if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
-      }
+    
   
       const interestReceivedPromises = user.interestReceived.map(async (interestUserId) => {
         const interestUser = await userModel.findById(interestUserId).select('name email age bio image location gender');
@@ -433,7 +432,7 @@ try {
       const targetId = req.body.targetId;
   
       
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(userId).select('-password');;
       
   
 
@@ -442,7 +441,7 @@ try {
       user.matches.push(targetId);
       
       
-      user.interestReceived = user.interestReceived.filter((id) => id !== targetId);
+      user.interestReceived = user.interestReceived.filter((id) => id.toString() !== targetId);
   
       
       await user.save();
@@ -451,7 +450,7 @@ try {
 
       targetUser.matches.push(userId);
 
-      targetUser.interestSend = targetUser.interestSend.filter((id) => id !== userId);
+      targetUser.interestSend = targetUser.interestSend.filter((id) => id.toString() !== userId);
   
       await targetUser.save();
   
@@ -466,22 +465,46 @@ try {
   };
 
 
-  const matchList= async(req,res)=>{
-
-    
+  const matchList = async (req, res) => {
     try {
-      const userId=req.params.Id
-       
-      const user=await userModel.findById(userId)
-        res.status(200).json({success:true,user})
-    } catch (error) {
-
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      const userId = req.params.Id;
   
+      const user = await userModel
+        .findById(userId)
+        .populate('matches') // Populate the 'matches' field with user details
+        .select('-password');
+
+      res.status(200).json({ success: true, matchList:user.matches });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  };
+  
+
+  const deleteMatch = async (req, res) => {
+    try {
+      const userId = req.body.userId;
+      const targetId = req.body.targetId;
+  
+      
+      const user = await userModel.findById(userId).populate('matches');
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+     
+      user.matches = user.matches.filter(match => match._id.toString() !== targetId);
+  
+     
+      await user.save();
+  
+      res.status(200).json({ success: true, matchList: user.matches, message: 'Match deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
   }
   
-
 
 export {
   login,
@@ -498,5 +521,6 @@ export {
   cancelInterest,
   getInterestsList,
   acceptInterest,
-  matchList
+  matchList,
+  deleteMatch
 };

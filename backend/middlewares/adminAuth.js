@@ -11,7 +11,7 @@ const adminAuthProtect = async (req, res, next) => {
       if (token) {
     
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.admin = decoded.userId;
+       
         next();
       } else {
         res.status(401).json({valid:false, message: "Not authorized, no token" });

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useUpdateUserProfilePhotoMutation, useUploadPhotoToCloudinaryMutation } from '../../slices/userApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useUpdateProfileMutation } from '../../slices/userApiSlice';
 import Loader from './Loader';
 
 
+
 function ProfileCard() {
   const [image, setImage] = useState(null);
   const [uploadedImageURL, setUploadedImageURL] = useState(null);
@@ -15,6 +16,9 @@ function ProfileCard() {
   const { userInfo } = useSelector((state) => state.auth);
   const [cloudinaryApi] = useUploadPhotoToCloudinaryMutation();
   const dispatch = useDispatch();
+
+
+
 
   const modalRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -74,33 +74,37 @@ function Interest() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full lg:flex-row">
-    <div className="flex-grow card  rounded-box p-4">
-      <h1 className="text-xl font-semibold">Interest Received</h1>
-      <ul>
-        {interestReceived?.map((user) => (
-          <li key={user?._id} className="flex items-center space-x-4">
-            <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
-            <span>{user?.name}</span>
-            <button onClick={() => acceptInterest(user._id)} className="btn btn-success">Accept</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div className='h-screen '>
 
-    <div className="flex-grow card rounded-box p-4">
-      <h1 className="text-xl font-semibold">Interest Sent</h1>
-      <ul>
-        {interestSend?.map((user) => (
-          <li key={user?._id} className="flex items-center space-x-4 m-5">
-            <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
-            <span>{user?.name}</span>
-            <button onClick={() => cancelInterest(user._id)} className="btn btn-primary">Cancel Request</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div className="grid grid-cols-2 gap-4 m-5 h-3/4">
+  <div className="card rounded-box bg-base-200 p-5">
+    <h1 className="text-xl font-semibold text-center">Interest Received</h1>
+    <ul>
+      {interestReceived?.map((user) => (
+        <li key={user?._id} className="flex items-center space-x-4 m-5">
+          <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
+          <span>{user?.name}</span>
+          <button onClick={() => acceptInterest(user._id)} className="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-950 rounded-lg focus:shadow-outline hover:bg-blue-700 ">Accept</button>
+        </li>
+      ))}
+    </ul>
   </div>
+
+  <div className="card rounded-box bg-base-200 p-5">
+    <h1 className="text-xl font-semibold text-center">Interest Sent</h1>
+    <ul>
+      {interestSend?.map((user) => (
+        <li key={user?._id} className="flex items-center space-x-4 m-5">
+          <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
+          <span>{user?.name}</span>
+          <button onClick={() => cancelInterest(user._id)} className="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-950 rounded-lg focus:shadow-outline hover:bg-rose-700">Cancel Request</button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+      </div>
   )
 }
 

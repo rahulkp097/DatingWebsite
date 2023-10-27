@@ -89,8 +89,8 @@ const Header = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/requests" className="justify-between">
-                Requests
+                <Link to="/matches" className="justify-between">
+                Matches
                 </Link>
               </li>
               <li>
