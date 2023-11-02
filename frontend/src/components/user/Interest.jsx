@@ -84,7 +84,8 @@ function Interest() {
         <li key={user?._id} className="flex items-center space-x-4 m-5">
           <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
           <span>{user?.name}</span>
-          <button onClick={() => acceptInterest(user._id)} className="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-950 rounded-lg focus:shadow-outline hover:bg-blue-700 ">Accept</button>
+
+          <button onClick={() => acceptInterest(user._id)} className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100">Accept</button>
         </li>
       ))}
     </ul>
@@ -94,10 +95,12 @@ function Interest() {
     <h1 className="text-xl font-semibold text-center">Interest Sent</h1>
     <ul>
       {interestSend?.map((user) => (
+        
         <li key={user?._id} className="flex items-center space-x-4 m-5">
           <img src={user?.image} alt="User Photo" className="w-10 h-10 rounded-full" />
           <span>{user?.name}</span>
-          <button onClick={() => cancelInterest(user._id)} className="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-950 rounded-lg focus:shadow-outline hover:bg-rose-700">Cancel Request</button>
+          
+          <button onClick={() => cancelInterest(user._id)} className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100">Cancel</button>
         </li>
       ))}
     </ul>

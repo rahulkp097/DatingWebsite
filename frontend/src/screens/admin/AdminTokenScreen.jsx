@@ -1,14 +1,17 @@
 import React from 'react'
 import AdminTokens from '../../components/admin/AdminTokens'
-import AdminHeader from '../../components/admin/AdminHeader'
+import AdminSideBar from '../../components/admin/AdminSideBar'
 
 function AdminTokenScreen() {
   return (
-    <>
-    <AdminHeader/>
-    <AdminTokens/>
-
-    </>
+    <div className=" h-screen w-screen overflow-hidden flex flex-row">
+    <AdminSideBar />
+    
+      <div className="flex-1 p-4 min-h-0 overflow-auto">
+          <AdminTokens/>
+      </div>
+    
+  </div>
   )
 }
 

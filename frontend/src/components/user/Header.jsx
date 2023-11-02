@@ -46,7 +46,9 @@ const Header = () => {
         <Link to="/profile" className="hover:underline">
           Profile
         </Link>
-      
+        <Link to="/shortlists" className="hover:underline">
+          Shortlist
+        </Link>
         <Link to="/interests" className="hover:underline">
           Interests
         </Link>

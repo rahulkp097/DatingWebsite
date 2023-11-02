@@ -182,6 +182,49 @@ export const usersApiSlice=apiSlice.injectEndpoints({
               }),
           }),
 
+          getTargetUserProfile: builder.mutation({
+            query: ({ userId, user }) => ({
+              url: `${USERS_URL}/userprofile`,
+              method: 'get',
+              credentials: 'include',
+              params: {
+                userId: userId,
+                user: user,
+              },
+            }),
+          }),
+          
+          
+
+          googleAuthLogin: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/googlelogin`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+          addToShortList: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/addshortlist`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+          
+          getShortListProfiles: builder.mutation({
+            query: (userId) => ({
+              url: `${USERS_URL}/shortlist/${userId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+
+
     })
 })
 
@@ -203,5 +246,9 @@ export const {
     useGetInterestLIstMutation,
     useAcceptInterestRequestMutation,
     useGetMatchListMutation,
-    useDeleteMatchMutation
+    useDeleteMatchMutation,
+    useGetTargetUserProfileMutation,
+    useGoogleAuthLoginMutation,
+    useAddToShortListMutation,
+    useGetShortListProfilesMutation
 }=usersApiSlice

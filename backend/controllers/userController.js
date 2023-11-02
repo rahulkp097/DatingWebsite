@@ -83,12 +83,10 @@ const registerUser = async (req, res) => {
 
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
-          return res
-            .status(500)
-            .json({
-              success: false,
-              message: "Something went wrong. Please try again",
-            });
+          return res.status(500).json({
+            success: false,
+            message: "Something went wrong. Please try again",
+          });
         } else {
           return res.status(200).json({ success: true, message: "OTP sent" });
         }
@@ -138,7 +136,7 @@ const uploadPhoto = async (req, res) => {
   const { userId, imageUrl } = req.body;
 
   try {
-    const user = await userModel.findById(userId).select('-password');
+    const user = await userModel.findById(userId).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -148,23 +146,20 @@ const uploadPhoto = async (req, res) => {
 
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        user,
-        success: true,
-        message: "Image uploaded and user data updated",
-      });
+    return res.status(200).json({
+      user,
+      success: true,
+      message: "Image uploaded and user data updated",
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 const updateProfile = async (req, res) => {
-  const { name, age, bio, userInfo, location } = req.body;
+  const { name, age, bio, userInfo, selectedCountry,selectedState,selectedCity } = req.body;
 
   try {
-    const user = await userModel.findById(userInfo._id).select('-password');;
+    const user = await userModel.findById(userInfo._id).select("-password");
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -182,30 +177,37 @@ const updateProfile = async (req, res) => {
       user.bio = bio;
     }
 
-    if (location) {
-      user.location = location;
+    if (selectedCountry) {
+      user.country = selectedCountry;
+    }
+
+    if (selectedState) {
+      user.state = selectedState;
+    }
+
+    if (selectedCity) {
+      user.city = selectedCity;
     }
 
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        user: user,
-        success: true,
-        message: "Profile updated successfully",
-      });
+    return res.status(200).json({
+      user: user,
+      success: true,
+      message: "Profile updated successfully",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
+
 const getUserProfile = (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const user = userModel.findById(userId).select('-password');;
+    const user = userModel.findById(userId).select("-password");
 
     if (user.isActive) {
       res.status(200).json({ success: true, user });
@@ -251,12 +253,10 @@ const resestPassword = async (req, res) => {
 
       transporter.sendMail(mailOptions, (error) => {
         if (error) {
-          return res
-            .status(500)
-            .json({
-              success: false,
-              message: "Something went wrong. Please try again",
-            });
+          return res.status(500).json({
+            success: false,
+            message: "Something went wrong. Please try again",
+          });
         } else {
           return res.status(200).json({ success: true, message: "OTP sent" });
         }
@@ -311,9 +311,14 @@ const getHome = async (req, res) => {
   if (userId) {
     try {
       const allUsers = await userModel.find({ isActive: true });
-      
+
       const currentUser = await userModel.findById(userId);
-      const sortedUsers = allUsers.filter((user) => user._id != userId && !currentUser.matches.includes(user._id));
+      const sortedUsers = allUsers.filter(
+        (user) =>
+          user._id != userId &&
+          !currentUser.interestReceived.includes(user._id) &&
+          !currentUser.matches.includes(user._id)
+      );
 
       res.status(200).json({ success: true, sortedUsers });
     } catch (error) {
@@ -324,187 +329,325 @@ const getHome = async (req, res) => {
   }
 };
 
+const sendinterest = async (req, res) => {
+  const userId = req.body.userId;
+  const targetId = req.body.targetId;
 
-const sendinterest= async(req,res)=>{
+  try {
+    const sendUser = await userModel.findById(userId).select("-password");
 
-const userId=req.body.userId
-const targetId=req.body.targetId
+    sendUser.interestSend.push(targetId);
+    await sendUser.save();
 
+    const targetUser = await userModel.findById(targetId);
 
-try {
-  
-  const sendUser=await userModel.findById(userId).select('-password');
+    targetUser.interestReceived.push(userId);
 
-  sendUser.interestSend.push(targetId)
-  await sendUser.save()
-  
-  
-  const targetUser=await userModel.findById(targetId)
-  
-  targetUser.interestReceived.push(userId)
-  
-  await targetUser.save()
-  
+    await targetUser.save();
 
-      return res.status(200).json({user:sendUser, success:true, message: 'Interest sent successfully' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    return res
+      .status(200)
+      .json({
+        user: sendUser,
+        success: true,
+        message: "Interest sent successfully",
+      });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const cancelInterest = async (req, res) => {
+  const userId = req.body.userId;
+  const targetId = req.body.targetId;
+
+  try {
+    const sendingUser = await userModel.findById(userId).select("-password");
+
+    if (!sendingUser) {
+      return res.status(404).json({ message: "Sending user not found" });
     }
-  };
 
+    const targetUser = await userModel.findById(targetId);
 
-  const cancelInterest = async (req, res) => {
+    if (!targetUser) {
+      return res.status(404).json({ message: "Receiving user not found" });
+    }
+
+    sendingUser.interestSend = sendingUser.interestSend.filter(
+      (e) => e.toString() !== targetId.toString()
+    );
+    await sendingUser.save();
+
+    targetUser.interestReceived = targetUser.interestReceived.filter(
+      (e) => e.toString() !== userId.toString()
+    );
+    await targetUser.save();
+
+    return res
+      .status(200)
+      .json({
+        user: sendingUser,
+        success: true,
+        message: "Interest request canceled",
+      });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getInterestsList = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await userModel.findById(userId).select("-password");
+
+    const interestReceivedPromises = user.interestReceived.map(
+      async (interestUserId) => {
+        const interestUser = await userModel
+          .findById(interestUserId)
+          .select("name email age bio image location gender");
+        return interestUser;
+      }
+    );
+
+    const interestSendPromises = user.interestSend.map(
+      async (interestUserId) => {
+        const interestUser = await userModel
+          .findById(interestUserId)
+          .select("name email age bio image location gender");
+        return interestUser;
+      }
+    );
+
+    const [interestReceived, interestSend] = await Promise.all([
+      Promise.all(interestReceivedPromises),
+      Promise.all(interestSendPromises),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      interestReceived,
+      interestSend,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const acceptInterest = async (req, res) => {
+  try {
     const userId = req.body.userId;
     const targetId = req.body.targetId;
-  
-    try {
-     
-      const sendingUser = await userModel.findById(userId).select('-password');;
-  
-      if (!sendingUser) {
-        return res.status(404).json({ message: 'Sending user not found' });
-      }
-  
-     
-      const targetUser = await userModel.findById(targetId);
-  
-      if (!targetUser) {
-        return res.status(404).json({ message: 'Receiving user not found' });
-      }
-  
-      
-      sendingUser.interestSend = sendingUser.interestSend.filter((e) => e.toString() !== targetId.toString());
-      await sendingUser.save();
-  
-     
-      targetUser.interestReceived = targetUser.interestReceived.filter((e) => e.toString() !== userId.toString());
-      await targetUser.save();
-  
-      return res.status(200).json({ user:sendingUser, success: true, message: 'Interest request canceled' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-  
 
+    const user = await userModel.findById(userId).select("-password");
 
-  const getInterestsList = async (req, res) => {
-    const userId = req.params.id;
-  
-    try {
-      const user = await userModel.findById(userId).select('-password');;
-  
-    
-  
-      const interestReceivedPromises = user.interestReceived.map(async (interestUserId) => {
-        const interestUser = await userModel.findById(interestUserId).select('name email age bio image location gender');
-        return interestUser;
-      });
-  
-      const interestSendPromises = user.interestSend.map(async (interestUserId) => {
-        const interestUser = await userModel.findById(interestUserId).select('name email age bio image location gender');
-        return interestUser;
-      });
-  
-      const [interestReceived, interestSend] = await Promise.all([
-        Promise.all(interestReceivedPromises),
-        Promise.all(interestSendPromises),
-      ]);
-  
-      res.status(200).json({
-        success: true,
-        interestReceived,
-        interestSend,
-      });
-    } catch (error) {
-      
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  };
-  
+    user.matches.push(targetId);
 
-  const acceptInterest = async (req, res) => {
-    try {
-      const userId = req.body.userId;
-      const targetId = req.body.targetId;
-  
-      
-      const user = await userModel.findById(userId).select('-password');;
-      
-  
+    user.interestReceived = user.interestReceived.filter(
+      (id) => id.toString() !== targetId
+    );
 
-  
-      
-      user.matches.push(targetId);
-      
-      
-      user.interestReceived = user.interestReceived.filter((id) => id.toString() !== targetId);
-  
-      
-      await user.save();
+    await user.save();
 
-      const targetUser = await userModel.findById(targetId);
+    const targetUser = await userModel.findById(targetId);
 
-      targetUser.matches.push(userId);
+    targetUser.matches.push(userId);
 
-      targetUser.interestSend = targetUser.interestSend.filter((id) => id.toString() !== userId);
-  
-      await targetUser.save();
-  
-      res.status(200).json({
-        success: true,
-        user: user,
-        message: 'Interest request accepted',
-      });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  };
+    targetUser.interestSend = targetUser.interestSend.filter(
+      (id) => id.toString() !== userId
+    );
 
+    await targetUser.save();
 
-  const matchList = async (req, res) => {
-    try {
-      const userId = req.params.Id;
-  
-      const user = await userModel
-        .findById(userId)
-        .populate('matches') // Populate the 'matches' field with user details
-        .select('-password');
-
-      res.status(200).json({ success: true, matchList:user.matches });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  };
-  
-
-  const deleteMatch = async (req, res) => {
-    try {
-      const userId = req.body.userId;
-      const targetId = req.body.targetId;
-  
-      
-      const user = await userModel.findById(userId).populate('matches');
-  
-      if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
-      }
-  
-     
-      user.matches = user.matches.filter(match => match._id.toString() !== targetId);
-  
-     
-      await user.save();
-  
-      res.status(200).json({ success: true, matchList: user.matches, message: 'Match deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+    res.status(200).json({
+      success: true,
+      user: user,
+      message: "Interest request accepted",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
+};
+
+const matchList = async (req, res) => {
+  try {
+    const userId = req.params.Id;
+
+    const user = await userModel
+      .findById(userId)
+      .populate("matches") // Populate the 'matches' field with user details
+      .select("-password");
+
+    res.status(200).json({ success: true, matchList: user.matches });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const deleteMatch = async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const targetId = req.body.targetId;
+
+    const user = await userModel.findById(userId).populate("matches");
+
+    const targetUser = await userModel.findById(targetId).populate("matches");
+
+    targetUser.matches = targetUser.matches.filter(
+      (match) => match._id.toString() !== userId
+    );
+    user.matches = user.matches.filter(
+      (match) => match._id.toString() !== targetId
+    );
+    await targetUser.save();
+
+    await user.save();
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        matchList: user.matches,
+        message: "Match deleted successfully",
+      });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getTargetUserProfile = async (req, res) => {
+  const targetId = req.query.userId;  
+  const userId = req.query.user;
+ 
+  try {
+    const TargetUser = await userModel.findById(targetId).select("-password");
+    const user = await userModel.findById(userId).select("-password");
+
+    res.status(200).json({ success: true, data: TargetUser,user });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const googleAuthLogin = async (req, res) => {
+  const { email, name, image } = req.body;
+
+  try {
+    
+    const user = await userModel.findOne({ email: email });
+   
+    if (user && user?.isActive) {
+      generateToken(res, user._id);
+      return res.status(200).json({ success:true, user: user });
+    }
+    if (user?.isActive) {
+      return res.json({
+        notActive: true,
+        message: "Your account has been blocked by admin",
+      });
+    } 
+
+   else {
+      const password=123456
+      const newUser = new userModel({
+        email: email,
+        name: name,
+        image: image,
+        password:password,
+        createdAt: Date.now(),
+       
+      });
+
+      await newUser.save();
+
+      generateToken(res, newUser._id);
+     
+      res.status(200).json({ success:true, message: "User created", user: newUser });
+    }
+  } catch (error) {
+   
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+const showRecommendation = async (req, res) => {
+  const userId = req.params.Id;
+
+  try {
+   
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const userCity = user.city;
+
+   
+    const recommendations = await userModel.find({
+      city: userCity,
+      _id: { $ne: userId }, 
+      matches: { $nin: [userId] }, 
+    });
+
+    return res.status(200).json({
+      recommendations,
+      success: true,
+      message: "Recommendations retrieved successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const addToShortList = async (req, res) => {
+  const userId = req.body.userId;
+  const targetId = req.body.targetId;
+
+  try {
+    const user = await userModel.findById(userId).select("-password");
+
   
+
+    const isAlreadyInShortlist = user.shortlist.includes(targetId);
+
+    if (isAlreadyInShortlist) {
+    
+      user.shortlist = user.shortlist.filter(id => id.toString() !== targetId);
+      await user.save();
+      res.status(200).json({ success: true, message: "User removed from shortlist", user });
+    } else {
+     
+      user.shortlist.push(targetId);
+      await user.save();
+      res.status(200).json({ success: true, message: "User added to shortlist", user });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+
+const getShortlistProfiles=async(req,res)=>{
+  const userId= req.params.userId
+  try {
+    const user= await userModel.findById(userId).populate("shortlist").select("-password")
+ 
+    res.status(200).json({success:true,user})
+  } catch (error) {
+    
+    res.status(400).json({success:false,message:"Internal Server Error"})
+  }
+}
+
+
 
 export {
   login,
@@ -522,5 +665,10 @@ export {
   getInterestsList,
   acceptInterest,
   matchList,
-  deleteMatch
+  deleteMatch,
+  getTargetUserProfile,
+  googleAuthLogin,
+  showRecommendation,
+  addToShortList,
+  getShortlistProfiles
 };

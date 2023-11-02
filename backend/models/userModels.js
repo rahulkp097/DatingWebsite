@@ -15,24 +15,33 @@ const userSchema = mongoose.Schema({
   age: Number,
   bio: String,
   image: String,
-  location: String,
+  country: String, // Add a field for the country
+  state: String,   // Add a field for the state
+  city: String,    // Add a field for the city
   gender: String,
+
+  shortlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+  ],
   matches: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user", 
+      ref: "user",
     },
   ],
   interestSend: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user", 
+      ref: "user",
     },
   ],
   interestReceived: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user", 
+      ref: "user",
     },
   ],
   tikets: [],

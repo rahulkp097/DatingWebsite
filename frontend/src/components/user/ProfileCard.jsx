@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useUpdateUserProfilePhotoMutation, useUploadPhotoToCloudinaryMutation } from '../../slices/userApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../../slices/authSlice';
+import { Country, State, City } from 'country-state-city';
 
 import { useUpdateProfileMutation } from '../../slices/userApiSlice';
 import Loader from './Loader';
@@ -16,6 +17,9 @@ function ProfileCard() {
   const { userInfo } = useSelector((state) => state.auth);
   const [cloudinaryApi] = useUploadPhotoToCloudinaryMutation();
   const dispatch = useDispatch();
+  const countries = Country.getAllCountries();
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
 
 
@@ -27,18 +31,20 @@ function ProfileCard() {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
     setUploadedImageURL(URL.createObjectURL(selectedImage));
-    console.log("Selected image:", selectedImage);
+  
   };
 
 
-  
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [bio, setBio] = useState('');
   const [location, setLocation] = useState('');
 
   const [profileUpdate] = useUpdateProfileMutation();
-
 
 
 
@@ -57,7 +63,7 @@ function ProfileCard() {
    
     
     try {
-      const res = await profileUpdate({ name, age, bio,location, userInfo }).unwrap();
+      const res = await profileUpdate({ name, age, bio,location, userInfo,selectedCountry,selectedState,selectedCity }).unwrap();
 
       if (res.success) {
         console.log('Profile updated successfully');
@@ -92,7 +98,7 @@ function ProfileCard() {
        const imageUrl=response.url
       const userId=userInfo._id
        const res=await uploadImageApi({imageUrl,userId}).unwrap()
-       console.log("res",res)
+       
        if(res.success){
 
          dispatch(setCredentials(res.user))
@@ -110,6 +116,8 @@ function ProfileCard() {
     }
   };
 
+
+
   return (
 
     <div className="hero min-h-screen bg-base-200">
@@ -125,7 +133,7 @@ function ProfileCard() {
         <h1 className="text-3xl font-bold text-info mb-4">{userInfo?.gender}</h1>
         <h3 className="text-3xl font-semibold text-accent mb-4">{userInfo?.age ? `${userInfo.age} years old` : ""}</h3>
         <h1 className="text-xl font-semibold text-base-600 mb-4">{userInfo?.email}</h1>
-        <h4 className="text-base-600 text-lg my-6">{userInfo?.location}</h4>
+        <h4 className="text-base-600 text-lg my-6">{userInfo?.city}</h4>
         <p className="text-base-600 text-lg my-6">{userInfo?.bio}</p>
 
 
@@ -221,7 +229,7 @@ function ProfileCard() {
     />
   </div>
 
-  <div className="mb-4">
+  {/* <div className="mb-4">
         <label className="block text-white text-sm font-bold mb-2" htmlFor="newLocation">
           New Location
         </label>
@@ -233,7 +241,90 @@ function ProfileCard() {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
-      </div>
+      </div> */}
+
+
+      <div className="mb-4">
+  <label className="block text-white text-sm font-bold mb-2" htmlFor="country">
+    Country
+  </label>
+  <select
+    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+    id="country"
+    value={selectedCountry}
+    onChange={(e) => {
+      setSelectedCountry(e.target.value);
+      // Fetch states of the selected country
+      const selectedCountryId = e.target.value;
+      
+      const statesOfCountry = State.getStatesOfCountry(selectedCountryId);
+      setStates(statesOfCountry);
+      // Reset state and city selections
+      setSelectedState('');
+      setSelectedCity('');
+    }}
+  >
+    <option value="">Select a country</option>
+    {countries.map((country, index) => (
+      <option key={index} value={country.isoCode}>
+        {country.name}
+      </option>
+    ))}
+  </select>
+</div>
+
+<div className="mb-4">
+  <label className="block text-white text-sm font-bold mb-2" htmlFor="state">
+    State
+  </label>
+  <select
+  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+  id="state"
+  value={selectedState}
+  onChange={(e) => {
+    setSelectedState(e.target.value);
+    // Fetch cities of the selected state
+    const selectedStateId = e.target.value;
+    const selectedCountryId = selectedCountry; // Get the selected country's ID or code
+
+
+    const citiesOfState = City.getCitiesOfState(selectedCountryId,selectedStateId);
+    setCities(citiesOfState);
+    // Reset city selection
+    setSelectedCity('');
+  }}
+>
+  <option value="">Select a state</option>
+  {states.map((state, index) => (
+    <option key={index} value={state.isoCode}>
+      {state.name}
+    </option>
+  ))}
+</select>
+
+
+</div>
+
+<div className="mb-4">
+  <label className="block text-white text-sm font-bold mb-2" htmlFor="city">
+    City
+  </label>
+  <select
+    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+    id="city"
+    value={selectedCity}
+    onChange={(e) => setSelectedCity(e.target.value)}
+  >
+    <option value="">Select a city</option>
+    {cities.map((city, index) => (
+      <option key={index} value={city.id}>
+        {city.name}
+      </option>
+    ))}
+  </select>
+</div>
+
+
 
 
   <div className="mb-4">
