@@ -1,17 +1,16 @@
 import React from 'react'
+import ChatComponent from '../../components/user/ChatComponent'
 import Header from '../../components/user/Header'
 import Footer from '../../components/user/Footer'
-import SubscriptionCard from '../../components/user/SubscriptionCard'
 
-function UserSubscripctionScreen() {
+function Chatscreen() {
   return (
     <>
     <Header/>
-      <SubscriptionCard/>
+    <ChatComponent/>
     <Footer/>
-    
     </>
   )
 }
 
-export default UserSubscripctionScreen
+export default Chatscreen

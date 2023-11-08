@@ -7,12 +7,13 @@ const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (email == process.env.AdminUsername &&
-      password === process.env.AdminPassword) {
-        
-         generateAdminToken(res, email);
+    if (
+      email == process.env.AdminUsername &&
+      password === process.env.AdminPassword
+    ) {
+      generateAdminToken(res, email);
 
-      res.status(200).json({ success:true, message: "login sucesss" });
+      res.status(200).json({ success: true, message: "login sucesss" });
     } else {
       res.json({ message: "Invalid email or password" });
     }
@@ -43,13 +44,11 @@ const userAction = async (req, res) => {
 
       await user.save();
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "User updated successfully",
-          isActive: updatedIsActive,
-        });
+      res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        isActive: updatedIsActive,
+      });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -60,11 +59,10 @@ const userAction = async (req, res) => {
 };
 
 const adminLogout = (req, res) => {
-    // Clear the 'jwt' cookie
-    res.clearCookie('adminjwt');
-    
-    res.status(200).json({ message: 'logout successfully' });
-  };
-  
+  // Clear the 'jwt' cookie
+  res.clearCookie("adminjwt");
+
+  res.status(200).json({ message: "logout successfully" });
+};
 
 export { adminLogin, getUserData, adminLogout, userAction };

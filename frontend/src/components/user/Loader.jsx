@@ -1,23 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 
 function Loader() {
-
-
-
-
   return (
-    
-<div className='dots-container'>
-
-<div className='dot'></div>
-<div className='dot'></div>
-<div className='dot'></div>
-<div className='dot'></div>
-<div className='dot'></div>
-
-</div>
-
-  )
+    <>
+<span className="loading loading-ball loading-xs"></span>
+<span className="loading loading-ball loading-sm"></span>
+<span className="loading loading-ball loading-md"></span>
+<span className="loading loading-ball loading-lg"></span>
+    </>
+  );
 }
 
-export default Loader
+export default Loader;

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useGoogleAuthLoginMutation, useLoginMutation } from "../../slices/userApiSlice";
+import {
+  useGoogleAuthLoginMutation,
+  useLoginMutation,
+} from "../../slices/userApiSlice";
 import { setCredentials } from "../../slices/authSlice";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
@@ -14,13 +17,13 @@ function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [googleLoginApi]=useGoogleAuthLoginMutation()
+  const [googleLoginApi,{isLoading:isLoadingGoogleAuth}] = useGoogleAuthLoginMutation();
   const [login, { isLoading }] = useLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo?.isActive) {
       navigate("/");
     }
   }, [navigate, userInfo]);
@@ -37,33 +40,28 @@ function Login() {
       toast.error(err?.data?.message || err.error);
     }
   };
-  
-  
-  const responseMessage =  async (response) => {
-  try {
-    
-    const decoded = jwtDecode(response.credential);
-    console.log(decoded)
-    const name=decoded.name
-    const email=decoded.email
-    const image=decoded.picture
-    
-    const res= await googleLoginApi({name,email,image}).unwrap()
-    
-    if (res.notActive) return toast.warning(res.message);
-    if (res.success) {
-      dispatch(setCredentials({ ...res.user }));
-    } else toast.error("login failed");
-  } catch (error) {
-    console.log(error)
-  }
 
-    
-};
-const errorMessage = (error) => {
+  const responseMessage = async (response) => {
+    try {
+      const decoded = jwtDecode(response.credential);
+      console.log(decoded);
+      const name = decoded.name;
+      const email = decoded.email;
+      const image = decoded.picture;
+
+      const res = await googleLoginApi({ name, email, image }).unwrap();
+
+      if (res.notActive) return toast.warning(res.message);
+      if (res.success) {
+        dispatch(setCredentials({ ...res.user }));
+      } else toast.error("login failed");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const errorMessage = (error) => {
     console.log(error);
-};
-
+  };
 
   return (
     <div className=" flex justify-center items-center h-screen">
@@ -125,21 +123,23 @@ const errorMessage = (error) => {
             </Link>
           </div>
           {/* Login Button */}
-          
+
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
-            Login {isLoading && <Loader />}
+             {isLoading ? <Loader /> : 'Login' }
           </button>
         </form>
-
+        {isLoadingGoogleAuth? <Loader/> :
+        
         <div className="mt-6 text-blue-500 text-center flex justify-center items-center ">
-          
-            <GoogleLogin  onSuccess={responseMessage} onError={errorMessage} />
+          <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
         </div>
+        }
         {/* Sign up Link */}
 
+        
         <div className="mt-6 text-blue-500 text-center">
           <Link to="/register" className="hover:underline">
             Sign up Here

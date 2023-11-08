@@ -15,10 +15,21 @@ const userSchema = mongoose.Schema({
   age: Number,
   bio: String,
   image: String,
-  country: String, // Add a field for the country
-  state: String,   // Add a field for the state
-  city: String,    // Add a field for the city
+  country: String, 
+  state: String,   
+  city: String,    
   gender: String,
+  education:String,
+  occupation:String,
+  hobbies:[],
+  subscription: {
+    plan: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subscription",
+    },
+    status:Boolean, 
+    expirationDate: Date, // Date when the subscription expires
+  },
 
   shortlist: [
     {
@@ -44,7 +55,10 @@ const userSchema = mongoose.Schema({
       ref: "user",
     },
   ],
-  tikets: [],
+  tikets: [  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },],
   isActive: {
     type: Boolean,
     default: true,

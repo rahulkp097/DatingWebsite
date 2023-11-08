@@ -27,6 +27,7 @@ import AdminPrivateRoute from './components/admin/AdminPrivateRoute.jsx';
 import UserProfileScreen from './screens/user/UserProfileScreen.jsx';
 import UserSubscripctionScreen from './screens/user/UserSubscripctionScreen.jsx';
 import UserShortlistScreen from './screens/user/UserShortlistScreen.jsx';
+import Chatscreen from './screens/user/Chatscreen.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -108,6 +109,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <UserSubscripctionScreen />,
+          },
+        ],
+      },
+      {
+        path: 'chat',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <Chatscreen />,
           },
         ],
       },

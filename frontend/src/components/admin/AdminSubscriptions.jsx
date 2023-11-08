@@ -1,9 +1,80 @@
-import React from 'react'
+import React from "react";
 
 function AdminSubscriptions() {
   return (
-    <div className='bg-blue-200 flex h-screen flex-col justify-center items-center'>AdminSumcriptions</div>
-  )
+
+
+    <div>
+
+
+<button className="btn" onClick={()=>document.getElementById('my_modal_1').showModal()}>Add Plan</button>
+<dialog id="my_modal_1" className="modal">
+  <div className="modal-box">
+    <h3 className="font-bold text-lg">Hello!</h3>
+    <p className="py-4">Press ESC key or click the button below to close</p>
+    <div className="modal-action">
+      <form method="dialog">
+      <label>
+    Name:
+  </label>
+    <input type="text" name="name" />
+
+        <button className="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+
+    <div className="relative overflow-x-auto">
+    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
+        <tr>
+          <th scope="col" className="px-6 py-3">
+            Product name
+          </th>
+          <th scope="col" className="px-6 py-3">
+            Color
+          </th>
+          <th scope="col" className="px-6 py-3">
+            Category
+          </th>
+          <th scope="col" className="px-6 py-3">
+            Price
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="bg-white dark:bg-gray-800">
+          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            Apple MacBook Pro 17"
+          </th>
+          <td className="px-6 py-4">Silver</td>
+          <td className="px-6 py-4">Laptop</td>
+          <td className="px-6 py-4">$2999</td>
+        </tr>
+        <tr className="bg-white dark:bg-gray-800">
+          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            Microsoft Surface Pro
+          </th>
+          <td className="px-6 py-4">White</td>
+          <td className="px-6 py-4">Laptop PC</td>
+          <td className="px-6 py-4">$1999</td>
+        </tr>
+        <tr className="bg-white dark:bg-gray-800">
+          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            Magic Mouse 2
+          </th>
+          <td className="px-6 py-4">Black</td>
+          <td className="px-6 py-4">Accessories</td>
+          <td className="px-6 py-4">$99</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    </div>
+  );
 }
 
-export default AdminSubscriptions
+export default AdminSubscriptions;

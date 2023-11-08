@@ -55,7 +55,7 @@ export const usersApiSlice=apiSlice.injectEndpoints({
         updateProfile: builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/profile`,
-                method:'POST',
+                method:'put',
                 body:data,
                 credentials: 'include',
 
@@ -88,7 +88,7 @@ export const usersApiSlice=apiSlice.injectEndpoints({
         updateUserProfilePhoto: builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/profilephoto`,
-                method:'POST',
+                method:'put',
                 body:data,
                 credentials: 'include',
 
@@ -148,6 +148,18 @@ export const usersApiSlice=apiSlice.injectEndpoints({
 
             })
         }),
+
+
+        cancelReceivedInterestRequest:builder.mutation({
+          query:(data)=>({
+              url: `${USERS_URL}/cancelreceivedinterest`,
+              method:'post',
+              body:data,
+              credentials: 'include',
+
+          })
+      }),
+
         getInterestLIst: builder.mutation({
             query: (userId) => ({
               url: `${USERS_URL}/interestslist/${userId}`,
@@ -176,7 +188,7 @@ export const usersApiSlice=apiSlice.injectEndpoints({
           deleteMatch: builder.mutation({
             query: (data) => ({
                 url: `${USERS_URL}/deletematch`,
-                method: 'post',
+                method: 'delete',
                 body:data,
                 credentials: 'include',
               }),
@@ -224,6 +236,15 @@ export const usersApiSlice=apiSlice.injectEndpoints({
             }),
           }),
 
+          updateUserPassword: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/updatepassword`,
+              method: 'put',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
 
     })
 })
@@ -243,6 +264,7 @@ export const {
     useGetHomeMutation,
     useSendInterestRequestMutation,
     useCancelInterestRequestMutation,
+    useCancelReceivedInterestRequestMutation,
     useGetInterestLIstMutation,
     useAcceptInterestRequestMutation,
     useGetMatchListMutation,
@@ -250,5 +272,6 @@ export const {
     useGetTargetUserProfileMutation,
     useGoogleAuthLoginMutation,
     useAddToShortListMutation,
-    useGetShortListProfilesMutation
+    useGetShortListProfilesMutation,
+    useUpdateUserPasswordMutation
 }=usersApiSlice

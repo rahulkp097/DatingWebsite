@@ -3,9 +3,54 @@ import generateToken from "../utils/generateToken.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import cloudinary from "../helper/imageUploader.js";
 dotenv.config();
 let storedOTP;
+
+// function to send Email to user
+
+const sendEmailMessage = async (recipientEmail, recipientName, message) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.nodeMailerUserName,
+      pass: process.env.nodeMailerPassword,
+    },
+  });
+
+  const mailOptions = {
+    from: "riofashionstoreeco@gmail.com",
+    to: recipientEmail,
+    subject: "You&Me Message",
+    text: `Hi, ${recipientName}, ${message}`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Message sent: ", info.response);
+  } catch (error) {
+    console.error("Error sending message: ", error);
+  }
+};
+
+
+
+// Function to generate a random password
+function generateRandomPassword(length) {
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
+
+
+
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -156,7 +201,19 @@ const uploadPhoto = async (req, res) => {
   }
 };
 const updateProfile = async (req, res) => {
-  const { name, age, bio, userInfo, selectedCountry,selectedState,selectedCity } = req.body;
+  const {
+    name,
+    age,
+    gender,
+    bio,
+    selectedHobbies,
+    selectedOccupation,
+   selectedQualification,
+    userInfo,
+    selectedCountry,
+    selectedState,
+    selectedCity,
+  } = req.body;
 
   try {
     const user = await userModel.findById(userInfo._id).select("-password");
@@ -175,6 +232,19 @@ const updateProfile = async (req, res) => {
 
     if (bio) {
       user.bio = bio;
+    }
+    if (gender) {
+      user.gender = gender;
+    }
+    if (selectedQualification) {
+      user.education = selectedQualification;
+    }
+
+    if (selectedOccupation) {
+      user.occupation = selectedOccupation;
+    }
+    if (selectedHobbies) {
+      user.hobbies = selectedHobbies;
     }
 
     if (selectedCountry) {
@@ -201,7 +271,6 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 const getUserProfile = (req, res) => {
   const userId = req.params.userId;
@@ -342,16 +411,19 @@ const sendinterest = async (req, res) => {
     const targetUser = await userModel.findById(targetId);
 
     targetUser.interestReceived.push(userId);
+    console.log(";sfdj")
+    const recipientEmail=targetUser.email
+    const recipientName =targetUser.name
+    const message=`${sendUser.name} is interested on you Profile`
+    await sendEmailMessage(recipientEmail, recipientName, message);
 
     await targetUser.save();
 
-    return res
-      .status(200)
-      .json({
-        user: sendUser,
-        success: true,
-        message: "Interest sent successfully",
-      });
+    return res.status(200).json({
+      user: sendUser,
+      success: true,
+      message: "Interest sent successfully",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -385,13 +457,47 @@ const cancelInterest = async (req, res) => {
     );
     await targetUser.save();
 
-    return res
-      .status(200)
-      .json({
-        user: sendingUser,
-        success: true,
-        message: "Interest request canceled",
-      });
+    return res.status(200).json({
+      user: sendingUser,
+      success: true,
+      message: "Interest request canceled",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const cancelReceivedInterest = async (req, res) => {
+  const userId = req.body.userId;
+  const targetId = req.body.targetId;
+
+  try {
+    const user = await userModel.findById(userId).select("-password");
+
+    const targetUser = await userModel.findById(targetId);
+
+    user.interestReceived = user.interestReceived.filter(
+      (e) => e.toString() !== targetId.toString()
+    );
+    await user.save();
+
+    targetUser.interestSend = targetUser.interestSend.filter(
+      (e) => e.toString() !== userId.toString()
+    );
+
+    const recipientEmail=targetUser.email
+    const recipientName =targetUser.name
+    const message=`${user.name} has declined your Interest`
+    await sendEmailMessage(recipientEmail, recipientName, message);
+    await targetUser.save();
+
+
+    return res.status(200).json({
+      user,
+      success: true,
+      message: "Interest request canceled",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -461,6 +567,10 @@ const acceptInterest = async (req, res) => {
       (id) => id.toString() !== userId
     );
 
+    const recipientEmail=targetUser.email
+    const recipientName =targetUser.name
+    const message=`${user.name} has accepted your interest` 
+    await sendEmailMessage(recipientEmail, recipientName, message);
     await targetUser.save();
 
     res.status(200).json({
@@ -507,27 +617,25 @@ const deleteMatch = async (req, res) => {
 
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        matchList: user.matches,
-        message: "Match deleted successfully",
-      });
+    res.status(200).json({
+      success: true,
+      matchList: user.matches,
+      message: "Match deleted successfully",
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
 const getTargetUserProfile = async (req, res) => {
-  const targetId = req.query.userId;  
+  const targetId = req.query.userId;
   const userId = req.query.user;
- 
+
   try {
     const TargetUser = await userModel.findById(targetId).select("-password");
     const user = await userModel.findById(userId).select("-password");
 
-    res.status(200).json({ success: true, data: TargetUser,user });
+    res.status(200).json({ success: true, data: TargetUser, user });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -537,50 +645,55 @@ const googleAuthLogin = async (req, res) => {
   const { email, name, image } = req.body;
 
   try {
-    
     const user = await userModel.findOne({ email: email });
-   
+
     if (user && user?.isActive) {
+      req.session.userId = user._id;
       generateToken(res, user._id);
-      return res.status(200).json({ success:true, user: user });
+
+      return res.status(200).json({ success: true, user: user });
     }
-    if (user?.isActive) {
+    if (user && !user?.isActive) {
       return res.json({
         notActive: true,
         message: "Your account has been blocked by admin",
       });
-    } 
+    } else {
+      const randomPassword = generateRandomPassword(8);
 
-   else {
-      const password=123456
+      const password = await bcrypt.hash(randomPassword, 10);
       const newUser = new userModel({
         email: email,
         name: name,
         image: image,
-        password:password,
+        password,
         createdAt: Date.now(),
-       
       });
 
-      await newUser.save();
+      const recipientEmail=newUser.email
+    const recipientName =newUser.name
+    const message = `Thank you for choosing You&Me! Your account has been successfully created. Welcome to our community. We're excited to have you on board! If you have any questions or need assistance, please don't hesitate to contact our support team. Enjoy your experience with You&Me!   YourPassword:${randomPassword}`;
 
+    await sendEmailMessage(recipientEmail, recipientName, message);
+
+      await newUser.save();
+      req.session.userId = newUser._id;
       generateToken(res, newUser._id);
-     
-      res.status(200).json({ success:true, message: "User created", user: newUser });
+
+      res
+        .status(200)
+        .json({ success: true, message: "User created", user: newUser });
     }
   } catch (error) {
-   
     console.error("Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-
 const showRecommendation = async (req, res) => {
   const userId = req.params.Id;
 
   try {
-   
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -588,11 +701,10 @@ const showRecommendation = async (req, res) => {
 
     const userCity = user.city;
 
-   
     const recommendations = await userModel.find({
       city: userCity,
-      _id: { $ne: userId }, 
-      matches: { $nin: [userId] }, 
+      _id: { $ne: userId },
+      matches: { $nin: [userId] },
     });
 
     return res.status(200).json({
@@ -606,7 +718,6 @@ const showRecommendation = async (req, res) => {
   }
 };
 
-
 const addToShortList = async (req, res) => {
   const userId = req.body.userId;
   const targetId = req.body.targetId;
@@ -614,40 +725,79 @@ const addToShortList = async (req, res) => {
   try {
     const user = await userModel.findById(userId).select("-password");
 
-  
-
     const isAlreadyInShortlist = user.shortlist.includes(targetId);
 
-    if (isAlreadyInShortlist) {
+   
     
-      user.shortlist = user.shortlist.filter(id => id.toString() !== targetId);
-      await user.save();
-      res.status(200).json({ success: true, message: "User removed from shortlist", user });
-    } else {
-     
+    if (isAlreadyInShortlist) {
+      user.shortlist = user.shortlist.filter(
+        (id) => id.toString() !== targetId
+        );
+        await user.save();
+        res
+        .status(200)
+        .json({ success: true, message: "User removed from shortlist", user });
+      } else {
+      console.log("inside the function")
+      const targetUser=await userModel.findById(targetId)
       user.shortlist.push(targetId);
+      const recipientEmail=targetUser.email
+      const recipientName =targetUser.name
+      const message=`Your profile has been shortlited by ${user.name}`
+      await sendEmailMessage(recipientEmail, recipientName, message);
       await user.save();
-      res.status(200).json({ success: true, message: "User added to shortlist", user });
+      res
+        .status(200)
+        .json({ success: true, message: "User added to shortlist", user });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
-
-const getShortlistProfiles=async(req,res)=>{
-  const userId= req.params.userId
+const getShortlistProfiles = async (req, res) => {
+  const userId = req.params.userId;
   try {
-    const user= await userModel.findById(userId).populate("shortlist").select("-password")
- 
-    res.status(200).json({success:true,user})
+    const user = await userModel
+      .findById(userId)
+      .populate("shortlist")
+      .select("-password");
+
+    res.status(200).json({ success: true, user });
   } catch (error) {
-    
-    res.status(400).json({success:false,message:"Internal Server Error"})
+    res.status(400).json({ success: false, message: "Internal Server Error" });
   }
-}
+};
 
+const updateUserPassword = async (req, res) => {
+  try {
+    const { userId, currentPassword, newPassword, confirmPassword } = req.body;
 
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!passwordMatch) {
+      return res.status(400).json({ message: "Incorrect current password" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ success: true, user, message: "Password changed successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export {
   login,
@@ -670,5 +820,7 @@ export {
   googleAuthLogin,
   showRecommendation,
   addToShortList,
-  getShortlistProfiles
+  getShortlistProfiles,
+  cancelReceivedInterest,
+  updateUserPassword,
 };

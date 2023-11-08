@@ -7,8 +7,7 @@ import userRoute from './routes/userRoute.js';
 import adminRouter from './routes/adminRoute.js';
 import session from 'express-session';
 import crypto from "crypto"
-
-
+import errorMiddleware from './middlewares/errorMiddleware.js';
 
 dotenv.config();
 
@@ -43,11 +42,14 @@ app.use((req, res, next) => {
    next();
   });
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/users', userRoute);
 app.use('/api/users/admin', adminRouter);
+app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
   res.send('Server is ready');
