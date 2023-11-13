@@ -21,6 +21,8 @@ const adminauthSlice = createSlice({
   },
 });
 
+
+
 export const { setCredentialsAdmin, logoutAdmin } = adminauthSlice.actions;
 
 export default adminauthSlice.reducer;

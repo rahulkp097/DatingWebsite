@@ -27,8 +27,21 @@ const userSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subscription",
     },
-    status:Boolean, 
-    expirationDate: Date, // Date when the subscription expires
+    planName: String,
+    status: Boolean,
+    expirationDate: Date,
+    startDate: Date, 
+  },
+  
+
+
+  interestCount: {
+    type: Number,
+    default: 0,
+  },
+  shortlistCount: {
+    type: Number,
+    default: 0,
   },
 
   shortlist: [

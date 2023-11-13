@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setCredentials } from "../../slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineArrowDown } from 'react-icons/ai';
+import { AiOutlineArrowUp } from 'react-icons/ai';
 
 import CaroselComponent from "./CaroselComponent";
 import Loader from "./Loader";
@@ -21,7 +23,10 @@ const UserHomeProfileCards = () => {
   const [getUserListApi] = useGetHomeMutation();
   const [sendInterestApi,{isLoading}] = useSendInterestRequestMutation();
   const [cancelInterestApi] = useCancelInterestRequestMutation();
-
+  const [userSubscriptionsPlan,setUserSubscripctionsPlan]=useState()
+  const [allSubScriptionPlans,setAllSubScriptionPlans]=useState()
+  
+  
   const isMatchingCity = users.filter(
     (profile) => profile.city === userInfo?.city
   );
@@ -29,6 +34,16 @@ const UserHomeProfileCards = () => {
   const isMatchingQualification=users.filter(
     (profile) => profile.education === userInfo?.education
   );
+
+
+  const isMatchingOccupassion=users.filter(
+    (profile) => profile.occupation === userInfo?.occupation
+  );
+console.log("hfds",userInfo)
+
+  const isMatchingHobbies = users.filter((profile) =>
+  profile.hobbies.some((hobby) => userInfo?.hobbies.includes(hobby))
+);
 
 
   
@@ -44,13 +59,18 @@ const UserHomeProfileCards = () => {
      
       const res = await getUserListApi(Id).unwrap();
 
-      if (res.success) {
+      if (res.success) {  
+        
+      
+       setUserSubscripctionsPlan(res.currentUser?.subscription?.plan)
+       setAllSubScriptionPlans(res.subscriptionPlans)
         setUsers(res.sortedUsers);
+       
       }
     } catch (error) {
       if (error.data.user) {
-        dispatch(setCredentials(error.data.user));
-        toast.warning(error.data.message);
+        dispatch(setCredentials(error?.data?.user));
+        toast.warning(error?.data.message);
         return navigate("/login");
       }
       console.log(error);
@@ -66,7 +86,7 @@ const UserHomeProfileCards = () => {
     try {
       if (isRequestSent(targetId)) {
         const res = await cancelInterestApi({ targetId, userId }).unwrap();
-
+      
         if (res.success) {
           toast.success(res.message);
           dispatch(setCredentials({ ...res.user }));
@@ -79,7 +99,7 @@ const UserHomeProfileCards = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.data.message)
     }
   };
 
@@ -95,10 +115,10 @@ const UserHomeProfileCards = () => {
     <div className="min-h-screen">
        
 
-
-       <div className="max-w-lg mx-auto m-6" style={{ position: "sticky", top: 0, zIndex: 999, backgroundColor: "white" }}>
+     
+       <div className="max-w-lg mx-auto m-6" style={{ position: "sticky", top: 0, zIndex: 999, }}>
   <div className="relative">
-    <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+    <span className="absolute inset-y-0 left-0 pl-3 flex items-center ">
       <svg
         className="h-5 w-5 text-gray-500"
         viewBox="0 0 24 24"
@@ -114,7 +134,7 @@ const UserHomeProfileCards = () => {
       </svg>
     </span>
     <input
-      className="w-full border rounded-md pl-10 pr-4 py-2 focus:border-blue-500 focus:outline-none focus:shadow-outline"
+      className="w-full bg-slate-200 border rounded-md pl-10 pr-4 py-2 focus:border-black focus:outline-none focus:shadow-outline"
       type="text"
       placeholder="Search users..."
       value={searchQuery}
@@ -123,37 +143,81 @@ const UserHomeProfileCards = () => {
   </div>
 </div>
 
-<details className="collapse ">
-  <summary className="collapse-title text-xl font-medium">
-  <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
-            People in Your city
-          </h1>
-    </summary>
-  <div className="collapse-content"> 
-   
-<CaroselComponent data={isMatchingCity} />
-
-
-
-
-  </div>
-</details>
-    
 
 
 
 
 
+{userInfo?.subscription?.status && userSubscriptionsPlan?.recommendations?.basedOnLocation && isMatchingCity.length > 0 ? (
+  <>
+    <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+      People in your city
+    </h1>
+    <CaroselComponent data={isMatchingCity} />
+  </>
+) : null}
 
 
 
-      <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 md:grid-cols-9 lg:grid-cols-12">
+
+
+{
+  userSubscriptionsPlan?.recommendations?.basedOnJob &&
+  isMatchingOccupassion.length > 0 ? (
+    <>
+      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+        People With your same Job
+      </h1>
+      <CaroselComponent data={isMatchingOccupassion} />
+    </>
+  ) : null
+}
+
+
+
+{
+  userSubscriptionsPlan?.recommendations?.basedOnHobbies &&
+  isMatchingHobbies.length > 0 ? (
+    <>
+      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+        People With your same Hobbies
+      </h1>
+      <CaroselComponent data={isMatchingHobbies} />
+    </>
+  ) : null
+}
+
+
+
+{
+  userSubscriptionsPlan?.recommendations?.basedOnQualifications &&
+  isMatchingQualification.length > 0 ? (
+    <>
+      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+        People With your same Qualification
+      </h1>
+      <CaroselComponent data={isMatchingQualification} />
+    </>
+  ) : null
+}
+
+
+
+
+
+
+
+
+
+
+
+      <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 md:grid-cols-9 lg:grid-cols-12 ">
         <button
           className={`${
             selectedGender === "All"
               ? "bg-blue-600 text-white"
               : "bg-gray-300 text-gray-800"
-          } px-4 py-2 rounded-md hover:bg-info hover:text-white transition duration-300 ease-in-out transform hover:scale-105`}
+          } px-4 py-2 rounded-md   transition duration-300 ease-in-out transform hover:scale-105`}
           onClick={() => setSelectedGender("All")}
         >
           All
@@ -163,7 +227,7 @@ const UserHomeProfileCards = () => {
             selectedGender === "Male"
               ? "bg-blue-600 text-white"
               : "bg-gray-300 text-gray-800"
-          } px-4 py-2 rounded-md hover:bg-info hover:text-white transition duration-300 ease-in-out transform hover:scale-105`}
+          } px-4 py-2 rounded-md   transition duration-300 ease-in-out transform hover:scale-105`}
           onClick={() => setSelectedGender("Male")}
         >
           Male
@@ -173,7 +237,7 @@ const UserHomeProfileCards = () => {
             selectedGender === "Female"
               ? "bg-blue-600 text-white"
               : "bg-gray-300 text-gray-800"
-          } px-4 py-2 rounded-md hover:bg-info hover:text-white transition duration-300 ease-in-out transform hover:scale-105`}
+          } px-4 py-2 rounded-md  transition duration-300 ease-in-out transform hover:scale-105`}
           onClick={() => setSelectedGender("Female")}
         >
           Female
@@ -184,9 +248,10 @@ const UserHomeProfileCards = () => {
         {filteredUsers?.map((profile, index) => (
           <div
             key={index}
-            className="relative flex flex-col rounded-xl bg-white text-gray-700 shadow-md"
+            className="relative flex flex-col rounded-xl bg- text-gray-700 shadow-md"
           >
             <div className="relative h-80 overflow-hidden rounded-t-xl bg-white">
+              
               <Link to={`/userprofile/${profile._id}`}>
                 <img
                   src={

@@ -93,7 +93,6 @@ function ProfileCard() {
         confirmPassword,
       }).unwrap();
 
-      console.log("user", res);
       if (res.success) {
         toast.success("Password updated successfully");
         dispatch(setCredentials(res.user));
@@ -128,7 +127,7 @@ function ProfileCard() {
       }).unwrap();
 
       if (res.success) {
-        console.log("Profile updated successfully");
+       
         dispatch(setCredentials(res.user));
         toast.success("Profile updated successfully");
         setName("");
@@ -204,20 +203,20 @@ function ProfileCard() {
                   onClick={() =>
                     document.getElementById("my_modal_1").showModal()
                   }
-                  className="bg-info text-black px-4 py-2 rounded mt-2"
+                  className="btn btn-info text-black px-4 py-2 rounded mt-2"
                 >
                   Change Image
                 </button>
               </div>
             </div>
 
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box">
+            <dialog id="my_modal_1" className="modal ">
+              <div className="modal-box bg-zinc-300">
                 <h3 className="font-bold text-lg">Select Photo</h3>
 
                 <div className="modal-action">
                   <form method="dialog">
-                    <div className="flex flex-col justify-center items-center pt-10">
+                    <div className="flex flex-col justify-center items-center pt-10 ">
                       <div className="w-full max-w-lg mx-auto bg-blue shadow-md rounded p-4 mt-4">
                         <div className="flex items-center justify-center">
                           {uploadedImageURL && (
@@ -254,42 +253,42 @@ function ProfileCard() {
 
             <div className="md:w-1/2">
               <div className="about-text">
-                <h3 className="text-primary  text-2xl font-bold">
+                <h3 className="text-accent-content text-2xl font-bold">
                   {userInfo?.name}
                 </h3>
 
-                <p className="">{userInfo?.bio}</p>
+                <p className="text-info-content ">{userInfo?.bio}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   <div className="media">
-                    <label className="text-info ">Occupation</label>
+                    <label className="text-info  text-xl">Occupation</label>
                     <p>{userInfo?.occupation}</p>
                   </div>
 
                   <div className="media">
-                    <label className="text-info ">Age</label>
-                    <p>{userInfo?.age} Yr</p>
+                    <label className="text-info text-xl">Age</label>
+                    <p>{userInfo?.age} </p>
                   </div>
                   <div className="media">
-                    <label className="text-info ">Gender</label>
+                    <label className="text-info text-xl">Gender</label>
                     <p>{userInfo?.gender}</p>
                   </div>
                   <div className="media">
-                    <label className="text-info ">location</label>
+                    <label className="text-info text-xl">location</label>
                     <p>{userInfo?.city}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   <div className="media">
-                    <label className="text-info ">Qualification</label>
+                    <label className="text-info text-xl ">Qualification</label>
                     <p>{userInfo?.education}</p>
                   </div>
                   <div className="media">
-  <label className="text-info">Hobbies</label>
+  <label className="text-info text-xl">Hobbies</label>
   <p>{userInfo?.hobbies && userInfo?.hobbies.join(', ')}</p>
 </div>
 
                   <div className="media">
-                    <label className="text-info ">E-mail</label>
+                    <label className="text-info text-xl ">E-mail</label>
                     <p>{userInfo?.email}</p>
                   </div>
                 </div>
@@ -303,16 +302,17 @@ function ProfileCard() {
       </section>
 
 
+                              
 
 
   
 
-      <div className="grid grid-cols-2 gap-4">
+     
 
-      <div className="collapse ">
+      <div className="collapse w-1/2 bg-slate-400 m-6">
   <input type="checkbox" /> 
   <div className="collapse-title justify-center text-xl font-medium">
-  <h1 className="text-2xl font-semibold  text-center ">
+  <h1 className=" font-semibold  text-center ">
     Edit profile
   </h1>
 </div>
@@ -439,10 +439,11 @@ function ProfileCard() {
   >
     Hobbies
   </label>
-  <div className="h-40 border rounded bg-gray-100 p-2 overflow-y-auto">
+  <div className="h-40 border   rounded bg-gray-100 p-2 overflow-y-auto">
     {HobbiesData.map((option, index) => (
       <div key={index} className="mb-2">
         <input
+        className="checkbox checkbox-success mr-2"
           type="checkbox"
           id={option}
           value={option}
@@ -572,7 +573,7 @@ function ProfileCard() {
                 <Loader />
               ) : (
                 <button
-                  className="w-full btn btn-active  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="w-full bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
                   Update Profile
@@ -584,10 +585,10 @@ function ProfileCard() {
 
   </div>
 </div>
-<div className="collapse ">
+<div className="collapse w-1/2 m-6  bg-slate-400">
   <input type="checkbox" /> 
   <div className="collapse-title justify-center text-xl font-medium">
-  <h1 className="text-2xl font-semibold  text-center ">
+  <h1 className="font-semibold  text-center ">
     Update Password
   </h1>
 </div>
@@ -649,7 +650,7 @@ function ProfileCard() {
                 <Loader />
               ) : (
                 <button
-                  className=" btn btn-active  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className=" bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
                   Update Password
@@ -662,7 +663,7 @@ function ProfileCard() {
 </div>
 
   
-      </div>
+      
     </div>
   );
 }

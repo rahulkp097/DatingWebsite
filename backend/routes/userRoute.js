@@ -23,6 +23,8 @@ import {
   getShortlistProfiles,
   cancelReceivedInterest,
   updateUserPassword,
+  getSubscripctions,
+  pucharsesubscripction,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/userAuth.js";
 import { ActiveUser } from "../middlewares/UserBlockMiddleware.js";
@@ -48,6 +50,9 @@ router.get("/userprofile", protect, getTargetUserProfile);
 router.post("/googlelogin", googleAuthLogin);
 router.post("/addshortlist", protect, addToShortList);
 router.get("/shortlist/:userId", protect, getShortlistProfiles);
+router.get("/subscriptions/:Id", protect, getSubscripctions);
 router.put("/updatepassword",protect,updateUserPassword)
+router.post("/pucharsesubscripction",protect,pucharsesubscripction)
+ 
 
 export default router;

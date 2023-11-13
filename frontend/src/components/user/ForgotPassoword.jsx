@@ -58,7 +58,7 @@ const ResetPasswordForm = () => {
                 />
               </svg>
 
-              <span>Reset password</span>
+              <span>{isLoading ? <Loader/> :"Register"}</span>
             </button>
             <p className="text-center text-black">
               Back to login?{" "}

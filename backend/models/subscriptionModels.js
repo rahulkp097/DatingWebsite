@@ -1,11 +1,27 @@
+import mongoose from "mongoose";
+
 const subscriptionSchema = mongoose.Schema({
-    name: String,
-    price: Number,
-    duration: Number, // Duration in months
-    features: [String], // List of features included in the plan
-  });
+  name: String,
+  price: Number,
+  duration: Number, 
+  features: [String], 
+  maxInterests: {
+    type: Number,
+    default: 10, 
+  },
+  maxShortlist: {
+    type: Number,
+    default: 5, 
+  },
+  recommendations: {
+    basedOnQualifications: Boolean,
+    basedOnLocation: Boolean,
+    basedOnJob: Boolean,
+    basedOnHobbies: Boolean,
+  },
   
-  const SubscriptionModel = mongoose.model("Subscription", subscriptionSchema);
-  
-  export default SubscriptionModel;
-  
+});
+
+const SubscriptionModel = mongoose.model("Subscription", subscriptionSchema);
+
+export default SubscriptionModel;

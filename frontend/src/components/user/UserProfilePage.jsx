@@ -55,12 +55,13 @@ const UserProfilePage = () => {
       const targetId = userData._id;
 
       const res = await userShortListApi({ userId, targetId }).unwrap();
+    
       if (res.success) {
         getUserProfileData();
         toast.success(res.message);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.data.message)
     }
   };
 
@@ -88,7 +89,7 @@ const UserProfilePage = () => {
         targetId,
         userId,
       }).unwrap();
-      console.log("response", res);
+     
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
         toast.success(res.message);
@@ -109,6 +110,7 @@ const UserProfilePage = () => {
     try {
       if (isRequestSent(targetId)) {
         const res = await cancelInterestApi({ targetId, userId }).unwrap();
+      
 
         if (res.success) {
           toast.success(res.message);
@@ -122,7 +124,7 @@ const UserProfilePage = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.data.message)
     }
   };
 
@@ -140,15 +142,15 @@ const UserProfilePage = () => {
                       "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
                     }
                     alt="user"
-                    className="rounded-circle p-1 bg-primary  h-56"
+                    className="rounded-full p-1 bg-slate-400   h-60"
                   />
-                  <div className="mt-3  ">
+                  <div className="mt-3   ">
                     <h4>{userData?.name}</h4>
 
                       {isLoadingShortlist?  <Loader/> :
                     <button
                     onClick={ShortlistSubmission}
-                      className="btn btn-primary"
+                      className="btn btn-neutral"
                       disabled={userInfo?.matches?.includes(userData?._id)}
                     >
                       {userInfo?.shortlist?.includes(userData?._id)
@@ -156,13 +158,13 @@ const UserProfilePage = () => {
                         : "Shortlist"}
                     </button>}
 
-                    <button className="btn btn-outline-primary">Message</button>
+                    <button className="btn btn-accent ml-2">Message</button>
                   </div>
                 </div>
                 <hr className="my-4" />
-                <div className="overflow-hidden shadow rounded-lg border">
+                <div className="overflow-hidden shadow  rounded-lg border">
                   <div className="px-4 py-5 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-slate-400">
+                    <h3 className="text-lg leading-6 font-medium text-slate-500">
                       Profile
                     </h3>
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">
@@ -172,27 +174,27 @@ const UserProfilePage = () => {
                   <div className="border-t  px-4 py-5 sm:p-0">
                     <dl className="sm:divide-y ">
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className=" font-medium text-info">Name</dt>
+                        <dt className=" font-medium text-cyan-900 text-lg">Name</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.name}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">Age</dt>
+                        <dt className=" text-cyan-900 text-lg">Age</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.age}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="text-cyan-900 text-lg">
                           Gender
                         </dt>
-                        <dd className="mt-1  sm:mt-0 sm:col-span-2">
+                        <dd className="mt-1  text-cyan-900 text-lg">
                           {userData?.gender}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="text-cyan-900 text-lg">
                           Education
                         </dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
@@ -200,7 +202,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="text-cyan-900 text-lg">
                           Occupation
                         </dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
@@ -208,7 +210,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="text-cyan-900 text-lg">
                           Hobbies
                         </dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
@@ -216,7 +218,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="ttext-cyan-900 text-lg">
                           Email address
                         </dt>
                         <dd className="mt-1sm:mt-0 sm:col-span-2">
@@ -224,7 +226,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">
+                        <dt className="text-cyan-900 text-lg">
                           Location
                         </dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
@@ -232,7 +234,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-info">bio</dt>
+                        <dt className="text-cyan-900 text-lg">bio</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.bio}
                         </dd>

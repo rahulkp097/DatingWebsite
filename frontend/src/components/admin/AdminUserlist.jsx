@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAdminFetchDataMutation,
   useAdminUserActionMutation,
+  useGetUserActivityMutation,
 } from "../../slices/adminApiSlice";
 import Loader from "../user/Loader";
 import { toast } from "react-toastify";
@@ -12,7 +13,8 @@ function AdminUserlist() {
   const [filter, setFilter] = useState("All"); // Default to 'All'
   const [adminFetchData, { isLoading }] = useAdminFetchDataMutation();
   const [userAction] = useAdminUserActionMutation();
-
+ const [getUserActivityApi,{isLoading:isLoadingActivity}]=useGetUserActivityMutation()
+ const [userActivities,setUserActivities]=useState()
   const userToggle = async (userId) => {
     try {
       const res = await userAction({ userId }).unwrap();
@@ -56,6 +58,23 @@ function AdminUserlist() {
     return userString.includes(searchQuery.toLowerCase());
   });
 
+
+  const viewUserActivity = async (userId) => {
+    try {
+     
+      const res = await getUserActivityApi(userId).unwrap();
+  
+      if(res.success){
+        setUserActivities(res.userActivity)
+      }
+      
+      document.getElementById('my_modal_5').showModal();
+    } catch (error) {
+      console.error("Error viewing user activity:", error);
+    }
+  };
+  
+
   return (
     <>
       <div className="container mx-auto px-4 sm:px-8">
@@ -64,7 +83,7 @@ function AdminUserlist() {
             <div className="flex flex-row mb-1 sm:mb-0">
               <div className="relative">
                 <select
-                  className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  className="inline-flex items-center  text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
                 >
@@ -84,7 +103,7 @@ function AdminUserlist() {
               </div> */}
             </div>
             <div className="max-w-md mx-auto">
-              <div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
+              <div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-slate-900 overflow-hidden">
                 <div className="grid place-items-center h-full w-12 text-gray-300">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +121,7 @@ function AdminUserlist() {
                   </svg>
                 </div>
                 <input
-                  className="peer h-full w-full outline-none bg-white text-sm text-black pr-2"
+                  className="peer h-full w-full outline-none bg-slate-700 text-sm text-white pr-2"
                   type="text"
                   id="search"
                   placeholder="Search something.."
@@ -112,7 +131,7 @@ function AdminUserlist() {
               </div>
             </div>
           </div>
-          <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+          <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 bg py-4 overflow-x-auto">
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
               <table className="min-w-full leading-normal">
                 <thead>
@@ -129,15 +148,16 @@ function AdminUserlist() {
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Location
                     </th>
-                    {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Created at
-                    </th> */}
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                     Activities
+                    </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody>
+                 
                   {filteredUserData.map((user, index) => (
                     <tr key={user._id}>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-black">
@@ -148,7 +168,7 @@ function AdminUserlist() {
                           <div className="flex-shrink-0 w-10 h-10">
                             <img
                               className="w-full h-full rounded-full"
-                              src={user.image}
+                              src={user.image ||"https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"}
                               alt="Avatar Tailwind CSS Component"
                             />
                           </div>
@@ -169,29 +189,64 @@ function AdminUserlist() {
                           {user.city}
                         </p>
                       </td>
-                      {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          {user.createdAt}
-                        </p>
-                      </td> */}
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                          <span
-                            aria-hidden
-                            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                          ></span>
-                          <span
-                            onClick={() => userToggle(user._id)}
-                            className="relative cursor-pointer"
-                          >
-                            {user.isActive ? "Active" : "Inactive"}
-                          </span>
-                        </span>
-                      </td>
+                      <button className="btn" onClick={() => viewUserActivity(user._id)}>View</button> </td>
+
+                      
+               
+
+
+      
+                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+  <span className="relative inline-block px-3 py-1 font-semibold leading-tight">
+    <span
+      aria-hidden
+      className={`absolute inset-0 ${
+        user.isActive ? "bg-green-200" : "bg-red-200"
+      } opacity-50 rounded-full`}
+    ></span>
+    <span
+      onClick={() => userToggle(user._id)}
+      className={`relative cursor-pointer ${
+        user.isActive ? "text-green-900" : "text-red-900"
+      }`}
+    >
+      {user.isActive ? "Active" : "Inactive"}
+    </span>
+  </span>
+</td>
+
                     </tr>
                   ))}
                 </tbody>
               </table>
+
+
+              <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+  <div className="modal-box h-80 overflow-y-auto">
+    <h3 className="font-bold text-lg">User Activities</h3>
+    <div className="py-4">
+  {userActivities?.length > 0 ? (
+    userActivities?.map((activity, index) => (
+      <div key={index} className="mb-2">
+        <p className="font-bold">Activity: {activity.activityType}</p>
+        <p>{activity.activity}</p>
+        <p className="text-gray-500">Time: {new Date(activity.timestamp).toLocaleString()}</p>
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-500">No activities found.</p>
+  )}
+</div>
+
+    <div className="modal-action">
+      <form method="dialog">
+        
+        <button className="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
               {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                 <span className="text-xs xs:text-sm text-gray-900">
                   Showing {filteredUserData.length} Entries
@@ -208,6 +263,8 @@ function AdminUserlist() {
             </div>
           </div>
         </div>
+  
+
       </div>
     </>
   );

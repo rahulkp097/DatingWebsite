@@ -246,6 +246,24 @@ export const usersApiSlice=apiSlice.injectEndpoints({
           }),
 
 
+          GetSubscripctionData:builder.mutation({
+            query:(userId)=>({
+              url:`${USERS_URL}/subscriptions/${userId}`,
+              method:"get",
+              credentials: 'include',
+            })
+          }),
+
+
+          Pucharsesubscripction: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/pucharsesubscripction`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
     })
 })
 
@@ -273,5 +291,8 @@ export const {
     useGoogleAuthLoginMutation,
     useAddToShortListMutation,
     useGetShortListProfilesMutation,
-    useUpdateUserPasswordMutation
+    useUpdateUserPasswordMutation,
+    useGetSubscripctionDataMutation,
+    usePucharsesubscripctionMutation
+    
 }=usersApiSlice

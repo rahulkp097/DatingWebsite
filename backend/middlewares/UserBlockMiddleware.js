@@ -1,13 +1,14 @@
 import userModel from '../models/userModels.js';
-
+import jwt from 'jsonwebtoken'
 
 
 
 const ActiveUser = async (req, res, next) => {
-  const userId = req.session.userId;
+  let token=await req.cookies.userJwt
 
   try {
-    const user = await userModel.findById(userId).select("-password");
+    const decoded=jwt.verify(token,process.env.JWT_SECRET);
+     const user=await userModel.findById(decoded.userId).select('-password')
 
     if (user.isActive) {
       

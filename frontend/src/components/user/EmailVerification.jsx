@@ -20,11 +20,11 @@ function EmailVerification() {
 
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
+
   const otpSubmit = async (e) => {
     e.preventDefault();
     const enteredOTP = otp.join("");
 
-    console.log("Entered OTP:", enteredOTP);
 
     try {
       const response = await verifyOTP({
@@ -85,7 +85,7 @@ function EmailVerification() {
                     <div className="w-16 h-16" key={index}>
                       <input
                         ref={inputRefs[index]}
-                        className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-black focus:bg-gray-500 focus:ring-1 ring-blue-700"
+                        className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-slate-500 focus:bg-gray-500 focus:ring-1 ring-blue-700"
                         type="text"
                         name={`otp-${index}`}
                         value={digit}

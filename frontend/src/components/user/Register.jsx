@@ -27,10 +27,10 @@ function Register() {
       navigate("/");
     }
   }, [navigate, userInfo]);
-
+  
+  
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("password length", password.length);
 
     const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
@@ -47,12 +47,12 @@ function Register() {
     } else {
       try {
         const res = await EmailVerification({ email, name });
-        console.log("response from server", res);
+        const encodedPassword = encodeURIComponent(password)
 
         if (res.data.success) {
           toast.success(`OTP has been sent to ${email}`);
           navigate(
-            `/otp?name=${name}&email=${email}&password=${password}&gender=${gender}`
+            `/otp?name=${name}&email=${email}&password=${encodedPassword}&gender=${gender}`
           );
         } else {
           return toast.error("The user already exists");
@@ -185,12 +185,13 @@ function Register() {
           </div>
 
           <div className="flex items-center mt-4">
-            {isLoading && <Loader />}
+          
             <button
               type="submit"
               className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600"
             >
-              Register
+              {isLoading ? <Loader/> :"Register"}
+              
             </button>
           </div>
         </form>
