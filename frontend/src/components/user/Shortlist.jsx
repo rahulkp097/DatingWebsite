@@ -67,7 +67,6 @@ function Shortlist() {
                 </h1>
                 <h2 className="text-base font-semibold">{profile.age}</h2>
                 <h5 className="text-base font-semibold">{profile.city}</h5>
-                
               </div>
             </Link>
             <div className="p-4 pt-0 ">

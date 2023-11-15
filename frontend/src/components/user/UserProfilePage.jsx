@@ -24,9 +24,11 @@ const UserProfilePage = () => {
 
   const [userProfileDataApi] = useGetTargetUserProfileMutation();
 
-  const [userShortListApi, { isLoading: isLoadingShortlist }] = useAddToShortListMutation();
+  const [userShortListApi, { isLoading: isLoadingShortlist }] =
+    useAddToShortListMutation();
 
-  const [sendInterestApi,{ isLoading: isLoadingInterestsend}] = useSendInterestRequestMutation();
+  const [sendInterestApi, { isLoading: isLoadingInterestsend }] =
+    useSendInterestRequestMutation();
   const [cancelInterestApi] = useCancelInterestRequestMutation();
 
   const [cancelReceviedInterestAPi] =
@@ -55,13 +57,13 @@ const UserProfilePage = () => {
       const targetId = userData._id;
 
       const res = await userShortListApi({ userId, targetId }).unwrap();
-    
+
       if (res.success) {
         getUserProfileData();
         toast.success(res.message);
       }
     } catch (error) {
-      toast.error(error.data.message)
+      toast.error(error.data.message);
     }
   };
 
@@ -89,7 +91,7 @@ const UserProfilePage = () => {
         targetId,
         userId,
       }).unwrap();
-     
+
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
         toast.success(res.message);
@@ -110,7 +112,6 @@ const UserProfilePage = () => {
     try {
       if (isRequestSent(targetId)) {
         const res = await cancelInterestApi({ targetId, userId }).unwrap();
-      
 
         if (res.success) {
           toast.success(res.message);
@@ -124,7 +125,7 @@ const UserProfilePage = () => {
         }
       }
     } catch (error) {
-      toast.error(error.data.message)
+      toast.error(error.data.message);
     }
   };
 
@@ -147,16 +148,19 @@ const UserProfilePage = () => {
                   <div className="mt-3   ">
                     <h4>{userData?.name}</h4>
 
-                      {isLoadingShortlist?  <Loader/> :
-                    <button
-                    onClick={ShortlistSubmission}
-                      className="btn btn-neutral"
-                      disabled={userInfo?.matches?.includes(userData?._id)}
-                    >
-                      {userInfo?.shortlist?.includes(userData?._id)
-                        ? "Shortlisted"
-                        : "Shortlist"}
-                    </button>}
+                    {isLoadingShortlist ? (
+                      <Loader />
+                    ) : (
+                      <button
+                        onClick={ShortlistSubmission}
+                        className="btn btn-neutral"
+                        disabled={userInfo?.matches?.includes(userData?._id)}
+                      >
+                        {userInfo?.shortlist?.includes(userData?._id)
+                          ? "Shortlisted"
+                          : "Shortlist"}
+                      </button>
+                    )}
 
                     <button className="btn btn-accent ml-2">Message</button>
                   </div>
@@ -174,7 +178,9 @@ const UserProfilePage = () => {
                   <div className="border-t  px-4 py-5 sm:p-0">
                     <dl className="sm:divide-y ">
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className=" font-medium text-cyan-900 text-lg">Name</dt>
+                        <dt className=" font-medium text-cyan-900 text-lg">
+                          Name
+                        </dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.name}
                         </dd>
@@ -186,33 +192,25 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-cyan-900 text-lg">
-                          Gender
-                        </dt>
+                        <dt className="text-cyan-900 text-lg">Gender</dt>
                         <dd className="mt-1  text-cyan-900 text-lg">
                           {userData?.gender}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-cyan-900 text-lg">
-                          Education
-                        </dt>
+                        <dt className="text-cyan-900 text-lg">Education</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.education}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-cyan-900 text-lg">
-                          Occupation
-                        </dt>
+                        <dt className="text-cyan-900 text-lg">Occupation</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.occupation}
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-cyan-900 text-lg">
-                          Hobbies
-                        </dt>
+                        <dt className="text-cyan-900 text-lg">Hobbies</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.hobbies}
                         </dd>
@@ -226,9 +224,7 @@ const UserProfilePage = () => {
                         </dd>
                       </div>
                       <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-cyan-900 text-lg">
-                          Location
-                        </dt>
+                        <dt className="text-cyan-900 text-lg">Location</dt>
                         <dd className="mt-1  sm:mt-0 sm:col-span-2">
                           {userData?.city}
                         </dd>
@@ -244,16 +240,15 @@ const UserProfilePage = () => {
                       !userInfo?.interestSend?.includes(userData?._id) ? (
                         <div className="p-4 pt-0">
                           <button
-                          className="w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                          type="button"
-                          onClick={() => sendOrCancelRequest(userData?._id)}
+                            className="w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            type="button"
+                            onClick={() => sendOrCancelRequest(userData?._id)}
                           >
-                            {isLoadingInterestsend && <Loader/>}
+                            {isLoadingInterestsend && <Loader />}
                             {isRequestSent(userData?._id)
                               ? "Cancel Interest"
                               : "Send Interest"}
                           </button>
-                            
                         </div>
                       ) : null}
 
@@ -278,13 +273,11 @@ const UserProfilePage = () => {
 
                       {userInfo?.interestSend?.includes(userData?._id) ? (
                         <div className="p-4 pt-0">
-                          
                           <button
                             className="w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                             type="button"
                             onClick={() => sendOrCancelRequest(userData?._id)}
                           >
-                            
                             {isRequestSent(userData?._id)
                               ? "Cancel Interest"
                               : "Send Interest"}

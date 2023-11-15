@@ -20,11 +20,9 @@ function EmailVerification() {
 
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
-
   const otpSubmit = async (e) => {
     e.preventDefault();
     const enteredOTP = otp.join("");
-
 
     try {
       const response = await verifyOTP({

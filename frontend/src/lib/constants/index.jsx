@@ -31,7 +31,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
 	},
 	{
 		key: 'transactions',
-		label: 'token',
+		label: 'Reports',
 		path: '/admin/token',
 		icon: <HiOutlineDocumentText />
 	},

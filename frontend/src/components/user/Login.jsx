@@ -17,7 +17,8 @@ function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [googleLoginApi,{isLoading:isLoadingGoogleAuth}] = useGoogleAuthLoginMutation();
+  const [googleLoginApi, { isLoading: isLoadingGoogleAuth }] =
+    useGoogleAuthLoginMutation();
   const [login, { isLoading }] = useLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -128,18 +129,18 @@ function Login() {
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
-             {isLoading ? <Loader /> : 'Login' }
+            {isLoading ? <Loader /> : "Login"}
           </button>
         </form>
-        {isLoadingGoogleAuth? <Loader/> :
-        
-        <div className="mt-6 text-blue-500 text-center flex justify-center items-center ">
-          <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
-        </div>
-        }
+        {isLoadingGoogleAuth ? (
+          <Loader />
+        ) : (
+          <div className="mt-6 text-blue-500 text-center flex justify-center items-center ">
+            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+          </div>
+        )}
         {/* Sign up Link */}
 
-        
         <div className="mt-6 text-blue-500 text-center">
           <Link to="/register" className="hover:underline">
             Sign up Here

@@ -27,8 +27,7 @@ function Register() {
       navigate("/");
     }
   }, [navigate, userInfo]);
-  
-  
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -47,7 +46,7 @@ function Register() {
     } else {
       try {
         const res = await EmailVerification({ email, name });
-        const encodedPassword = encodeURIComponent(password)
+        const encodedPassword = encodeURIComponent(password);
 
         if (res.data.success) {
           toast.success(`OTP has been sent to ${email}`);
@@ -185,13 +184,11 @@ function Register() {
           </div>
 
           <div className="flex items-center mt-4">
-          
             <button
               type="submit"
               className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600"
             >
-              {isLoading ? <Loader/> :"Register"}
-              
+              {isLoading ? <Loader /> : "Register"}
             </button>
           </div>
         </form>

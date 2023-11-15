@@ -42,7 +42,7 @@ function Interest() {
       const userId = userInfo._id;
 
       const res = await acceptInterestApi({ targetId, userId }).unwrap();
-      
+
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
         toast.success(res.message);
@@ -61,7 +61,7 @@ function Interest() {
         targetId,
         userId,
       }).unwrap();
-      
+
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
         toast.success(res.message);
@@ -77,7 +77,7 @@ function Interest() {
       const userId = userInfo?._id;
 
       const res = await cancelInterestApi({ targetId, userId }).unwrap();
-  
+
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
         toast.success(res.message);

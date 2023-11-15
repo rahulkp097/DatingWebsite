@@ -13,8 +13,9 @@ function AdminUserlist() {
   const [filter, setFilter] = useState("All"); // Default to 'All'
   const [adminFetchData, { isLoading }] = useAdminFetchDataMutation();
   const [userAction] = useAdminUserActionMutation();
- const [getUserActivityApi,{isLoading:isLoadingActivity}]=useGetUserActivityMutation()
- const [userActivities,setUserActivities]=useState()
+  const [getUserActivityApi, { isLoading: isLoadingActivity }] =
+    useGetUserActivityMutation();
+  const [userActivities, setUserActivities] = useState();
   const userToggle = async (userId) => {
     try {
       const res = await userAction({ userId }).unwrap();
@@ -58,22 +59,19 @@ function AdminUserlist() {
     return userString.includes(searchQuery.toLowerCase());
   });
 
-
   const viewUserActivity = async (userId) => {
     try {
-     
       const res = await getUserActivityApi(userId).unwrap();
-  
-      if(res.success){
-        setUserActivities(res.userActivity)
+
+      if (res.success) {
+        setUserActivities(res.userActivity);
       }
-      
-      document.getElementById('my_modal_5').showModal();
+
+      document.getElementById("my_modal_5").showModal();
     } catch (error) {
       console.error("Error viewing user activity:", error);
     }
   };
-  
 
   return (
     <>
@@ -149,7 +147,7 @@ function AdminUserlist() {
                       Location
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                     Activities
+                      Activities
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Action
@@ -157,7 +155,6 @@ function AdminUserlist() {
                   </tr>
                 </thead>
                 <tbody>
-                 
                   {filteredUserData.map((user, index) => (
                     <tr key={user._id}>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-black">
@@ -168,7 +165,10 @@ function AdminUserlist() {
                           <div className="flex-shrink-0 w-10 h-10">
                             <img
                               className="w-full h-full rounded-full"
-                              src={user.image ||"https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"}
+                              src={
+                                user.image ||
+                                "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                              }
                               alt="Avatar Tailwind CSS Component"
                             />
                           </div>
@@ -190,63 +190,69 @@ function AdminUserlist() {
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <button className="btn" onClick={() => viewUserActivity(user._id)}>View</button> </td>
+                        <button
+                          className="btn"
+                          onClick={() => viewUserActivity(user._id)}
+                        >
+                          View
+                        </button>{" "}
+                      </td>
 
-                      
-               
-
-
-      
-                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-  <span className="relative inline-block px-3 py-1 font-semibold leading-tight">
-    <span
-      aria-hidden
-      className={`absolute inset-0 ${
-        user.isActive ? "bg-green-200" : "bg-red-200"
-      } opacity-50 rounded-full`}
-    ></span>
-    <span
-      onClick={() => userToggle(user._id)}
-      className={`relative cursor-pointer ${
-        user.isActive ? "text-green-900" : "text-red-900"
-      }`}
-    >
-      {user.isActive ? "Active" : "Inactive"}
-    </span>
-  </span>
-</td>
-
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <span className="relative inline-block px-3 py-1 font-semibold leading-tight">
+                          <span
+                            aria-hidden
+                            className={`absolute inset-0 ${
+                              user.isActive ? "bg-green-200" : "bg-red-200"
+                            } opacity-50 rounded-full`}
+                          ></span>
+                          <span
+                            onClick={() => userToggle(user._id)}
+                            className={`relative cursor-pointer ${
+                              user.isActive ? "text-green-900" : "text-red-900"
+                            }`}
+                          >
+                            {user.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
 
+              <dialog
+                id="my_modal_5"
+                className="modal modal-bottom sm:modal-middle"
+              >
+                <div className="modal-box h-80 overflow-y-auto">
+                  <h3 className="font-bold text-lg">User Activities</h3>
+                  <div className="py-4">
+                    {userActivities?.length > 0 ? (
+                      userActivities?.map((activity, index) => (
+                        <div key={index} className="mb-2">
+                          <p className="font-bold">
+                            Activity: {activity.activityType}
+                          </p>
+                          <p>{activity.activity}</p>
+                          <p className="text-gray-500">
+                            Time:{" "}
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">No activities found.</p>
+                    )}
+                  </div>
 
-              <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-  <div className="modal-box h-80 overflow-y-auto">
-    <h3 className="font-bold text-lg">User Activities</h3>
-    <div className="py-4">
-  {userActivities?.length > 0 ? (
-    userActivities?.map((activity, index) => (
-      <div key={index} className="mb-2">
-        <p className="font-bold">Activity: {activity.activityType}</p>
-        <p>{activity.activity}</p>
-        <p className="text-gray-500">Time: {new Date(activity.timestamp).toLocaleString()}</p>
-      </div>
-    ))
-  ) : (
-    <p className="text-gray-500">No activities found.</p>
-  )}
-</div>
-
-    <div className="modal-action">
-      <form method="dialog">
-        
-        <button className="btn">Close</button>
-      </form>
-    </div>
-  </div>
-</dialog>
+                  <div className="modal-action">
+                    <form method="dialog">
+                      <button className="btn">Close</button>
+                    </form>
+                  </div>
+                </div>
+              </dialog>
               {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                 <span className="text-xs xs:text-sm text-gray-900">
                   Showing {filteredUserData.length} Entries
@@ -263,8 +269,6 @@ function AdminUserlist() {
             </div>
           </div>
         </div>
-  
-
       </div>
     </>
   );

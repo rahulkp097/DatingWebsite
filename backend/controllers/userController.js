@@ -8,12 +8,7 @@ import SubscriptionModel from "../models/subscriptionModels.js";
 import UserActivityModel from "../models/userActivityModels.js";
 dotenv.config();
 
-
-
 let storedOTP;
-
-
-
 
 // function to send Email to user
 
@@ -43,11 +38,10 @@ const sendEmailMessage = async (recipientEmail, recipientName, message) => {
   }
 };
 
-
-
 // Function to generate a random password
 function generateRandomPassword(length) {
-  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let password = "";
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
@@ -59,7 +53,6 @@ function generateRandomPassword(length) {
 // Function to Log user activity function
 const logUserActivity = async (userId, activityType) => {
   try {
-    
     const userActivity = new UserActivityModel({
       userId,
       activityType,
@@ -67,13 +60,8 @@ const logUserActivity = async (userId, activityType) => {
     await userActivity.save();
   } catch (error) {
     console.error("Error logging user activity:", error);
-    
   }
 };
-
-
-
-
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -88,12 +76,12 @@ const login = async (req, res) => {
           message: "Your account has been blocked by admin",
         });
       }
-        
+
       const isPasswordMatch = await bcrypt.compare(password, user.password);
 
       if (isPasswordMatch) {
-        await logUserActivity(user._id, 'Login');
-         generateToken(res, user._id);
+        await logUserActivity(user._id, "Login");
+        generateToken(res, user._id);
 
         req.session.userLogin = true;
         req.session.userId = user._id;
@@ -170,7 +158,6 @@ const verifyOTP = (req, res) => {
   const { name, email, password, enteredOTP, gender } = req.body;
 
   if (storedOTP === enteredOTP) {
-    
     bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
         return res
@@ -215,7 +202,7 @@ const uploadPhoto = async (req, res) => {
     user.image = imageUrl;
 
     await user.save();
-    await logUserActivity(userId, 'Profile Photo updated');
+    await logUserActivity(userId, "Profile Photo updated");
 
     return res.status(200).json({
       user,
@@ -234,7 +221,7 @@ const updateProfile = async (req, res) => {
     bio,
     selectedHobbies,
     selectedOccupation,
-   selectedQualification,
+    selectedQualification,
     userInfo,
     selectedCountry,
     selectedState,
@@ -286,7 +273,7 @@ const updateProfile = async (req, res) => {
     }
 
     await user.save();
-    await logUserActivity(user._id, 'Profile updated');
+    await logUserActivity(user._id, "Profile updated");
     return res.status(200).json({
       user: user,
       success: true,
@@ -312,11 +299,11 @@ const getUserProfile = (req, res) => {
   }
 };
 
-const userLogout =  (req, res) => {
+const userLogout = (req, res) => {
   req.session.destroy();
 
   res.clearCookie("userJwt");
- 
+
   res.status(200).json({ success: true, mesasge: "logout sucessfully" });
 };
 
@@ -380,7 +367,7 @@ const confirmPassword = async (req, res) => {
       );
 
       if (user) {
-        await logUserActivity(user._id, 'Changed Password');
+        await logUserActivity(user._id, "Changed Password");
         res.status(200).json({
           success: true,
           message:
@@ -406,10 +393,12 @@ const getHome = async (req, res) => {
 
   if (userId) {
     try {
-      const allUsers = await userModel.find({ isActive: true })
-      const subscriptionPlans=await SubscriptionModel.find()
-      const currentUser = await userModel.findById(userId).populate('subscription.plan');
-      
+      const allUsers = await userModel.find({ isActive: true });
+      const subscriptionPlans = await SubscriptionModel.find();
+      const currentUser = await userModel
+        .findById(userId)
+        .populate("subscription.plan");
+
       const sortedUsers = allUsers.filter(
         (user) =>
           user._id != userId &&
@@ -417,7 +406,9 @@ const getHome = async (req, res) => {
           !currentUser.matches.includes(user._id)
       );
 
-      res.status(200).json({ success: true,currentUser, sortedUsers,subscriptionPlans });
+      res
+        .status(200)
+        .json({ success: true, currentUser, sortedUsers, subscriptionPlans });
     } catch (error) {
       res.status(500).json({ mesasge: "An error occurred: " + error.message });
     }
@@ -432,7 +423,7 @@ const sendinterest = async (req, res) => {
 
   try {
     const sendUser = await userModel.findById(userId).select("-password");
-      
+
     if (!sendUser.subscription || !sendUser.subscription.status) {
       return res.status(400).json({
         success: false,
@@ -440,15 +431,17 @@ const sendinterest = async (req, res) => {
       });
     }
 
-
-    const currentPlan=await SubscriptionModel.findById(sendUser.subscription.plan)
+    const currentPlan = await SubscriptionModel.findById(
+      sendUser.subscription.plan
+    );
     const maxAllowedInterests = currentPlan.maxInterests; // Adjust the field based on your subscription plan
     const currentInterestCount = sendUser.interestCount;
-    
+
     if (maxAllowedInterests && currentInterestCount >= maxAllowedInterests) {
       return res.status(400).json({
         success: false,
-        message: "You have reached the maximum allowed interests for your subscription plan.",
+        message:
+          "You have reached the maximum allowed interests for your subscription plan.",
       });
     }
     sendUser.interestSend.push(targetId);
@@ -458,14 +451,14 @@ const sendinterest = async (req, res) => {
     const targetUser = await userModel.findById(targetId);
 
     targetUser.interestReceived.push(userId);
-  
-    const recipientEmail=targetUser.email
-    const recipientName =targetUser.name
-    const message=`${sendUser.name} is interested on you Profile`
+
+    const recipientEmail = targetUser.email;
+    const recipientName = targetUser.name;
+    const message = `${sendUser.name} is interested on you Profile`;
     await sendEmailMessage(recipientEmail, recipientName, message);
 
     await targetUser.save();
-    await logUserActivity(userId, 'sent interest');
+    await logUserActivity(userId, "sent interest");
     return res.status(200).json({
       user: sendUser,
       success: true,
@@ -533,12 +526,11 @@ const cancelReceivedInterest = async (req, res) => {
       (e) => e.toString() !== userId.toString()
     );
 
-    const recipientEmail=targetUser.email
-    const recipientName =targetUser.name
-    const message=`${user.name} has declined your Interest`
+    const recipientEmail = targetUser.email;
+    const recipientName = targetUser.name;
+    const message = `${user.name} has declined your Interest`;
     await sendEmailMessage(recipientEmail, recipientName, message);
     await targetUser.save();
-
 
     return res.status(200).json({
       user,
@@ -614,12 +606,12 @@ const acceptInterest = async (req, res) => {
       (id) => id.toString() !== userId
     );
 
-    const recipientEmail=targetUser.email
-    const recipientName =targetUser.name
-    const message=`${user.name} has accepted your interest` 
+    const recipientEmail = targetUser.email;
+    const recipientName = targetUser.name;
+    const message = `${user.name} has accepted your interest`;
     await sendEmailMessage(recipientEmail, recipientName, message);
     await targetUser.save();
-    await logUserActivity(userId, 'Interest Accepted');
+    await logUserActivity(userId, "Interest Accepted");
     res.status(200).json({
       success: true,
       user: user,
@@ -696,8 +688,9 @@ const googleAuthLogin = async (req, res) => {
 
     if (user && user?.isActive) {
       req.session.userId = user._id;
+      req.user = user;
       generateToken(res, user._id);
-      await logUserActivity(user._id, 'Login');
+      await logUserActivity(user._id, "Login");
       return res.status(200).json({ success: true, user: user });
     }
     if (user && !user?.isActive) {
@@ -717,11 +710,11 @@ const googleAuthLogin = async (req, res) => {
         createdAt: Date.now(),
       });
 
-      const recipientEmail=newUser.email
-    const recipientName =newUser.name
-    const message = `Thank you for choosing You&Me! Your account has been successfully created. Welcome to our community. We're excited to have you on board! If you have any questions or need assistance, please don't hesitate to contact our support team. Enjoy your experience with You&Me!   YourPassword:${randomPassword}`;
+      const recipientEmail = newUser.email;
+      const recipientName = newUser.name;
+      const message = `Thank you for choosing You&Me! Your account has been successfully created. Welcome to our community. We're excited to have you on board! If you have any questions or need assistance, please don't hesitate to contact our support team. Enjoy your experience with You&Me!   YourPassword:${randomPassword}`;
 
-    await sendEmailMessage(recipientEmail, recipientName, message);
+      await sendEmailMessage(recipientEmail, recipientName, message);
 
       await newUser.save();
       req.session.userId = newUser._id;
@@ -781,21 +774,28 @@ const addToShortList = async (req, res) => {
 
     const isAlreadyInShortlist = user.shortlist.includes(targetId);
 
-    const currentPlan = await SubscriptionModel.findById(user.subscription.plan);
-    const maxAllowedShortlists = currentPlan.maxShortlist; 
-    const currentShortlistCount = user.shortlistCount; 
+    const currentPlan = await SubscriptionModel.findById(
+      user.subscription.plan
+    );
+    const maxAllowedShortlists = currentPlan.maxShortlist;
+    const currentShortlistCount = user.shortlistCount;
 
     if (isAlreadyInShortlist) {
-      user.shortlist = user.shortlist.filter((id) => id.toString() !== targetId);
-     
+      user.shortlist = user.shortlist.filter(
+        (id) => id.toString() !== targetId
+      );
+
       await user.save();
-      return res.status(200).json({ success: true, message: "User removed from shortlist", user });
+      return res
+        .status(200)
+        .json({ success: true, message: "User removed from shortlist", user });
     }
 
     if (maxAllowedShortlists && currentShortlistCount >= maxAllowedShortlists) {
       return res.status(400).json({
         success: false,
-        message: "You have reached the maximum allowed shortlists for your subscription plan.",
+        message:
+          "You have reached the maximum allowed shortlists for your subscription plan.",
       });
     } else {
       const targetUser = await userModel.findById(targetId);
@@ -804,19 +804,20 @@ const addToShortList = async (req, res) => {
       const recipientName = targetUser.name;
       const message = `Your profile has been shortlisted by ${user.name}`;
       await sendEmailMessage(recipientEmail, recipientName, message);
-      user.shortlistCount += 1; 
+      user.shortlistCount += 1;
       await user.save();
-      await logUserActivity(userId, 'Added to Shortlist');
+      await logUserActivity(userId, "Added to Shortlist");
       return res
         .status(200)
         .json({ success: true, message: "User added to shortlist", user });
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
-
 
 const getShortlistProfiles = async (req, res) => {
   const userId = req.params.userId;
@@ -852,7 +853,7 @@ const updateUserPassword = async (req, res) => {
 
     user.password = hashedNewPassword;
     await user.save();
-    await logUserActivity(userId, 'Password updated');
+    await logUserActivity(userId, "Password updated");
     return res
       .status(200)
       .json({ success: true, user, message: "Password changed successfully" });
@@ -862,42 +863,38 @@ const updateUserPassword = async (req, res) => {
   }
 };
 
-
-const getSubscripctions=async(req,res,next)=>{
-
+const getSubscripctions = async (req, res, next) => {
   try {
-    const userId=req.params.Id
-   
-   
-    const subscriptionList=await SubscriptionModel.find()
-    const user=await userModel.findById(userId)
-    
-    res.status(200).json({subscriptionList,user})
+    const userId = req.params.Id;
+
+    const subscriptionList = await SubscriptionModel.find();
+    const user = await userModel.findById(userId);
+
+    res.status(200).json({ subscriptionList, user });
   } catch (error) {
     next(error);
   }
-
-}
+};
 
 const pucharsesubscripction = async (req, res) => {
   try {
     const { planId, userId } = req.body;
-    
+
     // Find the user by userId
     const user = await userModel.findById(userId);
 
-  
     const subscriptionPlan = await SubscriptionModel.findById(planId);
 
-
     user.subscription.plan = subscriptionPlan._id;
-    user.subscription.status = true; 
-   user.subscription.planName=subscriptionPlan.name
+    user.subscription.status = true;
+    user.subscription.planName = subscriptionPlan.name;
     const today = new Date();
-    user.subscription.expirationDate = new Date(today.setMonth(today.getMonth() + subscriptionPlan.duration));
+    user.subscription.expirationDate = new Date(
+      today.setMonth(today.getMonth() + subscriptionPlan.duration)
+    );
 
     await user.save();
-    await logUserActivity(userId, 'Subscription purchased');
+    await logUserActivity(userId, "Subscription purchased");
     return res.status(200).json({
       user,
       success: true,
@@ -911,7 +908,6 @@ const pucharsesubscripction = async (req, res) => {
     });
   }
 };
-
 
 export {
   login,
@@ -938,5 +934,5 @@ export {
   cancelReceivedInterest,
   updateUserPassword,
   getSubscripctions,
-  pucharsesubscripction
+  pucharsesubscripction,
 };

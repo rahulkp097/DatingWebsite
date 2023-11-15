@@ -264,6 +264,62 @@ export const usersApiSlice=apiSlice.injectEndpoints({
             }),
           }),
 
+
+
+          searchChatUser: builder.mutation({
+            query: (search) => ({
+              url: `${USERS_URL}/chat/search`,
+              method: 'get',
+              params:{
+                search:search
+              },
+              credentials: 'include',
+            }),
+          }),
+
+
+          accessUserChat: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/chat`,
+              method: 'post',
+             body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+
+       
+          getUserChat: builder.mutation({
+            query: (search) => ({
+              url: `${USERS_URL}/chat`,
+              method: 'get',
+              params:{
+                search:search
+              },
+              credentials: 'include',
+            }),
+          }),
+
+         
+          sendMessage: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/message`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+          getAllmessages: builder.mutation({
+            query: (chatId) => ({
+              url: `${USERS_URL}/message/${chatId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+
+
     })
 })
 
@@ -293,6 +349,11 @@ export const {
     useGetShortListProfilesMutation,
     useUpdateUserPasswordMutation,
     useGetSubscripctionDataMutation,
-    usePucharsesubscripctionMutation
+    usePucharsesubscripctionMutation,
+    useGetUserChatMutation,
+    useSearchChatUserMutation,
+    useAccessUserChatMutation,
+    useSendMessageMutation,
+    useGetAllmessagesMutation
     
 }=usersApiSlice

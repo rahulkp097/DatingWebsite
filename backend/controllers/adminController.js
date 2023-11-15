@@ -67,19 +67,15 @@ const adminLogout = (req, res) => {
   res.status(200).json({ message: "logout successfully" });
 };
 
-
-const getSubscripctions=async(req,res,next)=>{
-
+const getSubscripctions = async (req, res, next) => {
   try {
-    
-    const subscriptionList=await SubscriptionModel.find()
-    
-    res.status(200).json({subscriptionList})
+    const subscriptionList = await SubscriptionModel.find();
+
+    res.status(200).json({ subscriptionList });
   } catch (error) {
     next(error);
   }
-
-}
+};
 
 const mapRecommendationsToBoolean = (receivedRecommendations) => {
   const recommendations = {
@@ -101,12 +97,8 @@ const mapRecommendationsToBoolean = (receivedRecommendations) => {
 
 const addSubcripction = async (req, res, next) => {
   try {
-    const {
-      recommendations = [],
-      ...otherSubscriptionDetails
-    } = req.body;
+    const { recommendations = [], ...otherSubscriptionDetails } = req.body;
 
-  
     const newSubscription = {
       recommendations: {
         basedOnQualifications: recommendations.includes("Qualifications"),
@@ -116,16 +108,21 @@ const addSubcripction = async (req, res, next) => {
       },
       ...otherSubscriptionDetails,
     };
-    console.log("sub",newSubscription)
+ 
 
     const createdSubscription = await SubscriptionModel.create(newSubscription);
-    res.status(201).json({ success: true, createdSubscription, message: "New Subscription plan added" });
+    res
+      .status(201)
+      .json({
+        success: true,
+        createdSubscription,
+        message: "New Subscription plan added",
+      });
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     next(error);
   }
 };
-
 
 const UpdateSubscripctionPlan = async (req, res, next) => {
   try {
@@ -144,86 +141,99 @@ const UpdateSubscripctionPlan = async (req, res, next) => {
       { new: true }
     );
 
-    res.status(200).json({ success: true, message: "Subscription Plan Updated", updatedPlan });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Subscription Plan Updated",
+        updatedPlan,
+      });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-
-const DeleteSubscripctionPlan=async(req,res,next)=>{
+const DeleteSubscripctionPlan = async (req, res, next) => {
   try {
+    const PlanId = req.params.id;
 
-    const PlanId=req.params.id
+    const subscriptionList = await SubscriptionModel.findOneAndDelete({
+      _id: PlanId,
+    });
 
-    const subscriptionList= await SubscriptionModel.findOneAndDelete({_id:PlanId})
-    
-    res.status(200).json({ success:true,message:"Subscripction Plan Deleted Successfully",subscriptionList})
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Subscripction Plan Deleted Successfully",
+        subscriptionList,
+      });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-
-const getUserActivity=async(req,res,next)=>{
+const getUserActivity = async (req, res, next) => {
   try {
-      const userId=req.params.Id
-      
-      const userActivity = await UserActivityModel.find({userId:userId}).populate("userId")
+    const userId = req.params.Id;
 
-      res.status(200).json({success:true,userActivity})
-      console.log("user",userActivity)
+    const userActivity = await UserActivityModel.find({
+      userId: userId,
+    }).populate("userId");
+
+    res.status(200).json({ success: true, userActivity });
+ 
   } catch (error) {
-    next(error)
-  } 
-}
-
+    next(error);
+  }
+};
 
 const getDashboardData = async (req, res) => {
   try {
     const totalUsers = await userModel.countDocuments();
 
     // Get all unique plan names from the SubscriptionModel
-    const planNames = await SubscriptionModel.distinct('name');
+    const planNames = await SubscriptionModel.distinct("name");
 
     // Dynamically construct the counts for each plan
     const planCounts = await Promise.all(
       planNames.map(async (planName) => ({
-        [planName]: await userModel.countDocuments({ 'subscription.planName': planName }),
+        [planName]: await userModel.countDocuments({
+          "subscription.planName": planName,
+        }),
       }))
     );
 
-   
     const usersPerMonth = await userModel.aggregate([
       {
         $group: {
-          _id: { $month: '$createdAt' }, // Group by month
+          _id: { $month: "$createdAt" }, // Group by month
           count: { $sum: 1 },
         },
       },
     ]);
 
+   
 
-    console.log("montj",usersPerMonth)
-  
-
-    res.status(200).json({ success: true, totalUsers,planCounts,usersPerMonth });
+    res
+      .status(200)
+      .json({ success: true, totalUsers, planCounts, usersPerMonth });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
- 
-export { 
-adminLogin,
-getUserData,
-adminLogout,
-userAction,
-getSubscripctions,
-addSubcripction,
-UpdateSubscripctionPlan,
-DeleteSubscripctionPlan,
-getUserActivity,
-getDashboardData
+
+export {
+  adminLogin,
+  getUserData,
+  adminLogout,
+  userAction,
+  getSubscripctions,
+  addSubcripction,
+  UpdateSubscripctionPlan,
+  DeleteSubscripctionPlan,
+  getUserActivity,
+  getDashboardData,
 };

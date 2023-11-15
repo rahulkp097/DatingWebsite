@@ -8,17 +8,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../slices/authSlice";
 import { Country, State, City } from "country-state-city";
-import HobbiesData from '../../Data/Hobbies.json'
-import InterestsData from '../../Data/Interests.json'
-import OccupassionData from '../../Data/Occupassion.json'
-import QualificationData from '../../Data/Qualification.json'
+import HobbiesData from "../../Data/Hobbies.json";
+import InterestsData from "../../Data/Interests.json";
+import OccupassionData from "../../Data/Occupassion.json";
+import QualificationData from "../../Data/Qualification.json";
 
 import { useUpdateProfileMutation } from "../../slices/userApiSlice";
 import Loader from "./Loader";
-
-
-
-
 
 function ProfileCard() {
   const [image, setImage] = useState(null);
@@ -40,17 +36,17 @@ function ProfileCard() {
     setUploadedImageURL(URL.createObjectURL(selectedImage));
   };
 
-
-  
-  
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedQualification, setQualification] = useState(userInfo?.selectedQualification ||"");
-  const [selectedOccupation, setOccupation] = useState(userInfo?.selectedOccupation ||"");
-  const [selectedHobbies,setSelectedHobbies]=useState([]);
-  
-  
+  const [selectedQualification, setQualification] = useState(
+    userInfo?.selectedQualification || ""
+  );
+  const [selectedOccupation, setOccupation] = useState(
+    userInfo?.selectedOccupation || ""
+  );
+  const [selectedHobbies, setSelectedHobbies] = useState([]);
+
   const handleHobbyChange = (e) => {
     const hobby = e.target.value;
     if (e.target.checked) {
@@ -61,13 +57,12 @@ function ProfileCard() {
       setSelectedHobbies(selectedHobbies.filter((item) => item !== hobby));
     }
   };
-  
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [bio, setBio] = useState("");
 
-  
-  const [gender, setGender] = useState(userInfo?.gender || '');
+  const [gender, setGender] = useState(userInfo?.gender || "");
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -80,13 +75,19 @@ function ProfileCard() {
     e.preventDefault();
     try {
       const userId = userInfo._id;
-      if (newPassword !== confirmPassword) {
-        toast.warning("New password and confirm password do not match.");
+      const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-        return;
+      if (currentPassword !== confirmPassword) {
+        toast.error("Passwords do not match");
+      }  else if (newPassword.length < 6) {
+        toast.error("Password should be at least six letters");
+      } else if (!specialCharacters.test(newPassword)) {
+        toast.error("Password should contain at least one special character");
       }
 
-      const res = await updatePasswordApi({
+    else{
+
+     const res = await updatePasswordApi({
         userId,
         currentPassword,
         newPassword,
@@ -99,6 +100,7 @@ function ProfileCard() {
       } else {
         toast.error(res.message);
       }
+    }
     } catch (error) {
       toast.error("Error updating password:", error);
     }
@@ -119,7 +121,7 @@ function ProfileCard() {
         bio,
         selectedHobbies,
         selectedOccupation,
-       selectedQualification,
+        selectedQualification,
         userInfo,
         selectedCountry,
         selectedState,
@@ -127,13 +129,12 @@ function ProfileCard() {
       }).unwrap();
 
       if (res.success) {
-       
         dispatch(setCredentials(res.user));
         toast.success("Profile updated successfully");
         setName("");
         setAge("");
         setBio("");
-      
+
         setOccupation("");
         setSelectedCountry("");
         setSelectedState("");
@@ -249,8 +250,6 @@ function ProfileCard() {
               </div>
             </dialog>
 
-
-
             <div className="md:w-1/2">
               <div className="about-text">
                 <h3 className="text-accent-content text-2xl font-bold">
@@ -283,9 +282,9 @@ function ProfileCard() {
                     <p>{userInfo?.education}</p>
                   </div>
                   <div className="media">
-  <label className="text-info text-xl">Hobbies</label>
-  <p>{userInfo?.hobbies && userInfo?.hobbies.join(', ')}</p>
-</div>
+                    <label className="text-info text-xl">Hobbies</label>
+                    <p>{userInfo?.hobbies && userInfo?.hobbies.join(", ")}</p>
+                  </div>
 
                   <div className="media">
                     <label className="text-info text-xl ">E-mail</label>
@@ -301,369 +300,338 @@ function ProfileCard() {
         </div>
       </section>
 
-
-                              
-
-
-  
-
-     
-
       <div className="collapse w-1/2 bg-slate-400 m-6">
-  <input type="checkbox" /> 
-  <div className="collapse-title justify-center text-xl font-medium">
-  <h1 className=" font-semibold  text-center ">
-    Edit profile
-  </h1>
-</div>
+        <input type="checkbox" />
+        <div className="collapse-title justify-center text-xl font-medium">
+          <h1 className=" font-semibold  text-center ">Edit profile</h1>
+        </div>
 
-  <div className="collapse-content"> 
-   
-  <div>
-          <form
-            onSubmit={handleSubmit}
-            className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="name"
-                  type="text"
-                  placeholder={userInfo?.name}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+        <div className="collapse-content">
+          <div>
+            <form
+              onSubmit={handleSubmit}
+              className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    Name
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="name"
+                    type="text"
+                    placeholder={userInfo?.name}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="age"
+                  >
+                    Age
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="age"
+                    type="text"
+                    placeholder={userInfo?.age}
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="gender"
+                  >
+                    Gender
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="occupation"
+                  >
+                    Occupation
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="occupation"
+                    value={selectedOccupation}
+                    onChange={(e) => setOccupation(e.target.value)}
+                  >
+                    <option value="">Select occupation</option>
+                    {OccupassionData.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="occupation"
+                  >
+                    Qualificaction
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="qualification"
+                    value={selectedQualification}
+                    onChange={(e) => setQualification(e.target.value)}
+                  >
+                    <option value="">Select Course</option>
+                    {QualificationData.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="hobbies"
+                  >
+                    Hobbies
+                  </label>
+                  <div className="h-40 border   rounded bg-gray-100 p-2 overflow-y-auto">
+                    {HobbiesData.map((option, index) => (
+                      <div key={index} className="mb-2">
+                        <input
+                          className="checkbox checkbox-success mr-2"
+                          type="checkbox"
+                          id={option}
+                          value={option}
+                          checked={selectedHobbies.includes(option)}
+                          onChange={handleHobbyChange}
+                        />
+                        <label htmlFor={option} className="ml-2 ">
+                          {option}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="country"
+                  >
+                    Country
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="country"
+                    value={selectedCountry}
+                    onChange={(e) => {
+                      setSelectedCountry(e.target.value);
+                      // Fetch states of the selected country
+                      const selectedCountryId = e.target.value;
+                      const statesOfCountry =
+                        State.getStatesOfCountry(selectedCountryId);
+                      setStates(statesOfCountry);
+                      // Reset state and city selections
+                      setSelectedState("");
+                      setSelectedCity("");
+                    }}
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map((country, index) => (
+                      <option key={index} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="state"
+                  >
+                    State
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="state"
+                    value={selectedState}
+                    onChange={(e) => {
+                      setSelectedState(e.target.value);
+                      // Fetch cities of the selected state
+                      const selectedStateId = e.target.value;
+                      const selectedCountryId = selectedCountry; // Get the selected country's ID or code
+                      const citiesOfState = City.getCitiesOfState(
+                        selectedCountryId,
+                        selectedStateId
+                      );
+                      setCities(citiesOfState);
+                      // Reset city selection
+                      setSelectedCity("");
+                    }}
+                  >
+                    <option value="">Select a state</option>
+                    {states.map((state, index) => (
+                      <option key={index} value={state.isoCode}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="city"
+                  >
+                    City
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="city"
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                  >
+                    <option value="">Select a city</option>
+                    {cities.map((city, index) => (
+                      <option key={index} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="bio"
+                  >
+                    Bio
+                  </label>
+                  <textarea
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                    id="bio"
+                    type="text"
+                    placeholder={userInfo?.bio}
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                  />
+                </div>
               </div>
 
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="age"
-                >
-                  Age
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="age"
-                  type="text"
-                  placeholder={userInfo?.age}
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                />
+              <div className="mb-6">
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <button
+                    className="w-full bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Update Profile
+                  </button>
+                )}
               </div>
-
-              <div className="mb-4">
-  <label
-    className="block text-white text-sm font-bold mb-2"
-    htmlFor="gender"
-  >
-    Gender
-  </label>
-  <select
-    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-    id="gender"
-    value={gender}
-    onChange={(e) => setGender(e.target.value)}
-  >
-    <option value="">Select gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
-
-
-
-
-
-<div className="mb-4">
-  <label
-    className="block text-white text-sm font-bold mb-2"
-    htmlFor="occupation"
-  >
-    Occupation
-  </label>
-  <select
-    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-    id="occupation"
-    value={selectedOccupation}
-    onChange={(e) => setOccupation(e.target.value)}
-  >
-    <option value="">Select occupation</option>
-    {OccupassionData.map((option, index) => (
-      <option key={index} value={option}>
-        {option}
-      </option>
-    ))}
-  </select>
-</div>
-
-
-<div className="mb-4">
-  <label
-    className="block text-white text-sm font-bold mb-2"
-    htmlFor="occupation"
-  >
-    Qualificaction
-  </label>
-  <select
-    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-    id="qualification"
-    value={selectedQualification}
-    onChange={(e) => setQualification(e.target.value)}
-  >
-    <option value="">Select Course</option>
-    {QualificationData.map((option, index) => (
-      <option key={index} value={option}>
-        {option}
-      </option>
-    ))}
-  </select>
-</div>
-
-
-
-
-
-<div className="mb-4">
-  <label
-    className="block text-white text-sm font-bold mb-2"
-    htmlFor="hobbies"
-  >
-    Hobbies
-  </label>
-  <div className="h-40 border   rounded bg-gray-100 p-2 overflow-y-auto">
-    {HobbiesData.map((option, index) => (
-      <div key={index} className="mb-2">
-        <input
-        className="checkbox checkbox-success mr-2"
-          type="checkbox"
-          id={option}
-          value={option}
-          checked={selectedHobbies.includes(option)}
-          onChange={handleHobbyChange}
-        />
-        <label htmlFor={option} className="ml-2 ">{option}</label>
+            </form>
+          </div>
+        </div>
       </div>
-    ))}
-  </div>
-</div>
-
-
-
-
+      <div className="collapse w-1/2 m-6  bg-slate-400">
+        <input type="checkbox" />
+        <div className="collapse-title justify-center text-xl font-medium">
+          <h1 className="font-semibold  text-center ">Update Password</h1>
+        </div>
+        <div className="collapse-content">
+          <div>
+            {/* Password update section */}
+            <form
+              onSubmit={handlePasswordUpdate}
+              className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
+            >
               <div className="mb-4">
                 <label
                   className="block text-white text-sm font-bold mb-2"
-                  htmlFor="country"
+                  htmlFor="currentPassword"
                 >
-                  Country
+                  Current Password
                 </label>
-                <select
+                <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="country"
-                  value={selectedCountry}
-                  onChange={(e) => {
-                    setSelectedCountry(e.target.value);
-                    // Fetch states of the selected country
-                    const selectedCountryId = e.target.value;
-                    const statesOfCountry =
-                      State.getStatesOfCountry(selectedCountryId);
-                    setStates(statesOfCountry);
-                    // Reset state and city selections
-                    setSelectedState("");
-                    setSelectedCity("");
-                  }}
-                >
-                  <option value="">Select a country</option>
-                  {countries.map((country, index) => (
-                    <option key={index} value={country.isoCode}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="state"
-                >
-                  State
-                </label>
-                <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="state"
-                  value={selectedState}
-                  onChange={(e) => {
-                    setSelectedState(e.target.value);
-                    // Fetch cities of the selected state
-                    const selectedStateId = e.target.value;
-                    const selectedCountryId = selectedCountry; // Get the selected country's ID or code
-                    const citiesOfState = City.getCitiesOfState(
-                      selectedCountryId,
-                      selectedStateId
-                    );
-                    setCities(citiesOfState);
-                    // Reset city selection
-                    setSelectedCity("");
-                  }}
-                >
-                  <option value="">Select a state</option>
-                  {states.map((state, index) => (
-                    <option key={index} value={state.isoCode}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="city"
-                >
-                  City
-                </label>
-                <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="city"
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                >
-                  <option value="">Select a city</option>
-                  {cities.map((city, index) => (
-                    <option key={index} value={city.id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-      
-
-
-              <div className="mb-4">
-                <label
-                  className="block text-white text-sm font-bold mb-2"
-                  htmlFor="bio"
-                >
-                  Bio
-                </label>
-                <textarea
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                  id="bio"
-                  type="text"
-                  placeholder={userInfo?.bio}
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
+                  id="currentPassword"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                 />
               </div>
-            </div>
-
-            <div className="mb-6">
-              {isLoading ? (
-                <Loader />
-              ) : (
-                <button
-                  className="w-full bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
+              <div className="mb-4">
+                <label
+                  className="block text-white text-sm font-bold mb-2"
+                  htmlFor="newPassword"
                 >
-                  Update Profile
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-
-  </div>
-</div>
-<div className="collapse w-1/2 m-6  bg-slate-400">
-  <input type="checkbox" /> 
-  <div className="collapse-title justify-center text-xl font-medium">
-  <h1 className="font-semibold  text-center ">
-    Update Password
-  </h1>
-</div>
-  <div className="collapse-content"> 
-         
-  <div>
-          {/* Password update section */}
-          <form
-            onSubmit={handlePasswordUpdate}
-            className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
-          >
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="currentPassword"
-              >
-                Current Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                id="currentPassword"
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="newPassword"
-              >
-                New Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                id="newPassword"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="confirmPassword"
-              >
-                Confirm New Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-            <div className="mb-6">
-              {isLoading ? (
-                <Loader />
-              ) : (
-                <button
-                  className=" bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
+                  New Password
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-white text-sm font-bold mb-2"
+                  htmlFor="confirmPassword"
                 >
-                  Update Password
-                </button>
-              )}
-            </div>
-          </form>
+                  Confirm New Password
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+              <div className="mb-6">
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <button
+                    className=" bg-black  hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Update Password
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
         </div>
-  </div>
-</div>
-
-  
-      
+      </div>
     </div>
   );
 }

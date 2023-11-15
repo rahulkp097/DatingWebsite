@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setCredentials } from "../../slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineArrowDown } from 'react-icons/ai';
-import { AiOutlineArrowUp } from 'react-icons/ai';
+import { AiOutlineArrowDown } from "react-icons/ai";
+import { AiOutlineArrowUp } from "react-icons/ai";
 
 import CaroselComponent from "./CaroselComponent";
 import Loader from "./Loader";
@@ -21,32 +21,28 @@ const UserHomeProfileCards = () => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
   const [getUserListApi] = useGetHomeMutation();
-  const [sendInterestApi,{isLoading}] = useSendInterestRequestMutation();
+  const [sendInterestApi, { isLoading }] = useSendInterestRequestMutation();
   const [cancelInterestApi] = useCancelInterestRequestMutation();
-  const [userSubscriptionsPlan,setUserSubscripctionsPlan]=useState()
-  const [allSubScriptionPlans,setAllSubScriptionPlans]=useState()
-  
-  
+  const [userSubscriptionsPlan, setUserSubscripctionsPlan] = useState();
+  const [allSubScriptionPlans, setAllSubScriptionPlans] = useState();
+
   const isMatchingCity = users.filter(
     (profile) => profile.city === userInfo?.city
   );
 
-  const isMatchingQualification=users.filter(
+  const isMatchingQualification = users.filter(
     (profile) => profile.education === userInfo?.education
   );
 
-
-  const isMatchingOccupassion=users.filter(
+  const isMatchingOccupassion = users.filter(
     (profile) => profile.occupation === userInfo?.occupation
   );
-console.log("hfds",userInfo)
+  console.log("hfds", userInfo);
 
   const isMatchingHobbies = users.filter((profile) =>
-  profile.hobbies.some((hobby) => userInfo?.hobbies.includes(hobby))
-);
+    profile.hobbies.some((hobby) => userInfo?.hobbies.includes(hobby))
+  );
 
-
-  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,16 +52,13 @@ console.log("hfds",userInfo)
   const getUsertList = async () => {
     try {
       let Id = userInfo?._id;
-     
+
       const res = await getUserListApi(Id).unwrap();
 
-      if (res.success) {  
-        
-      
-       setUserSubscripctionsPlan(res.currentUser?.subscription?.plan)
-       setAllSubScriptionPlans(res.subscriptionPlans)
+      if (res.success) {
+        setUserSubscripctionsPlan(res.currentUser?.subscription?.plan);
+        setAllSubScriptionPlans(res.subscriptionPlans);
         setUsers(res.sortedUsers);
-       
       }
     } catch (error) {
       if (error.data.user) {
@@ -86,7 +79,7 @@ console.log("hfds",userInfo)
     try {
       if (isRequestSent(targetId)) {
         const res = await cancelInterestApi({ targetId, userId }).unwrap();
-      
+
         if (res.success) {
           toast.success(res.message);
           dispatch(setCredentials({ ...res.user }));
@@ -99,7 +92,7 @@ console.log("hfds",userInfo)
         }
       }
     } catch (error) {
-      toast.error(error.data.message)
+      toast.error(error.data.message);
     }
   };
 
@@ -109,107 +102,78 @@ console.log("hfds",userInfo)
       (selectedGender === "All" || user.gender === selectedGender)
   );
 
-
-
   return (
     <div className="min-h-screen">
-       
-
-     
-       <div className="max-w-lg mx-auto m-6" style={{ position: "sticky", top: 0, zIndex: 999, }}>
-  <div className="relative">
-    <span className="absolute inset-y-0 left-0 pl-3 flex items-center ">
-      <svg
-        className="h-5 w-5 text-gray-500"
-        viewBox="0 0 24 24"
-        fill="none"
+      <div
+        className="max-w-lg mx-auto m-6"
+        style={{ position: "sticky", top: 0, zIndex: 999 }}
       >
-        <path
-          d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-    <input
-      className="w-full bg-slate-200 border rounded-md pl-10 pr-4 py-2 focus:border-black focus:outline-none focus:shadow-outline"
-      type="text"
-      placeholder="Search users..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-  </div>
-</div>
+        <div className="relative">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center ">
+            <svg
+              className="h-5 w-5 text-gray-500"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            className="w-full bg-slate-200 border rounded-md pl-10 pr-4 py-2 focus:border-black focus:outline-none focus:shadow-outline"
+            type="text"
+            placeholder="Search users..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
+      {userInfo?.subscription?.status &&
+      userSubscriptionsPlan?.recommendations?.basedOnLocation &&
+      isMatchingCity.length > 0 ? (
+        <>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+            People in your city
+          </h1>
+          <CaroselComponent data={isMatchingCity} />
+        </>
+      ) : null}
 
+      {userSubscriptionsPlan?.recommendations?.basedOnJob &&
+      isMatchingOccupassion.length > 0 ? (
+        <>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+            People With your same Job
+          </h1>
+          <CaroselComponent data={isMatchingOccupassion} />
+        </>
+      ) : null}
 
+      {userSubscriptionsPlan?.recommendations?.basedOnHobbies &&
+      isMatchingHobbies.length > 0 ? (
+        <>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+            People With your same Hobbies
+          </h1>
+          <CaroselComponent data={isMatchingHobbies} />
+        </>
+      ) : null}
 
-
-
-{userInfo?.subscription?.status && userSubscriptionsPlan?.recommendations?.basedOnLocation && isMatchingCity.length > 0 ? (
-  <>
-    <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
-      People in your city
-    </h1>
-    <CaroselComponent data={isMatchingCity} />
-  </>
-) : null}
-
-
-
-
-
-{
-  userSubscriptionsPlan?.recommendations?.basedOnJob &&
-  isMatchingOccupassion.length > 0 ? (
-    <>
-      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
-        People With your same Job
-      </h1>
-      <CaroselComponent data={isMatchingOccupassion} />
-    </>
-  ) : null
-}
-
-
-
-{
-  userSubscriptionsPlan?.recommendations?.basedOnHobbies &&
-  isMatchingHobbies.length > 0 ? (
-    <>
-      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
-        People With your same Hobbies
-      </h1>
-      <CaroselComponent data={isMatchingHobbies} />
-    </>
-  ) : null
-}
-
-
-
-{
-  userSubscriptionsPlan?.recommendations?.basedOnQualifications &&
-  isMatchingQualification.length > 0 ? (
-    <>
-      <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
-        People With your same Qualification
-      </h1>
-      <CaroselComponent data={isMatchingQualification} />
-    </>
-  ) : null
-}
-
-
-
-
-
-
-
-
-
-
+      {userSubscriptionsPlan?.recommendations?.basedOnQualifications &&
+      isMatchingQualification.length > 0 ? (
+        <>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-left">
+            People With your same Qualification
+          </h1>
+          <CaroselComponent data={isMatchingQualification} />
+        </>
+      ) : null}
 
       <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 md:grid-cols-9 lg:grid-cols-12 ">
         <button
@@ -251,7 +215,6 @@ console.log("hfds",userInfo)
             className="relative flex flex-col rounded-xl bg- text-gray-700 shadow-md"
           >
             <div className="relative h-80 overflow-hidden rounded-t-xl bg-white">
-              
               <Link to={`/userprofile/${profile._id}`}>
                 <img
                   src={
@@ -272,17 +235,15 @@ console.log("hfds",userInfo)
               </p>
             </div>
             <div className="p-4 pt-0">
-              {isLoading ? <Loader/> :
               <button
-              className="w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-              onClick={() => sendOrCancelRequest(profile._id)}
+                className="w-full select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
+                onClick={() => sendOrCancelRequest(profile._id)}
               >
                 {isRequestSent(profile._id)
                   ? "Cancel Interest"
                   : "Send Interest"}
               </button>
-                }
             </div>
           </div>
         ))}

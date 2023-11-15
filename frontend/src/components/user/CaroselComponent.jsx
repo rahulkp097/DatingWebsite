@@ -1,10 +1,9 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css';
-import { FreeMode, Pagination } from 'swiper/modules';
-import { RxArrowTopRight } from 'react-icons/rx';
-import { Link } from 'react-router-dom';
-
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
+import { FreeMode, Pagination } from "swiper/modules";
+import { RxArrowTopRight } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const CaroselComponent = ({ data }) => {
   const isSingleSlide = data.length === 1;
@@ -19,13 +18,17 @@ const CaroselComponent = ({ data }) => {
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: `url(${profile?.image ||
-                    'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'})`,
+                  backgroundImage: `url(${
+                    profile?.image ||
+                    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                  })`,
                 }}
               />
               <div className="absolute inset-0 bg-black opacity-10 group-hover:opacity-50" />
               <div className="relative flex flex-col gap-3">
-                <h1 className="text-xl lg:text-2xl text-white">{profile?.name} </h1>
+                <h1 className="text-xl lg:text-2xl text-white">
+                  {profile?.name}{" "}
+                </h1>
                 <p className="lg:text-[18px] text-white">{profile?.age} </p>
               </div>
               <RxArrowTopRight className="absolute bottom-5 left-5 w-[35px] h-[35px] text-white group-hover:text-blue-500 group-hover:rotate-45 duration-100" />
@@ -51,7 +54,7 @@ const CaroselComponent = ({ data }) => {
           },
         }}
         freeMode={!isSingleSlide}
-        slidesPerView={isSingleSlide ? 1 : 'auto'}
+        slidesPerView={isSingleSlide ? 1 : "auto"}
         pagination={{
           clickable: true,
         }}
@@ -65,13 +68,17 @@ const CaroselComponent = ({ data }) => {
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${profile?.image ||
-                      'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'})`,
+                    backgroundImage: `url(${
+                      profile?.image ||
+                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                    })`,
                   }}
                 />
                 <div className="absolute inset-0 bg-black opacity-10 group-hover:opacity-50" />
                 <div className="relative flex flex-col gap-3">
-                  <h1 className="text-xl lg:text-2xl text-white">{profile?.name} </h1>
+                  <h1 className="text-xl lg:text-2xl text-white">
+                    {profile?.name}{" "}
+                  </h1>
                   <p className="lg:text-[18px] text-white">{profile?.age} </p>
                 </div>
                 <RxArrowTopRight className="absolute bottom-5 left-5 w-[35px] h-[35px] text-white group-hover:text-blue-500 group-hover:rotate-45 duration-100" />

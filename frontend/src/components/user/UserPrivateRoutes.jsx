@@ -9,14 +9,13 @@ const UserPrivateRoute = () => {
   const dispatch = useDispatch();
   const [logoutApiCall, { isLoading }] = useLogoutMutation();
 
-
   const logoutHandler = async () => {
     try {
       dispatch(logout());
       const res = await logoutApiCall().unwrap();
       navigate("/login");
       if (res) {
-        toast.warning("your Account has been bloked by admin")
+        toast.warning("your Account has been bloked by admin");
       } else {
         toast.error("Logout Failed");
       }
@@ -26,8 +25,8 @@ const UserPrivateRoute = () => {
   };
 
   const { userInfo } = useSelector((state) => state.auth);
-  if(userInfo?.isActive==false) {
-    logoutHandler()
+  if (userInfo?.isActive == false) {
+    logoutHandler();
   }
   return userInfo?.isActive ? <Outlet /> : <Navigate to="/login" replace />;
 };
