@@ -11,6 +11,7 @@ import { getSender, getSenderFull } from '../../../config/ChatLogics';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import ProfileModel from './ProfileModel';
 import { useSelector } from 'react-redux';
+import Lottie from "react-lottie";
 import animationData from "../Animation/TypingAnimation.json";
 import "./Style.css";
 const ENDPOINT = "http://localhost:5000";
@@ -27,14 +28,14 @@ function SingleChat({fetchAgain,setFetchAgain}) {
     const { userInfo } = useSelector((state) => state.auth);
    
    
-    // const defaultOptions = {
-    //     loop: true,
-    //     autoplay: true,
-    //     animationData: animationData,
-    //     rendererSettings: {
-    //       preserveAspectRatio: "xMidYMid slice",
-    //     },
-    //   };
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        rendererSettings: {
+          preserveAspectRatio: "xMidYMid slice",
+        },
+      };
 
     const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
@@ -51,10 +52,12 @@ function SingleChat({fetchAgain,setFetchAgain}) {
         try {
           
           setLoading(true);
-    
+          const chatId=selectedChat._id
        
-      const data=await getUserMessagesApi(chatId).unwrap()
-          setMessages(data);
+      const {messages}=await getUserMessagesApi(chatId).unwrap()
+    
+      setMessages(messages);
+     
           setLoading(false);
     
           socket.emit("join chat", selectedChat._id);
@@ -79,7 +82,7 @@ function SingleChat({fetchAgain,setFetchAgain}) {
             setNewMessage("");
         
             const content= newMessage
-            const chatId=selectedChat
+            const chatId=selectedChat?._id
             const data=await messageSendApi({content,chatId}).unwrap()
 
             socket.emit("new message", data);
@@ -156,7 +159,7 @@ function SingleChat({fetchAgain,setFetchAgain}) {
       };
     
 
-console.log("selected",selectedChat)
+
   return (
     <>
     {selectedChat ? (
@@ -223,12 +226,12 @@ console.log("selected",selectedChat)
           >
             {istyping ? (
               <div>
-                {/* <Lottie
+                <Lottie
                   options={defaultOptions}
-                  // height={50}
+                  
                   width={70}
                   style={{ marginBottom: 15, marginLeft: 0 }}
-                /> */}
+                />
               </div>
             ) : (
               <></>

@@ -4,7 +4,6 @@ import userModel from "../models/userModels.js"
 import ChatModel from "../models/chatModel.js"
 import messageModel from "../models/messageModels.js"
 
-
 const sendMessage = expressAsyncHandler(async (req, res) => {
     const { content, chatId } = req.body;
   
@@ -14,7 +13,7 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     }
   
     var newMessage = {
-      sender: req.userId,
+      sender: req.user._id,
       content: content,
       chat: chatId,
     };
@@ -22,19 +21,21 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     try {
       var message = await messageModel.create(newMessage);
   
-      message = await message.populate("sender", "name image");
+      message = await message.populate("sender", "name image email");
       message = await message.populate("chat");
       message = await userModel.populate(message, {
         path: "chat.users",
-        select: "name image email",
+        select: "name pic email",
       });
   
       await ChatModel.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
   
       res.json(message);
     } catch (error) {
-      res.status(400).json({ error: error.message })}});
-
+      res.status(400);
+      throw new Error(error.message);
+    }
+  });
   
  
 const allMessages=expressAsyncHandler(async(req,res)=>{
@@ -42,7 +43,7 @@ const allMessages=expressAsyncHandler(async(req,res)=>{
         const messages = await messageModel.find({ chat: req.params.chatId })
           .populate("sender", "name image email")
           .populate("chat");
-        res.status(200).json(messages);
+        res.status(200).json({messages});
       } catch (error) {
         res.status(400).json({ error: error.message });
       }

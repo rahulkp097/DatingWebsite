@@ -5,6 +5,7 @@ import ChatComponent from '../../components/chat/ChatComponent';
 import ChatProvider from '../../Context/ChatProvider';
 
 function Chatscreen() {
+  
   return (
     <ChakraProvider>
        <ChatProvider>
