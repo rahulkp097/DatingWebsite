@@ -2,7 +2,6 @@ import expressAsyncHandler from "express-async-handler";
 import ChatModel from "../models/chatModel.js";
 import userModel from "../models/userModels.js";
 
-
 const searchUsers = expressAsyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
@@ -13,11 +12,17 @@ const searchUsers = expressAsyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = await userModel.find(keyword).find({ _id: { $ne: req.user._id } });
+  const users = await userModel.find({
+    $and: [
+      { matches: req.user._id }, // Filter based on the current user in matches array
+      keyword, // Apply other search criteria
+      { _id: { $ne: req.user._id } }, // Exclude the current user from the result
+    ],
+  });
+
+  console.log("user", users);
   res.send(users);
 });
-
-
 
 const accessChat = expressAsyncHandler(async (req, res) => {
   const { userId } = req.body;

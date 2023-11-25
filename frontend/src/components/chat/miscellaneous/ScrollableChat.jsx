@@ -37,6 +37,7 @@ function ScrollableChat({messages}) {
               maxWidth: "75%",
             }}
           >
+            
             {m.content}
           </span>
         </div>

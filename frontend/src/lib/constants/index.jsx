@@ -29,12 +29,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
 		path: '/admin/subscriptions',
 		icon: <HiOutlineShoppingCart />
 	},
-	{
-		key: 'transactions',
-		label: 'Reports',
-		path: '/admin/token',
-		icon: <HiOutlineDocumentText />
-	},
+	// {
+	// 	key: 'transactions',
+	// 	label: 'Reports',
+	// 	path: '/admin/token',
+	// 	icon: <HiOutlineDocumentText />
+	// },
 	// {
 	// 	key: 'halls',
 	// 	label: 'Halls',

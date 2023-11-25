@@ -14,7 +14,12 @@ import { useSelector } from 'react-redux';
 import Lottie from "react-lottie";
 import animationData from "../Animation/TypingAnimation.json";
 import "./Style.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVideo } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
+
 const ENDPOINT = "http://localhost:5000";
+
 var socket, selectedChatCompare;
 
 function SingleChat({fetchAgain,setFetchAgain}) {
@@ -25,8 +30,8 @@ function SingleChat({fetchAgain,setFetchAgain}) {
     const [typing, setTyping] = useState(false);
     const [istyping, setIsTyping] = useState(false);
     const toast = useToast();
+    const navigate=useNavigate()
     const { userInfo } = useSelector((state) => state.auth);
-   
    
     const defaultOptions = {
         loop: true,
@@ -157,6 +162,30 @@ function SingleChat({fetchAgain,setFetchAgain}) {
           }
         }, timerLength);
       };
+
+
+
+      const videoCallHandler=async()=>{
+
+        try {
+         
+          setNewMessage("");
+          const chatId=selectedChat._id
+                
+          const Url=` http://localhost:3000/videocall/${chatId} `
+          
+      const content= `you have a videocall request from ${user.name}, use this link to join : ${Url}`
+      
+      const data=await messageSendApi({content,chatId}).unwrap()
+
+      socket.emit("new message", data);
+      setMessages([...messages, data]);
+        navigate(`/videocall/${chatId}`)
+    } catch (error) {
+        console.log(error)
+      }
+        
+      }
     
 
 
@@ -182,6 +211,30 @@ function SingleChat({fetchAgain,setFetchAgain}) {
           {messages &&
             (!selectedChat.isGroupChat ? (
               <>
+              
+                   
+              <div className="cursor-pointer" onClick={() => userInfo.subscription && userInfo.subscription.planName === 'Premium Plan' && videoCallHandler()}>
+  {userInfo.subscription && userInfo.subscription.planName === 'Premium Plan' ? (
+    <FontAwesomeIcon icon={faVideo} />
+  ) : (
+    <div
+      onClick={() => {
+        // Show toast indicating the need for a premium plan
+         return toast({
+          title: "You need a premium plan to access video calls",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+      }}
+    >
+      <FontAwesomeIcon icon={faVideo} />
+    </div>
+  )}
+</div>
+
+                
                 {getSender(user, selectedChat.users)}
                 <ProfileModel
                   user={getSenderFull(user, selectedChat.users)}

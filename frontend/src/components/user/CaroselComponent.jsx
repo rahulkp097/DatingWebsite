@@ -14,6 +14,8 @@ const CaroselComponent = ({ data }) => {
       <div className="flex flex-wrap gap-4 justify-center">
         {data.map((profile, index) => (
           <Link to={`/userprofile/${profile._id}`} key={index}>
+              <div className="indicator">
+   {profile?.subscription?.planName &&    <span className="indicator-item badge badge-primary">{profile?.subscription?.planName}</span> }
             <div className="flex flex-col gap-6 mb-20 group relative shadow-lg text-black rounded-xl px-6 py-8 h-[250px] w-[215px] lg:h-[400px] lg:w-[350px] overflow-hidden cursor-pointer">
               <div
                 className="absolute inset-0 bg-cover bg-center"
@@ -32,6 +34,7 @@ const CaroselComponent = ({ data }) => {
                 <p className="lg:text-[18px] text-white">{profile?.age} </p>
               </div>
               <RxArrowTopRight className="absolute bottom-5 left-5 w-[35px] h-[35px] text-white group-hover:text-blue-500 group-hover:rotate-45 duration-100" />
+            </div>
             </div>
           </Link>
         ))}

@@ -14,7 +14,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
 
-  const genderOptions = ["Male", "Female", "Other"];
+  const genderOptions = ["Male", "Female"];
 
   const navigate = useNavigate();
 

@@ -170,12 +170,12 @@ const handleRecommendationChange = (recommendation) => {
   return (
     
 
-    <div>
+    <div >
 
 
 <button className="btn btn-neutral" onClick={() => document.getElementById('my_modal_1').showModal()}>Add Plan</button>
 <dialog id="my_modal_1" className="modal">
-  <div className="modal-box p-4 sm:p-6 md:p-8 lg:p-10">
+  <div className="modal-box p-4 sm:p-6 md:p-8 lg:p-10 bg-slate-300">
     <h3 className="font-bold text-lg mb-4">Add a Subscription Plan</h3>
     <form method="dialog">
       <div className="mb-4">
@@ -295,7 +295,7 @@ const handleRecommendationChange = (recommendation) => {
 
 
 <dialog id="my_modal_2" className="modal">
-      <div className="modal-box p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="modal-box p-4 sm:p-6 md:p-8 lg:p-10 bg-slate-300">
         <h3 className="font-bold text-lg mb-4">Edit Subscription Plan</h3>
         <form method="dialog">
           <div className="mb-4">
@@ -442,9 +442,9 @@ const handleRecommendationChange = (recommendation) => {
     </dialog>
 
 
-<div className="relative overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-900 uppercase dark:text-gray-400">
+<div className="relative overflow-x-auto ">
+      <table className="w-full text-sm text-left text-gray-500 bg-slate-300 ">
+        <thead className="text-xs text-gray-900 uppercase bg-slate-300">
           <tr>
             <th scope="col" className="px-6 py-3">
               Product name
@@ -465,22 +465,22 @@ const handleRecommendationChange = (recommendation) => {
         </thead>
         <tbody>
           {subscripctions?.map((item) => (
-            <tr key={item._id} className="bg-white dark:bg-gray-800">
+            <tr key={item._id} className=" bg-gray-800">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium  whitespace-nowrap text-white"
               >
                 {item.name}
               </th>
-              <td className="px-6 py-4">{item.duration} Months</td>
+              <td className="px-6 py-4 text-white">{item.duration} Months</td>
               <td className="px-6 py-4">
-                <li>
+               
                   {item.features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
+                    <li className="text-white" key={index}>{feature}</li>
                   ))}
-                </li>
+               
               </td>
-              <td className="px-6 py-4">Rs.{item.price}</td>
+              <td className="px-6 py-4 text-white">Rs.{item.price}</td>
               <td className="px-6 py-4">
               <div className="space-x-2">
 

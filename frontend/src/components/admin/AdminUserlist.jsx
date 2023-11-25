@@ -6,6 +6,7 @@ import {
 } from "../../slices/adminApiSlice";
 import Loader from "../user/Loader";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 function AdminUserlist() {
   const [userData, setUserData] = useState([]);
@@ -18,19 +19,42 @@ function AdminUserlist() {
   const [userActivities, setUserActivities] = useState();
   const userToggle = async (userId) => {
     try {
-      const res = await userAction({ userId }).unwrap();
-
-      if (res.success) {
-        setUserData((prevUserData) =>
-          prevUserData.map((user) =>
-            user._id === userId ? { ...user, isActive: !user.isActive } : user
-          )
-        );
+      const userToToggle = userData.find((user) => user._id === userId);
+  
+      let confirmMessage = "";
+  
+      if (userToToggle.isActive) {
+        confirmMessage = "Are you sure you want to block this User?";
+      } else {
+        confirmMessage = "Are you sure you want to unblock this User?";
+      }
+  
+      const { value: confirmToggle } = await Swal.fire({
+        title: "Confirm Toggle",
+        text: confirmMessage,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#",
+      });
+  
+      if (confirmToggle) {
+        const res = await userAction({ userId }).unwrap();
+  
+        if (res.success) {
+          setUserData((prevUserData) =>
+            prevUserData.map((user) =>
+              user._id === userId ? { ...user, isActive: !user.isActive } : user
+            )
+          );
+        }
       }
     } catch (error) {
       console.error("Error toggling user status:", error);
     }
   };
+  
 
   useEffect(() => {
     callApi();

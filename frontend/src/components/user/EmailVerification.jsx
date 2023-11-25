@@ -31,12 +31,12 @@ function EmailVerification() {
         password,
         enteredOTP,
         gender,
-      });
+      }).unwrap()
       console.log(response);
-      if (response.data.success) {
+      if (response.success) {
         toast.success("OTP verification Successfully");
-        console.log("User created:", response.newUser);
-        navigate("/login");
+        dispatch(setCredentials({ ...response.user }));
+        navigate("/userdetails")
       } else {
         toast.error("OTP verification failed:", response.message);
       }

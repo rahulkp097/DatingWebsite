@@ -88,10 +88,11 @@ const accessChat=async(userId)=>{
   return (
     <>
     <Box
+    className='bg-stone-300'
     display="flex"
     justifyContent="space-between"
     alignItems="center"
-    bg="white"
+  
     w="100%"
     p="5px 10px 5px 10px"
     borderWidth="5px"
@@ -105,7 +106,7 @@ const accessChat=async(userId)=>{
       </Button>
     </Tooltip>
     <Text fontSize="2xl" fontFamily="Work sans">
-      Talk-A-Tive
+      Chat
     </Text>
     <div>
       <Menu>
@@ -153,7 +154,7 @@ const accessChat=async(userId)=>{
     </div>
   </Box>
 
-  <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+  <Drawer  placement="left" onClose={onClose} isOpen={isOpen}>
     <DrawerOverlay />
     <DrawerContent>
       <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>

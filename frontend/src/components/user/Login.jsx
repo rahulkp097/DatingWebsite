@@ -129,16 +129,14 @@ function Login() {
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
-            {isLoading ? <Loader /> : "Login"}
+            {isLoading ||isLoadingGoogleAuth ? <Loader /> : "Login"}
           </button>
         </form>
-        {isLoadingGoogleAuth ? (
-          <Loader />
-        ) : (
+       
           <div className="mt-6 text-blue-500 text-center flex justify-center items-center ">
             <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
           </div>
-        )}
+       
         {/* Sign up Link */}
 
         <div className="mt-6 text-blue-500 text-center">

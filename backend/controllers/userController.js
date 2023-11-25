@@ -174,8 +174,11 @@ const verifyOTP = (req, res) => {
         createdAt: Date.now(),
       });
 
+      
+
       newUser
         .then((user) => {
+          generateToken(res, user._id);
           return res.status(200).json({ success: true, user });
         })
         .catch((error) => {
@@ -189,7 +192,7 @@ const verifyOTP = (req, res) => {
   }
 };
 
-const uploadPhoto = async (req, res) => {
+const uploadProfilePhoto = async (req, res) => {
   const { userId, imageUrl } = req.body;
 
   try {
@@ -226,6 +229,7 @@ const updateProfile = async (req, res) => {
     selectedCountry,
     selectedState,
     selectedCity,
+    currentLocation,
   } = req.body;
 
   try {
@@ -270,6 +274,9 @@ const updateProfile = async (req, res) => {
 
     if (selectedCity) {
       user.city = selectedCity;
+    }
+    if (currentLocation) {
+      user.currentLocation = currentLocation;
     }
 
     await user.save();
@@ -671,9 +678,9 @@ const getTargetUserProfile = async (req, res) => {
   const userId = req.query.user;
 
   try {
-    const TargetUser = await userModel.findById(targetId).select("-password");
+    const TargetUser = await userModel.findById(targetId).populate("reports").select("-password");
     const user = await userModel.findById(userId).select("-password");
-
+    
     res.status(200).json({ success: true, data: TargetUser, user });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
@@ -759,7 +766,7 @@ const showRecommendation = async (req, res) => {
 };
 
 const addToShortList = async (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.body.user;
   const targetId = req.body.targetId;
 
   try {
@@ -792,13 +799,14 @@ const addToShortList = async (req, res) => {
     }
 
     if (maxAllowedShortlists && currentShortlistCount >= maxAllowedShortlists) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message:
           "You have reached the maximum allowed shortlists for your subscription plan.",
       });
     } else {
       const targetUser = await userModel.findById(targetId);
+      
       user.shortlist.push(targetId);
       const recipientEmail = targetUser.email;
       const recipientName = targetUser.name;
@@ -909,6 +917,96 @@ const pucharsesubscripction = async (req, res) => {
   }
 };
 
+
+const reportUser = async (req, res,next) => {
+  try {
+    const { reason, userId, targetId } = req.body;
+  
+
+    const user = await userModel.findById(targetId);
+    user.reports.push({ reporter: userId, reason, createdAt: new Date() });
+    user.reportCount += 1;
+    await logUserActivity(userId,`reported ${user.name}`);
+      if (user.reportCount >= 5) {
+    
+      user.isActive = false;
+    }
+    
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "User reported successfully" });
+  } catch (error) {
+    next(error)
+  }
+};
+
+
+const uploadphotos=async(req,res,next)=>{
+  const { userId, imageUrl } = req.body;
+
+  try {
+    const user = await userModel.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.photos.push(imageUrl)
+
+    await user.save();
+    await logUserActivity(userId, "new Photo uploaded Photo updated");
+
+    return res.status(200).json({
+      user,
+      success: true,
+      message: "Image uploaded and user data updated",
+    });
+  } catch (error) {
+    next(error)
+  }
+
+
+}
+
+
+const deletePhoto=async(req,res,next)=>{
+  try {
+    const {userId,index}=req.body
+    
+    const user=await userModel.findById(userId).select('-password')
+    
+    user.photos.splice(index,1)
+    
+    user.save()
+    return res.status(200).json({
+      user,
+      success: true,
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
+const setAsProfilePhoto=async(req,res,next)=>{
+
+  try {
+    const {userId,index}=req.body
+
+    const user=await userModel.findById(userId).select("-password")
+    const profilephoto=user.photos[index]
+
+    user.image=profilephoto
+    user.save()
+    return res.status(200).json({
+      user,
+      success: true,
+     
+    });
+    
+  } catch (error) {
+   next(error) 
+  }
+}
 export {
   login,
   updateProfile,
@@ -918,7 +1016,7 @@ export {
   resestPassword,
   confirmPassword,
   getUserProfile,
-  uploadPhoto,
+  uploadProfilePhoto,
   getHome,
   sendinterest,
   cancelInterest,
@@ -935,4 +1033,8 @@ export {
   updateUserPassword,
   getSubscripctions,
   pucharsesubscripction,
+  reportUser,
+  uploadphotos,
+  deletePhoto,
+  setAsProfilePhoto
 };

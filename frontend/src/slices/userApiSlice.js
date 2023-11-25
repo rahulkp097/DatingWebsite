@@ -96,6 +96,42 @@ export const usersApiSlice=apiSlice.injectEndpoints({
       
         }),
 
+        uploadphotos: builder.mutation({
+          query:(data)=>({
+              url: `${USERS_URL}/uploadphotos`,
+              method:'post',
+              body:data,
+              credentials: 'include',
+
+          })
+    
+      }),
+
+
+      setAsProfilePhtos: builder.mutation({
+        query:(data)=>({
+            url: `${USERS_URL}/setasprofilephoto`,
+            method:'put',
+            body:data,
+            credentials: 'include',
+
+        })
+  
+    }),
+
+    deleteSelectedPhoto: builder.mutation({
+      query:(data)=>({
+          url: `${USERS_URL}/deletephoto`,
+          method:'delete',
+          body:data,
+          credentials: 'include',
+
+      })
+
+  }),
+
+
+
 
         getUserProfile: builder.mutation({
             query: (userId) => ({
@@ -319,6 +355,15 @@ export const usersApiSlice=apiSlice.injectEndpoints({
             }),
           }),
 
+          reportUser: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/reportuser`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
 
     })
 })
@@ -354,6 +399,9 @@ export const {
     useSearchChatUserMutation,
     useAccessUserChatMutation,
     useSendMessageMutation,
-    useGetAllmessagesMutation
-    
+    useGetAllmessagesMutation,
+    useReportUserMutation,
+    useUploadphotosMutation,
+    useDeleteSelectedPhotoMutation,
+    useSetAsProfilePhtosMutation
 }=usersApiSlice

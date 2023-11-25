@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../slices/userApiSlice";
 import { logout } from "../../slices/authSlice";
 import { toast } from "react-toastify";
+import { selectSearchQuery, setSearchQuery } from "../../slices/searchSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation(); 
+  const isHomePage = location.pathname === "/";
   const [logoutApiCall, { isLoading }] = useLogoutMutation();
 
+  const searchQuery = useSelector(selectSearchQuery);
   const { userInfo } = useSelector((state) => state.auth);
+
+  const handleSearchQueryChange = (e) => {
+    const value = e.target.value;
+    dispatch(setSearchQuery(value));
+  };
+  
 
   const logoutHandler = async () => {
     try {
@@ -27,8 +37,17 @@ const Header = () => {
     }
   };
 
+  const headerStyles = {
+    position: "fixed",
+    top: 0,
+    width: "100%",
+    zIndex: 1000,
+    
+  };
+
+
   return (
-    <div className="navbar bg-slate-300">
+    <div className={isHomePage && searchQuery ? "navbar bg-slate-300 mb-5" : "navbar bg-slate-300"}  style={isHomePage && searchQuery ? headerStyles : null} >
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost normal-case text-xl">
           <img
@@ -42,6 +61,37 @@ const Header = () => {
 
       {userInfo && (
         <>
+
+{isHomePage && (
+  <div className="max-w-lg mx-auto m-4 md:ml-3 md:mr-auto">
+    <div className="relative">
+      <span className="absolute inset-y-0 left-0 pl-2 flex items-center">
+        <svg
+          className="h-4 w-4 text-gray-500"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <input
+        className="w-full bg-slate-200 border rounded-md pl-6 pr-2 py-2 focus:border-black focus:outline-none focus:shadow-outline text-sm" // Adjusted padding and font size
+        type="text"
+        placeholder="Search users..."
+        value={searchQuery}
+        onChange={handleSearchQueryChange}
+      />
+    </div>
+  </div>
+)}
+
+
           <div className="md:hidden block">
             <details className="dropdown">
               <summary tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -81,12 +131,25 @@ const Header = () => {
                     Subscriptions
                   </Link>
                 </li>
-                <li>
-                  <Link to="/chat" className="justify-between">
-                    Chat
-                  </Link>
-                </li>
-
+                {userInfo?.subscription ? (
+  <li>
+    <Link to="/chat" className="justify-between">
+      Chat
+    </Link>
+  </li>
+) : (
+  <li>
+    <button
+      onClick={() => {
+        // Show toast indicating the need for a subscription plan
+        toast.error('You need a subscription plan to access Chat.');
+      }}
+      className="justify-between"
+    >
+      Chat
+    </button>
+  </li>
+)}
                 <li>
                   <button onClick={() => logoutHandler()}>Logout</button>
                 </li>
@@ -94,7 +157,10 @@ const Header = () => {
             </details>
           </div>
 
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden md:flex space-x-4 ml-4">
+          <Link to="/profile" className="hover:underline">
+              Profile
+            </Link>
             <Link to="/shortlists" className="hover:underline">
               Shortlist
             </Link>
@@ -107,9 +173,26 @@ const Header = () => {
             <Link to="/subscriptions" className="hover:underline">
               Subscriptions
             </Link>
-            <Link to="/chat" className="hover:underline">
+           
+            {userInfo?.subscription ? (
+ 
+    <Link to="/chat" className="hover:underline">
               Chat
             </Link>
+  
+) : (
+  
+    <button
+      onClick={() => {
+        // Show toast indicating the need for a subscription plan
+        toast.error('You need a subscription plan to access Chat.');
+      }}
+      className="justify-between"
+    >
+      Chat
+    </button>
+  
+)}
 
             <details className="dropdown">
               <summary tabIndex={0} className="btn  btn-circle avatar">
@@ -123,16 +206,12 @@ const Header = () => {
                   />
                 </div>
               </summary>
-              <ul className="p-2 shadow menu dropdown-content mt-3 z-[1]  rounded-box right-0">
-                <li>
-                  <Link to="/profile">
-                    <button className="btn btn-info ">Profile</button>
-                  </Link>
-                </li>
+              <ul className="shadow menu dropdown-content mt-3 z-[1]  rounded-box right-0">
+               
                 <li>
                   <button
                     onClick={() => logoutHandler()}
-                    className="btn  hover:btn-error p-3 "
+                    className=" bg-red-400  hover:btn-error "
                   >
                     Logout
                   </button>

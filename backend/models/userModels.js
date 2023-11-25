@@ -17,7 +17,8 @@ const userSchema = mongoose.Schema({
   image: String,
   country: String, 
   state: String,   
-  city: String,    
+  city: String, 
+  currentLocation:String,   
   gender: String,
   education:String,
   occupation:String,
@@ -33,7 +34,9 @@ const userSchema = mongoose.Schema({
     startDate: Date, 
   },
   
-
+  photos: {
+    type: [String],
+  },
 
   interestCount: {
     type: Number,
@@ -68,10 +71,20 @@ const userSchema = mongoose.Schema({
       ref: "user",
     },
   ],
-  tikets: [  {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-  },],
+  reports: [
+    {
+      reporter: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+      reason: String,
+      createdAt: Date,
+    },
+  ],
+  reportCount: {
+    type: Number,
+    default: 0,
+  },
   isActive: {
     type: Boolean,
     default: true,

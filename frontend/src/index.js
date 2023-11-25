@@ -28,6 +28,9 @@ import UserProfileScreen from './screens/user/UserProfileScreen.jsx';
 import UserSubscripctionScreen from './screens/user/UserSubscripctionScreen.jsx';
 import UserShortlistScreen from './screens/user/UserShortlistScreen.jsx';
 import Chatscreen from './screens/user/Chatscreen.jsx';
+import VideoChatRoom from './components/chat/VideoCall/VideoChatRoom.jsx';
+import RegistrationDetails from './components/user/RegistrationDetails.jsx';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +53,11 @@ const router = createBrowserRouter([
       {
         path:"otp",
         element:<EmailVerification/>
+      },
+
+      {
+        path:"userdetails",
+        element:<RegistrationDetails/>
       },
       {
         path:"forgotpassword",
@@ -123,6 +131,16 @@ const router = createBrowserRouter([
         ],
       },
 
+      {
+        path: 'videocall/:roomId',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <VideoChatRoom />,
+          },
+        ],
+      },
 
       {
         path: 'shortlists',

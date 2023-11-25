@@ -205,25 +205,64 @@ const getDashboardData = async (req, res) => {
       }))
     );
 
-    const usersPerMonth = await userModel.aggregate([
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    const usersPerTime = await userModel.aggregate([
       {
-        $group: {
-          _id: { $month: "$createdAt" }, // Group by month
-          count: { $sum: 1 },
+        $facet: {
+          monthly: [
+            {
+              $group: {
+                _id: { $month: "$createdAt" },
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          weekly: [
+            {
+              $group: {
+                _id: {
+                  $dateToString: {
+                    format: "%Y-%U",
+                    date: "$createdAt",
+                  },
+                },
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          yearly: [
+            {
+              $match: {
+                createdAt: { $gte: new Date(currentYear, 0, 1) }, // Start of the current year
+              },
+            },
+            {
+              $group: {
+                _id: { $year: "$createdAt" },
+                count: { $sum: 1 },
+              },
+            },
+          ],
         },
       },
     ]);
 
-   
-
-    res
-      .status(200)
-      .json({ success: true, totalUsers, planCounts, usersPerMonth });
+    res.status(200).json({
+      success: true,
+      totalUsers,
+      planCounts,
+      usersPerMonth: usersPerTime[0]?.monthly || [],
+      usersPerWeek: usersPerTime[0]?.weekly || [],
+      usersPerYear: usersPerTime[0]?.yearly || [],
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 
 export {
   adminLogin,

@@ -89,18 +89,26 @@ function Interest() {
   };
 
   return (
-    <div className="min-h-screen ">
-      <div className="grid grid-cols-2 gap-4 m-5 h-3/4">
-        <div className="card rounded-box bg-base-200 p-5">
+    <div className="min-h-screen bg-slate-600 p-5">
+      <div className="grid grid-cols-2 gap-4  h-3/4">
+        <div className="card rounded-box min-h-screen bg-base-200 p-5">
           <h1 className="text-xl font-semibold text-center">
             Interest Received ({interestReceived?.length})
           </h1>
+          {interestReceived?.length === 0 ? (
+            <div className="flex items-center justify-center h-64">
+              <h1 className="text-3xl font-semibold text-gray-600">
+                No interest received.
+              </h1>
+            </div>
+          ) : (
           <ul>
             {interestReceived?.map((user) => (
               <li key={user?._id} className="flex items-center space-x-4 m-5">
                 <Link to={`/userprofile/${user?._id}`} key={user?._id}>
                   <img
-                    src={user?.image}
+                    src={user?.image||
+                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"    }
                     alt="User Photo"
                     className="w-20 h-20 rounded-full"
                   />
@@ -122,18 +130,27 @@ function Interest() {
               </li>
             ))}
           </ul>
+           )}
         </div>
 
         <div className="card rounded-box bg-base-200 p-5">
           <h1 className="text-xl font-semibold text-center">
             Interest Sent ({interestSend?.length})
           </h1>
+          {interestSend?.length === 0 ? (
+            <div className="flex items-center justify-center h-64">
+              <h1 className="text-3xl font-semibold text-gray-600">
+                No interest sent.
+              </h1>
+            </div>
+          ) : (
           <ul>
             {interestSend?.map((user) => (
               <li key={user?._id} className="flex items-center space-x-4 m-5">
                 <Link to={`/userprofile/${user?._id}`} key={user?._id}>
                   <img
-                    src={user?.image}
+                    src={user?.image||
+                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"}
                     alt="User Photo"
                     className="w-20 h-20 rounded-full"
                   />
@@ -148,6 +165,7 @@ function Interest() {
               </li>
             ))}
           </ul>
+          )}
         </div>
       </div>
     </div>

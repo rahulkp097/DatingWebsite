@@ -10,7 +10,7 @@ import {
   resestPassword,
   confirmPassword,
   getUserProfile,
-  uploadPhoto,
+  uploadProfilePhoto,
   getHome,
   sendinterest,
   getInterestsList,
@@ -25,13 +25,17 @@ import {
   updateUserPassword,
   getSubscripctions,
   pucharsesubscripction,
+  reportUser,
+  uploadphotos,
+  setAsProfilePhoto,
+  deletePhoto,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/userAuth.js";
 import { ActiveUser } from "../middlewares/UserBlockMiddleware.js";
 
 router.post("/login", login);
 router.put("/profile", protect, updateProfile);
-router.put("/profilephoto", protect, uploadPhoto);
+router.put("/profilephoto", protect, uploadProfilePhoto);
 router.get("/profile", protect, getUserProfile);
 router.get("/home", protect, ActiveUser, getHome);
 router.post("/", registerUser);
@@ -53,6 +57,10 @@ router.get("/shortlist/:userId", protect, getShortlistProfiles);
 router.get("/subscriptions/:Id", protect, getSubscripctions);
 router.put("/updatepassword",protect,updateUserPassword)
 router.post("/pucharsesubscripction",protect,pucharsesubscripction)
+router.post("/reportuser",protect,reportUser)
+router.post("/uploadphotos",protect,uploadphotos)
+router.put("/setasprofilephoto",protect,setAsProfilePhoto)
+router.delete("/deletephoto",protect,deletePhoto)
  
 
 export default router;

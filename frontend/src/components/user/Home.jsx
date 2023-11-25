@@ -29,35 +29,35 @@ function Home() {
           </div>
           <div className="container relative mx-auto">
             <div className="items-center flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
-                <div className="pr-12">
-                  <h1 className="text-white font-semibold text-5xl">
-                    Your story starts with us.
-                  </h1>
-                  <p className="mt-4 text-lg text-blueGray-200">
-                    Over 1,000 People Waiting To Meet You. Meet someone new
-                    today.
-                  </p>
-                  <div className="pt-20 flex justify-center items-center space-x-4">
-                    <Link to="/login">
-                      <button
-                        type="button"
-                        className="w-40 flex items-center justify-center text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-[#3b5998]/55 mr-2 mb-2 transition-transform transform hover:scale-105"
-                      >
-                        Login
-                      </button>
-                    </Link>
-                    <Link to="/register">
-                      <button
-                        type="button"
-                        className="w-40 flex items-center justify-center text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-[#1da1f2]/55 mr-2 mb-2 transition-transform transform hover:scale-105"
-                      >
-                        Register
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            <div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4 mx-auto text-center">
+  <div className="pr-4 md:pr-12">
+    <h1 className="text-white font-semibold text-4xl md:text-5xl lg:text-6xl xl:text-6xl">
+      Your story starts with us.
+    </h1>
+    <p className="mt-4 text-lg md:text-xl lg:text-2xl text-blueGray-200">
+      Over 1,000 People Waiting To Meet You. Meet someone new today.
+    </p>
+    <div className="pt-8 md:pt-20 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-x-4 md:space-y-0">
+      <Link to="/login">
+        <button
+          type="button"
+          className=" md:w-40 lg:w-40 xl:w-40 flex items-center justify-center text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 md:mr-2 mb-2 md:mb-0 transition-transform transform hover:scale-105"
+        >
+          Login
+        </button>
+      </Link>
+      <Link to="/register">
+        <button
+          type="button"
+          className=" md:w-40 lg:w-40 xl:w-40 flex items-center justify-center text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 md:ml-2 mb-2 md:mb-0 transition-transform transform hover:scale-105"
+        >
+          Register
+        </button>
+      </Link>
+    </div>
+  </div>
+</div>
+
             </div>
           </div>
           <div
@@ -75,6 +75,7 @@ function Home() {
             ></svg>
           </div>
         </div>
+
         <section className="pb-10 bg-blueGray-200 -mt-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
@@ -137,6 +138,7 @@ function Home() {
           </footer>
         </section>
       </section>
+
       <section className="bg-white dark:bg-gray-900">
         <div className="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
           <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
@@ -156,7 +158,7 @@ function Home() {
               earth, and it's all totally free.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-4 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-8">
             <img
               className="w-full rounded-lg"
               src="https://images.pexels.com/photos/888894/pexels-photo-888894.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
