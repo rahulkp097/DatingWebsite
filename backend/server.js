@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-// import connectDB from './config/db.js';
+import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import userRoute from './routes/userRoute.js';
@@ -14,7 +14,6 @@ import { Server } from 'socket.io';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -22,22 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const port = process.env.PORT || 5000;
-
-const connectDB = async () => {
-  try {
-    console.log('MONGO_URL:', process.env.MONGO_URL);
-    const conn = await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-  }
-};
-
 connectDB();
-
 
 const app = express();
 
