@@ -53,6 +53,7 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());
+app.use(express.static('static'))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/users', userRoute);
@@ -61,12 +62,15 @@ app.use('/api/users/chat',chatRouter );
 app.use('/api/users/message',messageRouter );
 
 
-app.use(errorMiddleware);
 
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Catch-all route to serve the 'index.html' for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
+app.use(errorMiddleware);
 
 const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
 const io = new Server(server, {
