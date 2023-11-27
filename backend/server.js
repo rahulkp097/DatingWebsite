@@ -22,8 +22,8 @@ const __dirname = dirname(__filename);
 
 const port = process.env.PORT || 5000;
 connectDB();
-
 const app = express();
+
 
 
 app.use(
