@@ -11,9 +11,14 @@ import crypto from "crypto"
 import errorMiddleware from './middlewares/errorMiddleware.js';
 import messageRouter from "./routes/messageRoutes.js"
 import { Server } from 'socket.io';
-import path from 'path';
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const port = process.env.PORT || 5000;
 connectDB();
@@ -58,10 +63,9 @@ app.use('/api/users/message',messageRouter );
 
 app.use(errorMiddleware);
 
-app.get('*',(req,res)=>{
-  res.sendFile(path.join(__dirname,"build/index.html"))
-})
-
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'build', 'index.html'));
+});
 
 
 const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
