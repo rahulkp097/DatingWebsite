@@ -28,7 +28,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://youandmelove.me',
     methods: 'GET, PUT, POST, DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
@@ -76,7 +76,7 @@ const server = app.listen(port, () => console.log(`Server connected on port ${po
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://youandmelove.me',
     
   },
 });
