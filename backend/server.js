@@ -11,6 +11,7 @@ import crypto from "crypto"
 import errorMiddleware from './middlewares/errorMiddleware.js';
 import messageRouter from "./routes/messageRoutes.js"
 import { Server } from 'socket.io';
+import path from 'path';
 dotenv.config();
 
 
@@ -61,9 +62,7 @@ app.get('*',(req,res)=>{
   res.sendFile(path.join(__dirname,"build/index.html"))
 })
 
-app.get('/', (req, res) => {
-  res.send('Server is ready');
-});
+
 
 const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
 const io = new Server(server, {
