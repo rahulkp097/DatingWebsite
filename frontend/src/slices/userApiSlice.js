@@ -55,7 +55,7 @@ export const usersApiSlice=apiSlice.injectEndpoints({
         updateProfile: builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/profile`,
-                method:'POST',
+                method:'put',
                 body:data,
                 credentials: 'include',
 
@@ -88,13 +88,49 @@ export const usersApiSlice=apiSlice.injectEndpoints({
         updateUserProfilePhoto: builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/profilephoto`,
-                method:'POST',
+                method:'put',
                 body:data,
                 credentials: 'include',
 
             })
       
         }),
+
+        uploadphotos: builder.mutation({
+          query:(data)=>({
+              url: `${USERS_URL}/uploadphotos`,
+              method:'post',
+              body:data,
+              credentials: 'include',
+
+          })
+    
+      }),
+
+
+      setAsProfilePhtos: builder.mutation({
+        query:(data)=>({
+            url: `${USERS_URL}/setasprofilephoto`,
+            method:'put',
+            body:data,
+            credentials: 'include',
+
+        })
+  
+    }),
+
+    deleteSelectedPhoto: builder.mutation({
+      query:(data)=>({
+          url: `${USERS_URL}/deletephoto`,
+          method:'delete',
+          body:data,
+          credentials: 'include',
+
+      })
+
+  }),
+
+
 
 
         getUserProfile: builder.mutation({
@@ -148,6 +184,18 @@ export const usersApiSlice=apiSlice.injectEndpoints({
 
             })
         }),
+
+
+        cancelReceivedInterestRequest:builder.mutation({
+          query:(data)=>({
+              url: `${USERS_URL}/cancelreceivedinterest`,
+              method:'post',
+              body:data,
+              credentials: 'include',
+
+          })
+      }),
+
         getInterestLIst: builder.mutation({
             query: (userId) => ({
               url: `${USERS_URL}/interestslist/${userId}`,
@@ -173,6 +221,150 @@ export const usersApiSlice=apiSlice.injectEndpoints({
             }),
           }),
 
+          deleteMatch: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/deletematch`,
+                method: 'delete',
+                body:data,
+                credentials: 'include',
+              }),
+          }),
+
+          getTargetUserProfile: builder.mutation({
+            query: ({ userId, user }) => ({
+              url: `${USERS_URL}/userprofile`,
+              method: 'get',
+              credentials: 'include',
+              params: {
+                userId: userId,
+                user: user,
+              },
+            }),
+          }),
+          
+          
+
+          googleAuthLogin: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/googlelogin`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+          addToShortList: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/addshortlist`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+          
+          getShortListProfiles: builder.mutation({
+            query: (userId) => ({
+              url: `${USERS_URL}/shortlist/${userId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+
+          updateUserPassword: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/updatepassword`,
+              method: 'put',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+          GetSubscripctionData:builder.mutation({
+            query:(userId)=>({
+              url:`${USERS_URL}/subscriptions/${userId}`,
+              method:"get",
+              credentials: 'include',
+            })
+          }),
+
+
+          Pucharsesubscripction: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/pucharsesubscripction`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+
+          searchChatUser: builder.mutation({
+            query: (search) => ({
+              url: `${USERS_URL}/chat/search`,
+              method: 'get',
+              params:{
+                search:search
+              },
+              credentials: 'include',
+            }),
+          }),
+
+
+          accessUserChat: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/chat`,
+              method: 'post',
+             body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
+
+       
+          getUserChat: builder.mutation({
+            query: (search) => ({
+              url: `${USERS_URL}/chat`,
+              method: 'get',
+              params:{
+                search:search
+              },
+              credentials: 'include',
+            }),
+          }),
+
+         
+          sendMessage: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/message`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+          getAllmessages: builder.mutation({
+            query: (chatId) => ({
+              url: `${USERS_URL}/message/${chatId}`,
+              method: 'get',
+              credentials: 'include',
+            }),
+          }),
+
+          reportUser: builder.mutation({
+            query: (data) => ({
+              url: `${USERS_URL}/reportuser`,
+              method: 'post',
+              body:data,
+              credentials: 'include',
+            }),
+          }),
+
+
     })
 })
 
@@ -191,7 +383,25 @@ export const {
     useGetHomeMutation,
     useSendInterestRequestMutation,
     useCancelInterestRequestMutation,
+    useCancelReceivedInterestRequestMutation,
     useGetInterestLIstMutation,
     useAcceptInterestRequestMutation,
-    useGetMatchListMutation
+    useGetMatchListMutation,
+    useDeleteMatchMutation,
+    useGetTargetUserProfileMutation,
+    useGoogleAuthLoginMutation,
+    useAddToShortListMutation,
+    useGetShortListProfilesMutation,
+    useUpdateUserPasswordMutation,
+    useGetSubscripctionDataMutation,
+    usePucharsesubscripctionMutation,
+    useGetUserChatMutation,
+    useSearchChatUserMutation,
+    useAccessUserChatMutation,
+    useSendMessageMutation,
+    useGetAllmessagesMutation,
+    useReportUserMutation,
+    useUploadphotosMutation,
+    useDeleteSelectedPhotoMutation,
+    useSetAsProfilePhtosMutation
 }=usersApiSlice

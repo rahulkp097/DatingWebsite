@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../../slices/userApiSlice";
+import {
+  useGoogleAuthLoginMutation,
+  useLoginMutation,
+} from "../../slices/userApiSlice";
 import { setCredentials } from "../../slices/authSlice";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [googleLoginApi, { isLoading: isLoadingGoogleAuth }] =
+    useGoogleAuthLoginMutation();
   const [login, { isLoading }] = useLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo?.isActive) {
       navigate("/");
     }
   }, [navigate, userInfo]);
@@ -26,7 +33,6 @@ function Login() {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-
       if (res.notActive) return toast.warning(res.message);
       if (res.success) {
         dispatch(setCredentials({ ...res.user }));
@@ -34,6 +40,28 @@ function Login() {
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
+  };
+
+  const responseMessage = async (response) => {
+    try {
+      const decoded = jwtDecode(response.credential);
+      console.log(decoded);
+      const name = decoded.name;
+      const email = decoded.email;
+      const image = decoded.picture;
+
+      const res = await googleLoginApi({ name, email, image }).unwrap();
+
+      if (res.notActive) return toast.warning(res.message);
+      if (res.success) {
+        dispatch(setCredentials({ ...res.user }));
+      } else toast.error("login failed");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const errorMessage = (error) => {
+    console.log(error);
   };
 
   return (
@@ -96,14 +124,19 @@ function Login() {
             </Link>
           </div>
           {/* Login Button */}
-          {isLoading && <Loader />}
+
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
-            Login
+            {isLoading ||isLoadingGoogleAuth ? <Loader /> : "Login"}
           </button>
         </form>
+       
+          <div className="mt-6 text-blue-500 text-center flex justify-center items-center ">
+            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+          </div>
+       
         {/* Sign up Link */}
 
         <div className="mt-6 text-blue-500 text-center">

@@ -1,48 +1,47 @@
-import React, { useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useVerifyOTPMutation } from '../../slices/userApiSlice';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../../slices/authSlice';
-import { toast } from 'react-toastify';
+import React, { useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useVerifyOTPMutation } from "../../slices/userApiSlice";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../slices/authSlice";
+import { toast } from "react-toastify";
 
 function EmailVerification() {
-  const [otp, setOtp] = useState(['', '', '', '']); // Initialize OTP state with an array of 4 empty strings
+  const [otp, setOtp] = useState(["", "", "", ""]); // Initialize OTP state with an array of 4 empty strings
   const location = useLocation();
   const [verifyOTP, { isLoading }] = useVerifyOTPMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  const name = searchParams.get('name');
-  const email = searchParams.get('email');
-  const password = searchParams.get('password');
-  const gender = searchParams.get('gender');
+  const name = searchParams.get("name");
+  const email = searchParams.get("email");
+  const password = searchParams.get("password");
+  const gender = searchParams.get("gender");
 
-  const inputRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
+  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const otpSubmit = async (e) => {
     e.preventDefault();
-    const enteredOTP = otp.join('');
-
-    console.log('Entered OTP:', enteredOTP);
+    const enteredOTP = otp.join("");
 
     try {
-      const response = await verifyOTP({ name, email, password, enteredOTP,gender });
+      const response = await verifyOTP({
+        name,
+        email,
+        password,
+        enteredOTP,
+        gender,
+      }).unwrap()
       console.log(response);
-      if (response.data.success) {
-        toast.success('OTP verification Successfully');
-        console.log('User created:', response.newUser);
-        navigate('/login');
+      if (response.success) {
+        toast.success("OTP verification Successfully");
+        dispatch(setCredentials({ ...response.user }));
+        navigate("/userdetails")
       } else {
-        toast.error('OTP verification failed:', response.message);
+        toast.error("OTP verification failed:", response.message);
       }
     } catch (error) {
-      toast.error('An error occurred:', error);
+      toast.error("An error occurred:", error);
     }
   };
 
@@ -55,7 +54,7 @@ function EmailVerification() {
       setOtp(newOtp);
 
       // Move focus to the next input field, if available
-      if (value === '' && index > 0 && inputRefs[index - 1].current) {
+      if (value === "" && index > 0 && inputRefs[index - 1].current) {
         inputRefs[index - 1].current.focus();
       } else if (index < inputRefs.length - 1 && inputRefs[index + 1].current) {
         inputRefs[index + 1].current.focus();
@@ -84,7 +83,7 @@ function EmailVerification() {
                     <div className="w-16 h-16" key={index}>
                       <input
                         ref={inputRefs[index]}
-                        className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-black focus:bg-gray-500 focus:ring-1 ring-blue-700"
+                        className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-slate-500 focus:bg-gray-500 focus:ring-1 ring-blue-700"
                         type="text"
                         name={`otp-${index}`}
                         value={digit}

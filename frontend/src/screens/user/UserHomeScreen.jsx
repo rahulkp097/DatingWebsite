@@ -10,7 +10,7 @@ function UserHomeScreen() {
   return (
     <>
       {userInfoStr && <Header />}
-      {userInfoStr ? <UserHomeProfileCards /> : <HomeScreen />}
+      {userInfoStr ? <UserHomeProfileCards />: <HomeScreen />}
       <Footer />
     </>
   );

@@ -5,13 +5,20 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import userRoute from './routes/userRoute.js';
 import adminRouter from './routes/adminRoute.js';
+import chatRouter from './routes/chatRoute.js'
 import session from 'express-session';
 import crypto from "crypto"
-
-
+import errorMiddleware from './middlewares/errorMiddleware.js';
+import messageRouter from "./routes/messageRoutes.js"
+import { Server } from 'socket.io';
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const port = process.env.PORT || 5000;
 connectDB();
@@ -43,14 +50,67 @@ app.use((req, res, next) => {
    next();
   });
 
+
+
 app.use(express.json());
+app.use(express.static('static'))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/users', userRoute);
 app.use('/api/users/admin', adminRouter);
+app.use('/api/users/chat',chatRouter );
+app.use('/api/users/message',messageRouter );
 
-app.get('/', (req, res) => {
-  res.send('Server is ready');
+
+
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Catch-all route to serve the 'index.html' for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+app.use(errorMiddleware);
 
-app.listen(port, () => console.log(`Server connected on port ${port}`));
+const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: 'http://localhost:3000',
+    
+  },
+});
+io.on("connection", (socket) => {
+  console.log("Connected to socket.io");
+  socket.on("setup", (userData) => {
+    socket.join(userData && userData._id);
+
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("User Joined Room: " + room);
+  });
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on("new message", (newMessageRecieved) => {
+    var chat = newMessageRecieved.chat;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+
+      socket.in(user._id).emit("message recieved", newMessageRecieved);
+    });
+  });
+
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
+  });
+
+  
+});

@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 function AdminTokens() {
   return (
-    <div className='bg-blue-200 flex h-screen flex-col justify-center items-center'>AdminTokens</div>
-  )
+    <div className="bg-blue-200 flex h-screen flex-col justify-center items-center">
+    Report page
+    </div>
+  );
 }
 
-export default AdminTokens
+export default AdminTokens;

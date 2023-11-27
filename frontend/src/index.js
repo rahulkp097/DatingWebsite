@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import store from './store.js';
 import { Provider } from 'react-redux';
 import './index.css';
-
+import {GoogleOAuthProvider}from '@react-oauth/google'
 
 import UserHomeScreen from './screens/user/UserHomeScreen.jsx';
 import UserLoginScreen from './screens/user/UserLoginScreen.jsx';
@@ -25,6 +25,12 @@ import UserMatchListScreen from './screens/user/UserMatchListScreen.jsx';
 import UserPrivateRoutes from './components/user/UserPrivateRoutes.jsx';
 import AdminPrivateRoute from './components/admin/AdminPrivateRoute.jsx';
 import UserProfileScreen from './screens/user/UserProfileScreen.jsx';
+import UserSubscripctionScreen from './screens/user/UserSubscripctionScreen.jsx';
+import UserShortlistScreen from './screens/user/UserShortlistScreen.jsx';
+import Chatscreen from './screens/user/Chatscreen.jsx';
+import VideoChatRoom from './components/chat/VideoCall/VideoChatRoom.jsx';
+import RegistrationDetails from './components/user/RegistrationDetails.jsx';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,6 +53,11 @@ const router = createBrowserRouter([
       {
         path:"otp",
         element:<EmailVerification/>
+      },
+
+      {
+        path:"userdetails",
+        element:<RegistrationDetails/>
       },
       {
         path:"forgotpassword",
@@ -89,12 +100,55 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'userprofile',
+        path: 'userprofile/:userId',
         element: <UserPrivateRoutes />,
         children: [
           {
             index: true,
             element: <UserProfileScreen />,
+          },
+        ],
+      },
+
+      {
+        path: 'subscriptions',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <UserSubscripctionScreen />,
+          },
+        ],
+      },
+      {
+        path: 'chat',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <Chatscreen />,
+          },
+        ],
+      },
+
+      {
+        path: 'videocall/:roomId',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <VideoChatRoom />,
+          },
+        ],
+      },
+
+      {
+        path: 'shortlists',
+        element: <UserPrivateRoutes />,
+        children: [
+          {
+            index: true,
+            element: <UserShortlistScreen />,
           },
         ],
       },
@@ -158,9 +212,12 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <GoogleOAuthProvider clientId='335701153084-isgpveaqbmual67f8m29pf8be4fh1oce.apps.googleusercontent.com'>
+
       <React.StrictMode>
   <Provider store={store}>
   <RouterProvider router={router} />
   </Provider>
   </React.StrictMode>
+  </GoogleOAuthProvider>
 );
