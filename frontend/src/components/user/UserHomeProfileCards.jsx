@@ -230,7 +230,7 @@ const UserHomeProfileCards = () => {
               </h1>
       {filteredUsers.length > 0 ? (
   <div className="flex justify-center items-center">
-    <div className="grid gap-6 grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
       {filteredUsers?.map((profile, index) => (
         <div className="indicator" key={index}>
           {profile?.subscription?.planName && (

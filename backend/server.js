@@ -57,6 +57,10 @@ app.use('/api/users/message',messageRouter );
 
 app.use(errorMiddleware);
 
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname,"build/index.html"))
+})
+
 app.get('/', (req, res) => {
   res.send('Server is ready');
 });
