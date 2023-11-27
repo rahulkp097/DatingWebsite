@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVideo } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router-dom";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://youandmelove.me";
 
 var socket, selectedChatCompare;
 
@@ -171,8 +171,8 @@ function SingleChat({fetchAgain,setFetchAgain}) {
          
           setNewMessage("");
           const chatId=selectedChat._id
-                
-          const Url=` http://localhost:3000/videocall/${chatId} `
+        
+          const Url=`https://youandmelove.me/videocall/${chatId} `
           
       const content= `you have a videocall request from ${user.name}, use this link to join : ${Url}`
       
