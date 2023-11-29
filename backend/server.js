@@ -26,25 +26,25 @@ const app = express();
 
 
 
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    methods: 'GET, PUT, POST, DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-    credentials: true,
-  })
-);
-
 // app.use(
 //   cors({
-//     origin: 'https://youandmelove.me',
+//     origin: 'http://localhost:3000',
 //     methods: 'GET, PUT, POST, DELETE',
 //     preflightContinue: false,
 //     optionsSuccessStatus: 204,
-//     credentials: true, // Allow cookies to be sent in cross-origin requests
+//     credentials: true,
 //   })
 // );
+
+app.use(
+  cors({
+    origin: 'https://youandmelove.me',
+    methods: 'GET, PUT, POST, DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true, // Allow cookies to be sent in cross-origin requests
+  })
+);
 
 
 
@@ -74,29 +74,29 @@ app.use('/api/users/message',messageRouter );
 
 
 
-// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'build')));
 
-// // Catch-all route to serve the 'index.html' for all other routes
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
+// Catch-all route to serve the 'index.html' for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.use(errorMiddleware);
 
-const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
-const io = new Server(server, {
-  pingTimeout: 60000,
-  cors: {
-    origin: 'https://localhost:3000',
-    
-  },
-});
+// const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
 // const io = new Server(server, {
 //   pingTimeout: 60000,
 //   cors: {
-//     origin: 'https://youandmelove.me',
+//     origin: 'https://localhost:3000',
     
 //   },
 // });
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: 'https://youandmelove.me',
+    
+  },
+});
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
   socket.on("setup", (userData) => {
