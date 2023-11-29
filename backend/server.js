@@ -42,7 +42,7 @@ app.use(
     methods: 'GET, PUT, POST, DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
-    credentials: true, // Allow cookies to be sent in cross-origin requests
+    credentials: true, 
   })
 );
 
