@@ -194,6 +194,8 @@ const Header = () => {
   
 )}
 
+
+
             <details className="dropdown">
               <summary tabIndex={0} className="btn  btn-circle avatar">
                 <div className="w-10 rounded-full">
@@ -222,6 +224,7 @@ const Header = () => {
         </>
       )}
     </div>
+
   );
 };
 

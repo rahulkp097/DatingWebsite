@@ -136,9 +136,9 @@ function SubscriptionCard() {
                         ></path>
                       </svg>
                     </span>
-                    <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
+                    <li className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
                       {feature}
-                    </p>
+                    </li>
                   </li>
                 ))}
               </ul>

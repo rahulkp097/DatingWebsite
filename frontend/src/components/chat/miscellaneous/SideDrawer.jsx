@@ -166,7 +166,7 @@ const accessChat=async(userId)=>{
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Button onClick={handleSearch}>Go</Button>
+          <Button onClick={handleSearch}>Search</Button>
         </Box>
         {loading ? (
           <ChatLoading />
