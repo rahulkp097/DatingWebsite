@@ -76,13 +76,13 @@ app.use('/api/users/message',messageRouter );
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Catch-all route to serve the 'index.html' for all other routes
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.use(errorMiddleware);
 
-// const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
+const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
 // const io = new Server(server, {
 //   pingTimeout: 60000,
 //   cors: {
