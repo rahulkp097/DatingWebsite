@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { ProfileTabs } from "./ProfileTabs";
 import { useUpdateUserProfilePhotoMutation, useUploadPhotoToCloudinaryMutation } from "../../../slices/userApiSlice";
 import { setCredentials } from "../../../slices/authSlice";
+import Loader from "../Loader";
 
 function ProfileCard() {
   const [image, setImage] = useState(null);
   const [uploadedImageURL, setUploadedImageURL] = useState(null);
   const [uploadImageApi, { isLoading }] = useUpdateUserProfilePhotoMutation();
   const { userInfo } = useSelector((state) => state.auth);
-  const [cloudinaryApi] = useUploadPhotoToCloudinaryMutation();
+  const [cloudinaryApi,{isLoading:isLoadingCloudinery}] = useUploadPhotoToCloudinaryMutation();
   const dispatch = useDispatch();
 
 
@@ -92,7 +93,8 @@ function ProfileCard() {
                   }
                   className="btn btn-info text-black px-4 py-2 rounded mt-2"
                 >
-                  Change Image
+                {isLoading || isLoadingCloudinery? <Loader/>: "Change Image"}
+                  
                 </button>
               </div>
             </div>
@@ -121,6 +123,7 @@ function ProfileCard() {
                           />
                         </div>
                         <div className="flex justify-center mt-4">
+                          
                           <button
                             onClick={onSubmit}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 focus:outline-none"

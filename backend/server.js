@@ -83,6 +83,8 @@ app.get('*', (req, res) => {
 app.use(errorMiddleware);
 
 const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
+
+
 // const io = new Server(server, {
 //   pingTimeout: 60000,
 //   cors: {
@@ -90,6 +92,9 @@ const server = app.listen(port, () => console.log(`Server connected on port ${po
     
 //   },
 // });
+
+
+
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
@@ -97,6 +102,9 @@ const io = new Server(server, {
     
   },
 });
+
+
+
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
   socket.on("setup", (userData) => {

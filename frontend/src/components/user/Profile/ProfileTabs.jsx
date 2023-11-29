@@ -335,7 +335,7 @@ export function ProfileTabs() {
             
             
             
-            <div className='bg-gradient-to-b from-black to-gray-800 w-2/3 mx-auto text-white min-h-screen flex flex-col items-center justify-center text-center'>
+            <div className='bg-gradient-to-b from-black to-gray-800 md:w-2/3 mx-auto text-white min-h-screen flex flex-col items-center justify-center text-center'>
 
             <div className='max-w-screen-lg p-4 mx-auto flex flex-col justify-center w-full'>
               <div className='pb-8'>
@@ -344,12 +344,12 @@ export function ProfileTabs() {
           
               <button
                 onClick={() => document.getElementById("my_PhotosModal_1").showModal()}
-                className="btn btn-info  text-black px-4 py-2 rounded mt-2"
+                className="btn btn-info  text-black px-4 py-2 rounded mt-2 "
               >
                 Upload Image
               </button>
           
-              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 sm:px-5 mt-4'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 sm:px-5 mt-4 '>
                 {userInfo.photos?.map((photo, index) => (
                   <div
                     key={index}
@@ -410,7 +410,7 @@ export function ProfileTabs() {
                       </div>
                     </form>
                   </div>
-                  <p className="py-4">Press ESC key to close</p>
+                  
                 </div>
               </dialog>
             </div>
@@ -421,7 +421,7 @@ export function ProfileTabs() {
 
             ) : value === "profile" ? (
               <div>
-         <div className="w-2/3 mx-auto">
+         <div className=" md:w-2/3 mx-auto">
                   <form
                     onSubmit={handleSubmit}
                     className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
@@ -720,7 +720,7 @@ export function ProfileTabs() {
         </div>
              
             ) : value === "password" ? (
-              <div className="w-2/5 mx-auto">
+              <div className=" md:w-2/5 mx-auto">
               <form
                 onSubmit={handlePasswordUpdate}
                 className="bg-info-content shadow-md rounded px-8 pt-6 pb-8 mb-4 text-black"
