@@ -249,9 +249,41 @@ const getDashboardData = async (req, res) => {
       },
     ]);
 
+
+    const usersWithActiveSubscriptions = await userModel.find({
+      'subscription.status': true,
+    });
+    
+    // Create a map to store monthly revenue data
+    const monthlyRevenueData = new Map();
+    
+    // Calculate revenue for each user and aggregate by month
+    for (const user of usersWithActiveSubscriptions) {
+      const { subscription } = user;
+    
+      // Retrieve subscription details
+      const subscriptionDetails = await SubscriptionModel.findById(subscription.plan);
+    
+      if (subscriptionDetails) {
+        // Calculate revenue for each user
+        const { price } = subscriptionDetails;
+        const startMonth = user.subscription.startDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month
+    
+        // Add revenue to the corresponding month in the map
+        const currentRevenue = monthlyRevenueData.get(startMonth) || 0;
+        monthlyRevenueData.set(startMonth, currentRevenue + price);
+      }
+    }
+    
+    const monthlyRevenueArray = Array.from(monthlyRevenueData.entries()).map(([month, revenue]) => ({ month, revenue }));
+
+   
+    
+
     res.status(200).json({
       success: true,
       totalUsers,
+      monthlyRevenueData: monthlyRevenueArray,
       planCounts,
       usersPerMonth: usersPerTime[0]?.monthly || [],
       usersPerWeek: usersPerTime[0]?.weekly || [],

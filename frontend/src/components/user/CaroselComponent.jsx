@@ -15,7 +15,7 @@ const CaroselComponent = ({ data }) => {
         {data.map((profile, index) => (
           <Link to={`/userprofile/${profile._id}`} key={index}>
               <div className="indicator">
-   {profile?.subscription?.planName &&    <span className="indicator-item badge badge-primary">{profile?.subscription?.planName}</span> }
+   {profile?.subscription?.planName &&    <span className={`indicator-item badge ${profile?.subscription?.planName === 'Premium Plan' ? 'badge-secondary' : 'badge-primary'} hidden sm:inline`}>{profile?.subscription?.planName}</span> }
             <div className="flex flex-col gap-6 mb-20 group relative shadow-lg text-black rounded-xl px-6 py-8 h-[250px] w-[215px] lg:h-[400px] lg:w-[350px] overflow-hidden cursor-pointer">
               <div
                 className="absolute inset-0 bg-cover bg-center"

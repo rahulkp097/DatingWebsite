@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CardTwo from "./CardTwo";
 import Graph from "./Graph";
 import { useGetDashboardDataMutation } from "../../slices/adminApiSlice";
+import RevenueGraph from "./RevenueGraph";
 
 function AdminDashboard() {
   const [dashboardDataApi] = useGetDashboardDataMutation();
@@ -11,6 +12,8 @@ function AdminDashboard() {
   const [usersPerWeek, setUsersPerWeek] = useState([]);
   const [usersPerYear, setUsersPerYear] = useState([]);
   const [selectedInterval, setSelectedInterval] = useState("monthly");
+  const [monthlyRevenueData, setMonthlyRevenueData] = useState([]); // Initialize with null
+
 
   const convertToMonthName = (monthNumber) => {
     const months = [
@@ -35,10 +38,11 @@ function AdminDashboard() {
   useEffect(() => {
     getDashboardData();
   }, []);
-
+  
   const getDashboardData = async () => {
     try {
       const res = await dashboardDataApi().unwrap();
+      setMonthlyRevenueData(res.monthlyRevenueData);
       setTotalUsers(res.totalUsers);
       setTotalPlanCount(res.planCounts);
       setUsersPerMonth(res.usersPerMonth);
@@ -48,6 +52,7 @@ function AdminDashboard() {
       console.error(error);
     }
   };
+  
 
   const convertToWeekLabel = (weekLabel) => {
     if (!weekLabel) {
@@ -98,7 +103,13 @@ function AdminDashboard() {
     <>
       <CardTwo totalUsers={totalUsers} planCounts={totalPlanCount} />
 
-      <div className="flex justify-center items-center mt-4">
+   
+      
+      <div className="h-[700px] ">
+  <div>
+  <h1 className="text-3xl font-semibold m-6 text-center sm:text-center"> Users Data </h1>
+    
+       <div className="flex justify-center items-center mt-4">
         <label className="mr-2">Select Interval:</label>
         <select
           value={selectedInterval}
@@ -110,9 +121,17 @@ function AdminDashboard() {
         </select>
       </div>
 
-      <div className="h-[700px] ">
-        <Graph chartData={chartData} labels={labels} />
-      </div>
+    <Graph chartData={chartData} labels={labels} />
+  </div>
+
+  <div>
+   <h1 className="text-3xl font-semibold m-6 text-center sm:text-center">
+                Revenue Data
+              </h1>
+    <RevenueGraph revenueData={monthlyRevenueData} />
+  </div>
+</div>
+
     </>
   );
 }

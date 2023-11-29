@@ -158,7 +158,7 @@ const router = createBrowserRouter([
   {
     path:"/admin", 
     element: <App />,
-   
+    errorElement:<ErrorPage/>,
     children:[
       {
     path:"",
