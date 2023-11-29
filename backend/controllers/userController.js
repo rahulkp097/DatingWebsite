@@ -337,7 +337,7 @@ const resestPassword = async (req, res) => {
         subject: "Reset password Request",
         text: `Hi, ${user.name}, Thank you for Choosing You&Me. We have received your reset password request 
             Please visit this link to reset your password, 
-        Link :http://localhost:3000/enterpassword?email=${email}`,
+        Link :https://youandmelove.me/enterpassword?email=${email}`,
       };
 
       transporter.sendMail(mailOptions, (error) => {
@@ -896,6 +896,7 @@ const pucharsesubscripction = async (req, res) => {
     user.subscription.plan = subscriptionPlan._id;
     user.subscription.status = true;
     user.subscription.planName = subscriptionPlan.name;
+    user.subscription.startDate = new Date();
     const today = new Date();
     user.subscription.expirationDate = new Date(
       today.setMonth(today.getMonth() + subscriptionPlan.duration)

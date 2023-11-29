@@ -73,7 +73,7 @@ function ProfileCard() {
               >
                 <div className="indicator" >
   {userInfo?.subscription?.planName && (
-    <span className="indicator-item badge badge-primary">
+  <span className={`indicator-item badge ${userInfo?.subscription?.planName === 'Premium Plan' ? 'badge-secondary' : 'badge-primary'} hidden sm:inline`}>
       {userInfo?.subscription?.planName}
     </span>)}
                 <img

@@ -102,8 +102,8 @@ function SubscriptionCard() {
             key={plan._id}
             className={`relative flex w-full max-w-[20rem] flex-col rounded-xl ${
               index % 2 === 0
-                ? "bg-gradient-to-tr from-pink-600 to-pink-400"
-                : "bg-gradient-to-tr from-blue-600 to-blue-400"
+              ? "bg-gradient-to-tr from-blue-600 to-blue-400"
+                : "bg-gradient-to-tr from-pink-600 to-pink-400"
             } bg-clip-border p-8 text-white shadow-md shadow-pink-500/40 mb-8 mx-auto`}
           >
             <div className="relative m-0 mb-8 overflow-hidden rounded-none border-b border-white/10 bg-transparent bg-clip-border pb-8 text-center text-gray-700 shadow-none">

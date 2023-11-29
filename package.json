@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "cloudinary": "^1.41.0",
     "connect-mongodb-session": "^3.1.1",
     "cookie-parser": "^1.4.6",

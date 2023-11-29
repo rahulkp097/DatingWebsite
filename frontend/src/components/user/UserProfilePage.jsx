@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useAcceptInterestRequestMutation,
   useAddToShortListMutation,
@@ -22,7 +22,7 @@ const UserProfilePage = () => {
   const reportReasons = ["Fake Content", "Spam", "Harassment", "Other"];
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [reportUserApi,{isLoading:isLoadingReportUser}]=useReportUserMutation()
-
+  const navigate=useNavigate()
   const handleReport = async(reason,targetId) => {
     try {
       const userId=userInfo?._id
@@ -63,11 +63,13 @@ const UserProfilePage = () => {
       const user = userInfo._id;
 
       const res = await userProfileDataApi({ userId, user }).unwrap();
+      console.log("res",res)
 
       setUserData(res.data);
 
       dispatch(setCredentials(res.user));
     } catch (error) {
+      navigate("/error")
       console.log(error);
     }
   };
@@ -174,7 +176,7 @@ const UserProfilePage = () => {
                 }}
               >
                  <div className="indicator" >
-                       {userData?.subscription?.planName &&          <span className="indicator-item badge badge-primary">
+                       {userData?.subscription?.planName &&          <span className={`indicator-item badge ${userData?.subscription?.planName === 'Premium Plan' ? 'badge-secondary' : 'badge-primary'} hidden sm:inline`}>
               {userData?.subscription?.planName}
             </span>
             }

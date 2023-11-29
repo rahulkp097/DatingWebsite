@@ -234,9 +234,11 @@ const UserHomeProfileCards = () => {
       {filteredUsers?.map((profile, index) => (
         <div className="indicator" key={index}>
           {profile?.subscription?.planName && (
-            <span className="indicator-item badge badge-primary">
-              {profile?.subscription?.planName}
-            </span>
+        
+            <span className={`indicator-item badge ${profile?.subscription?.planName === 'Premium Plan' ? 'badge-secondary' : 'badge-primary'} hidden sm:inline`}>
+           {profile?.subscription?.planName}
+         </span>
+         
           )}
 
           <div className="relative flex flex-col rounded-xl bg- text-gray-700 bg-white shadow-md">

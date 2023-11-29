@@ -103,7 +103,7 @@ function MyChat({fetchAgain}) {
                   <b>{chat?.latestMessage?.sender?.name} : </b>
                   {chat.latestMessage.content.length > 50
                     ? chat.latestMessage.content.substring(0, 51) + "..."
-                    : chat.latestMessage.content}
+                    : chat.latestMessage.content  }
                 </Text>
               )}
             </Box>

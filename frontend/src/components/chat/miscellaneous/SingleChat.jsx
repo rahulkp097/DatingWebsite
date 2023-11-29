@@ -291,7 +291,7 @@ function SingleChat({fetchAgain,setFetchAgain}) {
             )}
             <Input
               variant="filled"
-              bg="#E0E0E0"
+              bg="#736c71"
               placeholder="Enter a message.."
               value={newMessage}
               onChange={typingHandler}

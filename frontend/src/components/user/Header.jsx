@@ -55,7 +55,7 @@ const Header = () => {
             alt="You&Me Logo"
             className="w-10 h-10 rounded-full mr-2" // Adjust the size as needed
           />
-          You&Me
+          <span className="hidden sm:block">You&Me</span>
         </Link>
       </div>
 
@@ -67,7 +67,7 @@ const Header = () => {
     <div className="relative">
       <span className="absolute inset-y-0 left-0 pl-2 flex items-center">
         <svg
-          className="h-4 w-4 text-gray-500"
+          className=" text-gray-500"
           viewBox="0 0 24 24"
           fill="none"
         >
