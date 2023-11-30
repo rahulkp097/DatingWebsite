@@ -45,25 +45,29 @@ const CaroselComponent = ({ data }) => {
   // Render Swiper if there are three or more slides
   return (
     <div className="flex items-center justify-center flex-col h-[600px]">
-      <Swiper
-        breakpoints={{
-          340: {
-            slidesPerView: 2,
-            spaceBetween: 15,
-          },
-          700: {
-            slidesPerView: 3,
-            spaceBetween: 15,
-          },
-        }}
-        freeMode={!isSingleSlide}
-        slidesPerView={isSingleSlide ? 1 : "auto"}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[FreeMode, Pagination]}
-        className="max-w-[100%] lg:max-w-[80%]"
-      >
+   <Swiper
+  breakpoints={{
+    0: {
+      slidesPerView: 1,
+      spaceBetween: 10,
+    },
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 15,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+  }}
+  freeMode={!isSingleSlide}
+  slidesPerView={isSingleSlide ? 1 : "auto"}
+  pagination={{
+    clickable: true,
+  }}
+  modules={[FreeMode, Pagination]}
+  className="max-w-[100%] lg:max-w-[80%]"
+>
         {data.map((profile, index) => (
           <SwiperSlide key={index}>
             <Link to={`/userprofile/${profile._id}`}>
