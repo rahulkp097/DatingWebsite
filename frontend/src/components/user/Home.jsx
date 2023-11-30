@@ -102,7 +102,7 @@ function Home() {
                       <i className="fas fa-retweet"></i>
                     </div>
                     <h6 className="text-xl font-semibold text-black">
-                      Find Match
+                      Find A Match
                     </h6>
                     <p className="mt-2 mb-4 text-blueGray-500">
                       Dive into our vast pool of potential partners and discover
@@ -146,7 +146,7 @@ function Home() {
               WHY You&Me
             </h2>
             <p className="mb-4">
-              It's easy- ingle2 is a piece of cake to use. Within minutes you'll
+              It's easy- YouAndMe is a piece of cake to use. Within minutes you'll
               be chatting with potential dates in your area.
             </p>
             <p>

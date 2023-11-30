@@ -89,14 +89,14 @@ function Interest() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-600 p-5">
+    <div className="min-h-screen bg-gray-200  p-5">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
       <div className="card rounded-box bg-base-200 p-5">
         <h1 className="text-xl font-semibold text-center">
           Interest Received ({interestReceived?.length})
         </h1>
         {interestReceived?.length === 0 ? (
-          <div className="flex items-center justify-center h-64">
+          <div className="flex items-center justify-center  h-64">
             <h1 className="text-3xl font-semibold text-gray-600">
               No interest received.
             </h1>

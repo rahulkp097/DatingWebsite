@@ -197,7 +197,7 @@ const UserProfilePage = () => {
   ) : (
     <>
       {userInfo?.matches?.includes(userData?._id) ? (
-        <div className="dropdown dropdown-right">
+        <div className="dropdown dropdown-bottom">
           <label
             tabIndex={0}
             className="btn m-1"
