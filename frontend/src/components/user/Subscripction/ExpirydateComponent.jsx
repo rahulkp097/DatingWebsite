@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 const ExpirydateComponent = ({ expirationDate }) => {
-  
   const [countdown, setCountdown] = useState({
     days: 0,
     hours: 0,
@@ -37,11 +36,9 @@ const ExpirydateComponent = ({ expirationDate }) => {
   return (
     <div className="grid grid-flow-col gap-3 text-center auto-cols-max">
       <div className="flex flex-col">
-    <span className="countdown font-mono text-5xl">
-      {countdown.days}
-    </span>
-    days
-  </div>
+        <span className="countdown font-mono text-5xl">{countdown.days}</span>
+        days
+      </div>
       <div className="flex flex-col">
         <span className="countdown font-mono text-5xl">
           <span

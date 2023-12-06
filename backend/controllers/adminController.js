@@ -108,16 +108,13 @@ const addSubcripction = async (req, res, next) => {
       },
       ...otherSubscriptionDetails,
     };
- 
 
     const createdSubscription = await SubscriptionModel.create(newSubscription);
-    res
-      .status(201)
-      .json({
-        success: true,
-        createdSubscription,
-        message: "New Subscription plan added",
-      });
+    res.status(201).json({
+      success: true,
+      createdSubscription,
+      message: "New Subscription plan added",
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -141,13 +138,11 @@ const UpdateSubscripctionPlan = async (req, res, next) => {
       { new: true }
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Subscription Plan Updated",
-        updatedPlan,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Subscription Plan Updated",
+      updatedPlan,
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -162,13 +157,11 @@ const DeleteSubscripctionPlan = async (req, res, next) => {
       _id: PlanId,
     });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Subscripction Plan Deleted Successfully",
-        subscriptionList,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Subscripction Plan Deleted Successfully",
+      subscriptionList,
+    });
   } catch (error) {
     next(error);
   }
@@ -183,7 +176,6 @@ const getUserActivity = async (req, res, next) => {
     }).populate("userId");
 
     res.status(200).json({ success: true, userActivity });
- 
   } catch (error) {
     next(error);
   }
@@ -193,10 +185,8 @@ const getDashboardData = async (req, res) => {
   try {
     const totalUsers = await userModel.countDocuments();
 
-    // Get all unique plan names from the SubscriptionModel
     const planNames = await SubscriptionModel.distinct("name");
 
-    // Dynamically construct the counts for each plan
     const planCounts = await Promise.all(
       planNames.map(async (planName) => ({
         [planName]: await userModel.countDocuments({
@@ -235,7 +225,7 @@ const getDashboardData = async (req, res) => {
           yearly: [
             {
               $match: {
-                createdAt: { $gte: new Date(currentYear, 0, 1) }, // Start of the current year
+                createdAt: { $gte: new Date(currentYear, 0, 1) },
               },
             },
             {
@@ -249,36 +239,31 @@ const getDashboardData = async (req, res) => {
       },
     ]);
 
-
     const usersWithActiveSubscriptions = await userModel.find({
-      'subscription.status': true,
+      "subscription.status": true,
     });
-    
-    // Create a map to store monthly revenue data
+
     const monthlyRevenueData = new Map();
-    
-    // Calculate revenue for each user and aggregate by month
+
     for (const user of usersWithActiveSubscriptions) {
       const { subscription } = user;
-    
-      // Retrieve subscription details
-      const subscriptionDetails = await SubscriptionModel.findById(subscription.plan);
-    
+
+      const subscriptionDetails = await SubscriptionModel.findById(
+        subscription.plan
+      );
+
       if (subscriptionDetails) {
-        // Calculate revenue for each user
         const { price } = subscriptionDetails;
-        const startMonth = user.subscription.startDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month
-    
-        // Add revenue to the corresponding month in the map
+        const startMonth = user.subscription.startDate.getMonth() + 1;
+
         const currentRevenue = monthlyRevenueData.get(startMonth) || 0;
         monthlyRevenueData.set(startMonth, currentRevenue + price);
       }
     }
-    
-    const monthlyRevenueArray = Array.from(monthlyRevenueData.entries()).map(([month, revenue]) => ({ month, revenue }));
 
-   
-    
+    const monthlyRevenueArray = Array.from(monthlyRevenueData.entries()).map(
+      ([month, revenue]) => ({ month, revenue })
+    );
 
     res.status(200).json({
       success: true,
@@ -294,7 +279,6 @@ const getDashboardData = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 
 export {
   adminLogin,

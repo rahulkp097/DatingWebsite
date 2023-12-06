@@ -1,19 +1,19 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import userRoute from './routes/userRoute.js';
-import adminRouter from './routes/adminRoute.js';
-import chatRouter from './routes/chatRoute.js'
-import session from 'express-session';
-import crypto from "crypto"
-import errorMiddleware from './middlewares/errorMiddleware.js';
-import messageRouter from "./routes/messageRoutes.js"
-import { Server } from 'socket.io';
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import userRoute from "./routes/userRoute.js";
+import adminRouter from "./routes/adminRoute.js";
+import chatRouter from "./routes/chatRoute.js";
+import session from "express-session";
+import crypto from "crypto";
+import errorMiddleware from "./middlewares/errorMiddleware.js";
+import messageRouter from "./routes/messageRoutes.js";
+import { Server } from "socket.io";
 import path from "path";
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 dotenv.config();
 
@@ -23,8 +23,6 @@ const __dirname = dirname(__filename);
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
-
-
 
 // app.use(
 //   cors({
@@ -38,72 +36,62 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://youandmelove.me',
-    methods: 'GET, PUT, POST, DELETE',
+    origin: "https://youandmelove.me",
+    methods: "GET, PUT, POST, DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204,
-    credentials: true, 
+    credentials: true,
   })
 );
 
+const secret = crypto.randomBytes(64).toString("hex");
 
-
-const secret = crypto.randomBytes(64).toString('hex');
-
-app.use(session({
-  secret: secret,
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(
+  session({
+    secret: secret,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 app.use((req, res, next) => {
   res.set("Cache-Control", "no-store, no-cache");
-   next();
-  });
-
-
+  next();
+});
 
 app.use(express.json());
-app.use(express.static('static'))
+app.use(express.static("static"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/api/users', userRoute);
-app.use('/api/users/admin', adminRouter);
-app.use('/api/users/chat',chatRouter );
-app.use('/api/users/message',messageRouter );
+app.use("/api/users", userRoute);
+app.use("/api/users/admin", adminRouter);
+app.use("/api/users/chat", chatRouter);
+app.use("/api/users/message", messageRouter);
 
+app.use(express.static(path.join(__dirname, "build")));
 
-
-
-app.use(express.static(path.join(__dirname, 'build')));
-
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 app.use(errorMiddleware);
 
-const server = app.listen(port, () => console.log(`Server connected on port ${port}`));
-
+const server = app.listen(port, () =>
+  console.log(`Server connected on port ${port}`)
+);
 
 // const io = new Server(server, {
 //   pingTimeout: 60000,
 //   cors: {
 //     origin: 'https://localhost:3000',
-    
+
 //   },
 // });
-
-
 
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: 'https://youandmelove.me',
-    
+    origin: "https://youandmelove.me",
   },
 });
-
-
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
@@ -136,6 +124,4 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });
-
-  
 });

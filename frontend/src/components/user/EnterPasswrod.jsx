@@ -12,7 +12,6 @@ function EnterPasswrod() {
   const searchParams = new URLSearchParams(location.search);
   const email = searchParams.get("email");
   const submitHandler = async (e) => {
-  
     e.preventDefault();
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
