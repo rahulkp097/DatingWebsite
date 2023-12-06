@@ -13,11 +13,7 @@ const searchUsers = expressAsyncHandler(async (req, res) => {
     : {};
 
   const users = await userModel.find({
-    $and: [
-      { matches: req.user._id }, // Filter based on the current user in matches array
-      keyword, // Apply other search criteria
-      { _id: { $ne: req.user._id } }, // Exclude the current user from the result
-    ],
+    $and: [{ matches: req.user._id }, keyword, { _id: { $ne: req.user._id } }],
   });
 
   console.log("user", users);
@@ -40,8 +36,6 @@ const accessChat = expressAsyncHandler(async (req, res) => {
   })
     .populate("users", "-password")
     .populate("latestMessage");
-
-  
 
   isChat = await userModel.populate(isChat, {
     path: "latestMessage.sender",
@@ -69,10 +63,6 @@ const accessChat = expressAsyncHandler(async (req, res) => {
   }
 });
 
-
-
-
-
 const fetchChats = expressAsyncHandler(async (req, res) => {
   try {
     ChatModel.find({ users: { $elemMatch: { $eq: req.user._id } } })
@@ -92,4 +82,4 @@ const fetchChats = expressAsyncHandler(async (req, res) => {
   }
 });
 
-export { accessChat, fetchChats,searchUsers };
+export { accessChat, fetchChats, searchUsers };

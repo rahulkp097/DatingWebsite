@@ -14,7 +14,6 @@ function AdminDashboard() {
   const [selectedInterval, setSelectedInterval] = useState("monthly");
   const [monthlyRevenueData, setMonthlyRevenueData] = useState([]); // Initialize with null
 
-
   const convertToMonthName = (monthNumber) => {
     const months = [
       null,
@@ -38,7 +37,7 @@ function AdminDashboard() {
   useEffect(() => {
     getDashboardData();
   }, []);
-  
+
   const getDashboardData = async () => {
     try {
       const res = await dashboardDataApi().unwrap();
@@ -52,35 +51,42 @@ function AdminDashboard() {
       console.error(error);
     }
   };
-  
 
   const convertToWeekLabel = (weekLabel) => {
     if (!weekLabel) {
       return "Unknown Week";
     }
-  
-    const [year, week] = weekLabel.split('-');
+
+    const [year, week] = weekLabel.split("-");
     const weekNumber = parseInt(week, 10);
-  
+
     // Calculate the start and end dates of the week
     const startDate = new Date(year, 0, 1);
     const daysToFirstThursday = (11 - startDate.getDay() + 7) % 7;
     startDate.setDate(1 + daysToFirstThursday + (weekNumber - 2) * 7);
-  
+
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 6);
-  
+
     // Format the dates as strings
-    const startDateString = startDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    const endDateString = endDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-  
+    const startDateString = startDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+    const endDateString = endDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+
     return `Week ${weekNumber} (${startDateString} - ${endDateString}, ${year})`;
   };
-  
 
   const chartData =
     selectedInterval === "monthly"
-      ? Array.from({ length: 12 }, (_, i) => usersPerMonth.find((item) => item._id === i + 1)?.count || 0)
+      ? Array.from(
+          { length: 12 },
+          (_, i) => usersPerMonth.find((item) => item._id === i + 1)?.count || 0
+        )
       : selectedInterval === "weekly"
       ? usersPerWeek.map((item) => item.count)
       : selectedInterval === "yearly"
@@ -103,35 +109,40 @@ function AdminDashboard() {
     <>
       <CardTwo totalUsers={totalUsers} planCounts={totalPlanCount} />
 
-   
-      
-      <div className="h-[700px] ">
-  <div>
-  <h1 className="text-3xl font-semibold m-6 text-center sm:text-center"> Users Data </h1>
-    
-       <div className="flex justify-center items-center mt-4">
-        <label className="mr-2">Select Interval:</label>
-        <select
-          value={selectedInterval}
-          onChange={(e) => handleIntervalChange(e.target.value)}
-        >
-          <option value="monthly">Monthly</option>
-          <option value="weekly">Weekly</option>
-          <option value="yearly">Yearly</option>
-        </select>
+      <div >
+        <div>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-center">
+            {" "}
+            Users Data{" "}
+          </h1>
+
+          <div className="flex justify-center items-center mt-4">
+            <label className="mr-2">Select Interval:</label>
+            <select
+              value={selectedInterval}
+              onChange={(e) => handleIntervalChange(e.target.value)}
+            >
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+            <div className="w-3/4">
+
+          <Graph chartData={chartData} labels={labels} />
+            </div>
+        </div>
+
+        <div>
+          <h1 className="text-3xl font-semibold m-6 text-center sm:text-center">
+            Revenue Data
+          </h1>
+          <div className="w-3/4">
+            
+          <RevenueGraph revenueData={monthlyRevenueData} />
+          </div>
+        </div>
       </div>
-
-    <Graph chartData={chartData} labels={labels} />
-  </div>
-
-  <div>
-   <h1 className="text-3xl font-semibold m-6 text-center sm:text-center">
-                Revenue Data
-              </h1>
-    <RevenueGraph revenueData={monthlyRevenueData} />
-  </div>
-</div>
-
     </>
   );
 }

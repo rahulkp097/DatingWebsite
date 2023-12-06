@@ -2,7 +2,7 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart } from "react-chartjs-2";
-import 'chartjs-plugin-datalabels'; 
+import "chartjs-plugin-datalabels";
 
 const monthNames = [
   null,
@@ -23,30 +23,34 @@ const monthNames = [
 const RevenueGraph = ({ revenueData }) => {
   const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
 
-  // Create a mapping for November data
+ 
   const novemberData = revenueData?.reduce((acc, item) => {
     acc[item.month] = item.revenue;
     return acc;
   }, {});
 
-  // Fill in missing data with zeros
-  const filledData = allMonths.map((month) => ({ month, revenue: novemberData[month] || 0 }));
+  
+  const filledData = allMonths.map((month) => ({
+    month,
+    revenue: novemberData[month] || 0,
+  }));
 
   const data = {
-    labels: filledData.map((item) => monthNames[item.month]), // Use month names
+    labels: filledData.map((item) => monthNames[item.month]), 
     datasets: [
       {
         label: "Revenue",
         data: filledData.map((item) => item.revenue),
-        borderColor: "rgba(75,192,192,1)",
-        borderWidth: 2,
-        pointRadius: 4,
-        pointBackgroundColor: "rgba(75,192,192,1)",
+        borderColor: "rgba(255, 99, 132, 1)", // Change the color as needed
+      borderWidth: 2,
+      pointRadius: 4,
+      pointBackgroundColor: "rgba(255, 99, 132, 1)", // Change the color as needed
       },
     ],
   };
 
   const options = {
+
     scales: {
       x: {
         type: "category",
@@ -60,9 +64,9 @@ const RevenueGraph = ({ revenueData }) => {
     plugins: {
       datalabels: {
         display: true,
-        color: 'black', // Set the color of data labels
-        anchor: 'end',
-        align: 'end',
+        color: "black", 
+        anchor: "end",
+        align: "end",
       },
     },
   };

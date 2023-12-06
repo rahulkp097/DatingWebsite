@@ -174,8 +174,6 @@ const verifyOTP = (req, res) => {
         createdAt: Date.now(),
       });
 
-      
-
       newUser
         .then((user) => {
           generateToken(res, user._id);
@@ -678,9 +676,12 @@ const getTargetUserProfile = async (req, res) => {
   const userId = req.query.user;
 
   try {
-    const TargetUser = await userModel.findById(targetId).populate("reports").select("-password");
+    const TargetUser = await userModel
+      .findById(targetId)
+      .populate("reports")
+      .select("-password");
     const user = await userModel.findById(userId).select("-password");
-    
+
     res.status(200).json({ success: true, data: TargetUser, user });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
@@ -806,7 +807,7 @@ const addToShortList = async (req, res) => {
       });
     } else {
       const targetUser = await userModel.findById(targetId);
-      
+
       user.shortlist.push(targetId);
       const recipientEmail = targetUser.email;
       const recipientName = targetUser.name;
@@ -918,31 +919,29 @@ const pucharsesubscripction = async (req, res) => {
   }
 };
 
-
-const reportUser = async (req, res,next) => {
+const reportUser = async (req, res, next) => {
   try {
     const { reason, userId, targetId } = req.body;
-  
 
     const user = await userModel.findById(targetId);
     user.reports.push({ reporter: userId, reason, createdAt: new Date() });
     user.reportCount += 1;
-    await logUserActivity(userId,`reported ${user.name}`);
-      if (user.reportCount >= 5) {
-    
+    await logUserActivity(userId, `reported ${user.name}`);
+    if (user.reportCount >= 5) {
       user.isActive = false;
     }
-    
+
     await user.save();
 
-    return res.status(200).json({ success: true, message: "User reported successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "User reported successfully" });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
-
-const uploadphotos=async(req,res,next)=>{
+const uploadphotos = async (req, res, next) => {
   const { userId, imageUrl } = req.body;
 
   try {
@@ -952,7 +951,7 @@ const uploadphotos=async(req,res,next)=>{
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.photos.push(imageUrl)
+    user.photos.push(imageUrl);
 
     await user.save();
     await logUserActivity(userId, "new Photo uploaded Photo updated");
@@ -963,51 +962,45 @@ const uploadphotos=async(req,res,next)=>{
       message: "Image uploaded and user data updated",
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
+};
 
-
-}
-
-
-const deletePhoto=async(req,res,next)=>{
+const deletePhoto = async (req, res, next) => {
   try {
-    const {userId,index}=req.body
-    
-    const user=await userModel.findById(userId).select('-password')
-    
-    user.photos.splice(index,1)
-    
-    user.save()
+    const { userId, index } = req.body;
+
+    const user = await userModel.findById(userId).select("-password");
+
+    user.photos.splice(index, 1);
+
+    user.save();
     return res.status(200).json({
       user,
       success: true,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-const setAsProfilePhoto=async(req,res,next)=>{
-
+const setAsProfilePhoto = async (req, res, next) => {
   try {
-    const {userId,index}=req.body
+    const { userId, index } = req.body;
 
-    const user=await userModel.findById(userId).select("-password")
-    const profilephoto=user.photos[index]
+    const user = await userModel.findById(userId).select("-password");
+    const profilephoto = user.photos[index];
 
-    user.image=profilephoto
-    user.save()
+    user.image = profilephoto;
+    user.save();
     return res.status(200).json({
       user,
       success: true,
-     
     });
-    
   } catch (error) {
-   next(error) 
+    next(error);
   }
-}
+};
 export {
   login,
   updateProfile,
@@ -1037,5 +1030,5 @@ export {
   reportUser,
   uploadphotos,
   deletePhoto,
-  setAsProfilePhoto
+  setAsProfilePhoto,
 };

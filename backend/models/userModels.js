@@ -15,14 +15,14 @@ const userSchema = mongoose.Schema({
   age: Number,
   bio: String,
   image: String,
-  country: String, 
-  state: String,   
-  city: String, 
-  currentLocation:String,   
+  country: String,
+  state: String,
+  city: String,
+  currentLocation: String,
   gender: String,
-  education:String,
-  occupation:String,
-  hobbies:[],
+  education: String,
+  occupation: String,
+  hobbies: [],
   subscription: {
     plan: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,9 +31,9 @@ const userSchema = mongoose.Schema({
     planName: String,
     status: Boolean,
     expirationDate: Date,
-    startDate: Date, 
+    startDate: Date,
   },
-  
+
   photos: {
     type: [String],
   },

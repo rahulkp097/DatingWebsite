@@ -57,9 +57,9 @@ function AdminLogin() {
 
   return (
     <div className="min-h-screen flex bg-gray-400 items-center justify-center">
-    <div className="bg-white p-8 rounded shadow-md md:w-96 w-full">
-    <h2 className="text-2xl font-semibold text-center mb-4">Admin Login</h2>
-    <div className="mb-4">
+      <div className="bg-white p-8 rounded shadow-md md:w-96 w-full">
+        <h2 className="text-2xl font-semibold text-center mb-4">Admin Login</h2>
+        <div className="mb-4">
           <label className="block text-gray-600 text-sm font-medium">
             Email
           </label>
@@ -84,8 +84,8 @@ function AdminLogin() {
           />
         </div>
         <button
-         className="w-full bg-blue-500 text-white font-semibold p-2 rounded-lg hover:bg-blue-600"
-         onClick={handleLogin}
+          className="w-full bg-blue-500 text-white font-semibold p-2 rounded-lg hover:bg-blue-600"
+          onClick={handleLogin}
         >
           Login
         </button>

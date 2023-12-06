@@ -20,15 +20,15 @@ function AdminUserlist() {
   const userToggle = async (userId) => {
     try {
       const userToToggle = userData.find((user) => user._id === userId);
-  
+
       let confirmMessage = "";
-  
+
       if (userToToggle.isActive) {
         confirmMessage = "Are you sure you want to block this User?";
       } else {
         confirmMessage = "Are you sure you want to unblock this User?";
       }
-  
+
       const { value: confirmToggle } = await Swal.fire({
         title: "Confirm Toggle",
         text: confirmMessage,
@@ -38,10 +38,10 @@ function AdminUserlist() {
         cancelButtonText: "Cancel",
         confirmButtonColor: "#",
       });
-  
+
       if (confirmToggle) {
         const res = await userAction({ userId }).unwrap();
-  
+
         if (res.success) {
           setUserData((prevUserData) =>
             prevUserData.map((user) =>
@@ -54,7 +54,6 @@ function AdminUserlist() {
       console.error("Error toggling user status:", error);
     }
   };
-  
 
   useEffect(() => {
     callApi();

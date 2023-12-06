@@ -9,10 +9,9 @@ const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState();
 
   useEffect(() => {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      setUser(userInfo); 
-    },[]);
-
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
+  }, []);
 
   return (
     <ChatContext.Provider

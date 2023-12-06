@@ -37,7 +37,6 @@ const ResetPasswordForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
-         
 
             <button
               onClick={submitHandler}

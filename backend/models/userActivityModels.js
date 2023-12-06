@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userActivitySchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: "user",
     required: true,
   },
   activityType: {
@@ -17,7 +17,6 @@ const userActivitySchema = new mongoose.Schema({
   // Add other fields as needed
 });
 
-const UserActivityModel = mongoose.model('UserActivity', userActivitySchema);
-
+const UserActivityModel = mongoose.model("UserActivity", userActivitySchema);
 
 export default UserActivityModel;

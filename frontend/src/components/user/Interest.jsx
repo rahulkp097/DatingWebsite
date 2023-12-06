@@ -90,94 +90,93 @@ function Interest() {
 
   return (
     <div className="min-h-screen bg-gray-200  p-5">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-      <div className="card rounded-box bg-base-200 p-5">
-        <h1 className="text-xl font-semibold text-center">
-          Interest Received ({interestReceived?.length})
-        </h1>
-        {interestReceived?.length === 0 ? (
-          <div className="flex items-center justify-center  h-64">
-            <h1 className="text-3xl font-semibold text-gray-600">
-              No interest received.
-            </h1>
-          </div>
-        ) : (
-          <ul>
-            {interestReceived?.map((user) => (
-              <li key={user?._id} className="flex items-center space-x-4 m-5">
-                <Link to={`/userprofile/${user?._id}`} key={user?._id}>
-                  <img
-                    src={
-                      user?.image ||
-                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
-                    }
-                    alt="User Photo"
-                    className="w-20 h-20 rounded-full"
-                  />
-                </Link>
-                <span>{user?.name}</span>
-  
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => acceptInterest(user?._id)}
-                    className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => cancelReceviedInterest(user?._id)}
-                    className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-  
-      <div className="card rounded-box bg-base-200 p-5">
-        <h1 className="text-xl font-semibold text-center">
-          Interest Sent ({interestSend?.length})
-        </h1>
-        {interestSend?.length === 0 ? (
-          <div className="flex items-center justify-center h-64">
-            <h1 className="text-3xl font-semibold text-gray-600">
-              No interest sent.
-            </h1>
-          </div>
-        ) : (
-          <ul>
-            {interestSend?.map((user) => (
-              <li key={user?._id} className="flex items-center space-x-4 m-5">
-                <Link to={`/userprofile/${user?._id}`} key={user?._id}>
-                  <img
-                    src={
-                      user?.image ||
-                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
-                    }
-                    alt="User Photo"
-                    className="w-20 h-20 rounded-full"
-                  />
-                </Link>
-                <span>{user?.name}</span>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => cancelInterest(user?._id)}
-                    className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+        <div className="card rounded-box bg-base-200 p-5">
+          <h1 className="text-xl font-semibold text-center">
+            Interest Received ({interestReceived?.length})
+          </h1>
+          {interestReceived?.length === 0 ? (
+            <div className="flex items-center justify-center  h-64">
+              <h1 className="text-3xl font-semibold text-gray-600">
+                No interest received.
+              </h1>
+            </div>
+          ) : (
+            <ul>
+              {interestReceived?.map((user) => (
+                <li key={user?._id} className="flex items-center space-x-4 m-5">
+                  <Link to={`/userprofile/${user?._id}`} key={user?._id}>
+                    <img
+                      src={
+                        user?.image ||
+                        "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                      }
+                      alt="User Photo"
+                      className="w-20 h-20 rounded-full"
+                    />
+                  </Link>
+                  <span>{user?.name}</span>
+
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => acceptInterest(user?._id)}
+                      className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => cancelReceviedInterest(user?._id)}
+                      className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="card rounded-box bg-base-200 p-5">
+          <h1 className="text-xl font-semibold text-center">
+            Interest Sent ({interestSend?.length})
+          </h1>
+          {interestSend?.length === 0 ? (
+            <div className="flex items-center justify-center h-64">
+              <h1 className="text-3xl font-semibold text-gray-600">
+                No interest sent.
+              </h1>
+            </div>
+          ) : (
+            <ul>
+              {interestSend?.map((user) => (
+                <li key={user?._id} className="flex items-center space-x-4 m-5">
+                  <Link to={`/userprofile/${user?._id}`} key={user?._id}>
+                    <img
+                      src={
+                        user?.image ||
+                        "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                      }
+                      alt="User Photo"
+                      className="w-20 h-20 rounded-full"
+                    />
+                  </Link>
+                  <span>{user?.name}</span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => cancelInterest(user?._id)}
+                      className="h-8 px-3 text-md font-bold text-blue-400 border border-blue-400 rounded-full hover:bg-blue-100"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-  
   );
 }
 

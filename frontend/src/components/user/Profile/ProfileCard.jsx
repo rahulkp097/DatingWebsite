@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ProfileTabs } from "./ProfileTabs";
-import { useUpdateUserProfilePhotoMutation, useUploadPhotoToCloudinaryMutation } from "../../../slices/userApiSlice";
+import {
+  useUpdateUserProfilePhotoMutation,
+  useUploadPhotoToCloudinaryMutation,
+} from "../../../slices/userApiSlice";
 import { setCredentials } from "../../../slices/authSlice";
 import Loader from "../Loader";
 
@@ -13,18 +16,15 @@ function ProfileCard() {
   const [uploadedImageURL, setUploadedImageURL] = useState(null);
   const [uploadImageApi, { isLoading }] = useUpdateUserProfilePhotoMutation();
   const { userInfo } = useSelector((state) => state.auth);
-  const [cloudinaryApi,{isLoading:isLoadingCloudinery}] = useUploadPhotoToCloudinaryMutation();
+  const [cloudinaryApi, { isLoading: isLoadingCloudinery }] =
+    useUploadPhotoToCloudinaryMutation();
   const dispatch = useDispatch();
-
-
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
     setUploadedImageURL(URL.createObjectURL(selectedImage));
   };
-
-
 
   const onSubmit = async () => {
     if (!image) {
@@ -72,29 +72,39 @@ function ProfileCard() {
                   alignItems: "center",
                 }}
               >
-                <div className="indicator" >
-  {userInfo?.subscription?.planName && (
-  <span className={`indicator-item badge ${userInfo?.subscription?.planName === 'Premium Plan' ? 'badge-secondary' : 'badge-primary'} hidden sm:inline`}>
-      {userInfo?.subscription?.planName}
-    </span>)}
-                <img
-                  src={
-                    userInfo?.image ||
-                    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
-                  }
-                  alt="Avatar"
-                  title="Avatar"
-                  className="rounded-full mx-auto md:mx-0 h-80"
-                />
-  </div>
+                <div className="indicator">
+                  {userInfo?.subscription?.planName && (
+                    <span
+                      className={`indicator-item badge ${
+                        userInfo?.subscription?.planName === "Premium Plan"
+                          ? "badge-secondary"
+                          : "badge-primary"
+                      } hidden sm:inline`}
+                    >
+                      {userInfo?.subscription?.planName}
+                    </span>
+                  )}
+                  <img
+                    src={
+                      userInfo?.image ||
+                      "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                    }
+                    alt="Avatar"
+                    title="Avatar"
+                    className="rounded-full mx-auto md:mx-0 h-80"
+                  />
+                </div>
                 <button
                   onClick={() =>
                     document.getElementById("my_modal_1").showModal()
                   }
                   className="btn btn-info text-black px-4 py-2 rounded mt-2"
                 >
-                {isLoading || isLoadingCloudinery? <Loader/>: "Change Image"}
-                  
+                  {isLoading || isLoadingCloudinery ? (
+                    <Loader />
+                  ) : (
+                    "Change Image"
+                  )}
                 </button>
               </div>
             </div>
@@ -123,7 +133,6 @@ function ProfileCard() {
                           />
                         </div>
                         <div className="flex justify-center mt-4">
-                          
                           <button
                             onClick={onSubmit}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 focus:outline-none"
@@ -164,7 +173,6 @@ function ProfileCard() {
                     <label className="text-info text-xl">Home Location</label>
                     <p>{userInfo?.city}</p>
                   </div>
-                  
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   <div className="media">
@@ -176,7 +184,9 @@ function ProfileCard() {
                     <p>{userInfo?.hobbies && userInfo?.hobbies.join(", ")}</p>
                   </div>
                   <div className="media">
-                    <label className="text-info text-xl">Current Location</label>
+                    <label className="text-info text-xl">
+                      Current Location
+                    </label>
                     <p>{userInfo?.currentLocation}</p>
                   </div>
 
@@ -194,13 +204,9 @@ function ProfileCard() {
         </div>
       </section>
 
-      
-
       <div>
-        <ProfileTabs/>
+        <ProfileTabs />
       </div>
-
-
     </div>
   );
 }
