@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const CardTwo = ({ totalUsers, planCounts }) => {
   // Define a mapping of plan names to colors
@@ -15,13 +17,14 @@ const CardTwo = ({ totalUsers, planCounts }) => {
         <div className="w-full px-6 sm:w-1/2 xl:w-1/3">
           <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-slate-100">
             <div className="p-3 rounded-full bg-indigo-600 bg-opacity-75">
-              <svg
+            <svg
                 className="h-8 w-8 text-white"
                 viewBox="0 0 28 30"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 {/* ... SVG Paths */}
+            <FontAwesomeIcon icon={faUsers} />
               </svg>
             </div>
             <div className="mx-5">
