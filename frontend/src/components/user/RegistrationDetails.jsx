@@ -145,6 +145,7 @@ function RegistrationDetails() {
   const handleSelectLocation = (location) => {
     setQuery(location);
     setCurrentLocation(location);
+    setSuggestions([])
   };
 
   const onSubmit = async () => {

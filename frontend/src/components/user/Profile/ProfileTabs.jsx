@@ -98,6 +98,7 @@ export function ProfileTabs() {
   const handleSelectLocation = (location) => {
     setQuery(location);
     setCurrentLocation(location);
+    setSuggestions([])
   };
 
   const uploadphotos = async () => {

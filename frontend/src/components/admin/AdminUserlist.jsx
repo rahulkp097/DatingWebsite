@@ -30,7 +30,7 @@ function AdminUserlist() {
       }
 
       const { value: confirmToggle } = await Swal.fire({
-        title: "Confirm Toggle",
+        title: "Confirm ",
         text: confirmMessage,
         icon: "warning",
         showCancelButton: true,
