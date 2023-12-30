@@ -41,4 +41,4 @@ I'm thrilled to introduce "YouAndMe," a revolutionary dating website designed an
 
 ## Demo Video
 
-[![Watch the Demo Video]](https://youtu.be/bkTzzImOPb0)
+[Watch the Demo Video](https://youtu.be/bkTzzImOPb0)
